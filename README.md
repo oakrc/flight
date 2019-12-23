@@ -1,2 +1,2 @@
 # FBLA Web Design: WestFlight Airlines
-A website built with MERN (_**MySQL, ExpressJS, ReactJS, and NodeJS)
+A website built with MERN (**MySQL**, ExpressJS, ReactJS, and NodeJS)
