@@ -1,0 +1,61 @@
+@font-face {
+  font-family: 'Gidole';
+  src: url("fonts/Gidole-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: 'Kollektif';
+  src: url("fonts/Kollektif-Bold.ttf") format("truetype");
+}
+
+h1, h2, h3, h4, h5, p {
+  margin: 0;
+}
+
+.Navbar {
+  top: 0;
+  position: fixed;
+  width: 100vw;
+  height: 8vh;
+  z-index: 2;
+}
+
+.Content {
+  margin: 20vh 0 0 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.FlightSearch {
+  width: 60vw;
+  height: 20vh;
+  background-color: whitesmoke;
+  border-radius: 0.75vw;
+  box-shadow: 0px 1px 15px 2px rgba(100, 100, 100, 0.75);
+  -webkit-box-shadow: 0px 1px 15px 2px rgba(100, 100, 100, 0.75);
+  -moz-box-shadow: 0px 1px 15px 2px rgba(100, 100, 100, 0.75);
+}
+
+.Title {
+  color: whitesmoke;
+  text-transform: lowercase;
+}
+
+.Title h1 {
+  font-size: 110px;
+  font-family: 'Kollektif';
+}
+
+.Title h2 {
+  font-size: 28px;
+  font-family: 'Gidole';
+}
+/*# sourceMappingURL=App.css.map */
