@@ -3,7 +3,7 @@ import React from 'react'
 function Title() {
     return (
         <div className="Title">
-            <h1>WestFlight Airlines</h1>
+            <h1>Flying West, Prices Best.</h1>
         </div>
     )
 }

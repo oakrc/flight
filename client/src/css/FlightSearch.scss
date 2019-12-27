@@ -1,0 +1,137 @@
+.FlightSearch {
+    display: flex;
+    flex-direction: column;
+    margin: 2.5vh 0 0 0;
+    background-color: #f0f0f0;
+    border-radius: 0.75vw;
+    box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
+    -webkit-box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
+    -moz-box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
+    padding: 2vh 0 4vh 2vw;
+    
+    .MuiOutlinedInput-root {
+        transition: 0.5s;
+
+        &:focus {
+            background-color: #f0f0f0 !important;
+        }
+
+        &:hover {
+            background-color: #e4e4e4;
+
+            .MuiOutlinedInput-notchedOutline {
+                border-color: #0277bd;
+            }
+        }
+    }
+
+    .Top {
+        position: relative;
+        display: inline-flex;
+        margin-bottom: 2vh;
+        align-items: center;
+
+        .MuiOutlinedInput-notchedOutline {
+            border: none;
+        }
+        
+        .MuiButton-root {
+            font-size: 1rem;
+            font-weight: 400;
+            text-transform: none;
+            color: #002e54; 
+            width: 8vw;
+        }
+
+        .MuiPaper-root {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            padding: 1vh 1.5vw 2vh 1.5vw;
+            z-index: 2;
+            color: #002e54; 
+
+            .Person {
+                display: inline-flex;
+                align-items: center;
+
+                p {
+                    min-width: 3.5vw;
+                    text-align: left;
+                }
+            }
+
+            .MuiOutlinedInput-root {
+                width: 2.5vw;
+
+                &:hover {
+                    background-color: white;
+                }
+            }
+
+            .MuiSvgIcon-root {
+                cursor: pointer;
+            }
+        }
+
+        .MuiSelect-root {
+            border-radius: 3px;
+            padding-top: 1vh;
+            padding-bottom: 1vh;
+            transition: 0.5s;
+
+            &:focus {
+                background-color: #f0f0f0;
+            }
+
+            &:hover {
+                background-color: #e4e4e4;
+            }
+
+        }
+    }
+
+    .Middle {
+        width: 100%;
+        display: inline-flex;
+
+        .MuiFormControl-root {
+            margin-right: 2vw;
+        }
+    }
+}
+
+.Bottom {
+    width: 50vw;
+    height: 4vh;
+    display: flex;
+    justify-content: flex-end;
+
+    & > * {
+        position: relative;
+        bottom: 2vh;
+
+    }
+
+    .MuiFab-primary {
+        background-color: #0083d1;
+    }
+
+    .MuiFab-primary:hover {
+        background-color: #0277bd;
+    }
+}
+
+.sidenote {
+    font-size: 0.8rem;
+    color: grey;
+    transition: 0.5s;
+}
+
+.sidenote-red {
+    color: red;
+}
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #cc0000 !important;
+}
