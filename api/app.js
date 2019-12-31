@@ -1,28 +1,26 @@
 // imports
-const express       = require('express');
-const session       = require('express-session');
-const redis         = require('redis');
-const RedisStore   = require('connect-redis')(session);
-const client        = redis.createClient();
-const fs            = require('fs');
-const cors          = require('cors');
-const logger        = require('morgan');
-const bodyParser    = require('body-parser');
-const mysql         = require('mysql');
-const bcrypt        = require('bcrypt');
+const express       = require('express'),
+      session       = require('express-session'),
+      redis         = require('redis'),
+      RedisStore    = require('connect-redis')(session),
+      cors          = require('cors'),
+      logger        = require('morgan'),
+      bodyParser    = require('body-parser'),
+      mysql         = require('mysql');
 
 // setup app
 const app           = express();
-const salt_rounds   = 12;
 app.disable('x-powered-by');
 app.use(logger('dev'));
+var client        = redis.createClient();
 app.use(session({
     secret: process.env.SESS_SECRET | '4n07h3rSeCr37',
     store: new RedisStore({host: 'localhost', port: 6379, client: client, ttl: 260}),
     saveUninitialized: false,
-    resave: false
+    resave: false,
     cookie: {
-        expires: 600000
+        expires: 600000,
+        secure: true
     }
 }));
 
@@ -42,44 +40,26 @@ app.locals.pool = pool;
 var allowed_origins = ['http://localhost:3000', 'http://yourapp.com'];
 app.use(cors({
     origin: (origin, callback) => {    // allow requests with no origin 
-        // (like mobile apps or curl requests)
-        if(!origin) return callback(null, true);    
-        if(allowed_origins.indexOf(origin) === -1){
+        if(!origin || allowed_origins.indexOf(origin) === -1){
             var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
+                'allow access from the specified origin.';
             return callback(new Error(msg), false);
         }
         return callback(null, true);
-    }
+    },
+    credentials: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use(bodyParser.text({ type: 'text/html' }));
-app.use((req,res,next) => {
-    console.log('[', Date.now(), ']', ' HTTP ', req.method, ' ', req.url);
-    next();
-});
 
-
-/*// JWT Auth0 Middleware
-const checkJwt = jwt({
-    secret: jwksRsa.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: `https://wfa.auth0.com/.well-known/jwks.json`
-    }),
-
-    // Validate the audience and the issuer.
-    audience: 'td6HeYvh1OGiH7lveZAXhZN43Zb0ZF0Y',
-    issuer: `https://wfa.auth0.com/`,
-    algorithms: ['RS256']
-});*/
 
 // Define routes
 app.get('/', (req, res) => res.status(200).send({msg: 'WestFlight Airlines API',}));
-app.get('/', (req, res) => res.status(404).end());
+app.use('/user', require('./routes/user'));
+app.use('/flight', require('./routes/flight'));
+app.use('/ticket', require('./routes/ticket'));
 
 // Listen
 const port = process.env.PORT || 3000;
