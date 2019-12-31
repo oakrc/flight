@@ -78,3 +78,8 @@ x32/
 *-dbg/
 Result
 
+# Credentials
+*.password
+
+# Session
+Session.vim

@@ -19,7 +19,7 @@
 CREATE TABLE aircrafts (
     id              BINARY(16) PRIMARY KEY,         -- UUID_TO_BIN(UUID()) to generate; also BIN_TO_UUID()
     reg_no          CHAR(8) NOT NULL,               -- aircraft registration number; might be unnecessary
-    capacity        SMALLINT NOT NULL,                   -- max number of seats
+    capacity        SMALLINT NOT NULL,              -- max number of seats
     model           VARCHAR(16) NOT NULL,           -- model of aircraft for display
     year_mfd        INT NOT NULL                    -- year manufactured
 );
@@ -33,7 +33,6 @@ CREATE TABLE routes (
 CREATE TABLE flight_schedule (
     id              BINARY(16) PRIMARY KEY,
     route_id        BINARY(16) NOT NULL,            -- see table route
-    date_flight     DATE NOT NULL,
     dtime_depart    DATETIME NOT NULL,
     dtime_arrive    DATETIME NOT NULL,
     aircraft_id     BINARY(16) NOT NULL,
@@ -56,8 +55,7 @@ CREATE TABLE users (
     gender          CHAR(1) NOT NULL,
     phone_number    VARCHAR(16) DEFAULT NULL,
     email           VARCHAR(50) NOT NULL,
-    pw_hash         BINARY(60) NOT NULL,
-    pw_salt         BINARY(32) NOT NULL
+    pw              BINARY(60) NOT NULL,
 );
 CREATE TABLE passengers (
     id              BINARY(16) PRIMARY KEY,
@@ -163,14 +161,37 @@ BEGIN
     INSERT INTO flight_schedule VALUES (
         @item_id,
         (SELECT id FROM routes ORDER BY RAND() LIMIT 1),
-        DATE_ADD(NOW(), INTERVAL ROUND(RAND(0.772)*120) DAY),
         @depart,
         @arrive,
         (SELECT id FROM aircrafts ORDER BY RAND() LIMIT 1)
     );
-    INSERT INTO airfares VALUES (UUID_TO_BIN(UUID()), @item_id, 'F', ROUND((RAND(0.142)*(2000))+700)),
-                                (UUID_TO_BIN(UUID()), @item_id, 'B', ROUND((RAND(0.242)*(1000))+300)),
-                                (UUID_TO_BIN(UUID()), @item_id, 'E', ROUND((RAND(0.342)*(200))+40));
+    INSERT INTO airfares VALUES (UUID_TO_BIN(UUID()), @item_id, 'F', ROUND((RAND(0.142)*(400))+800)),
+                                (UUID_TO_BIN(UUID()), @item_id, 'B', ROUND((RAND(0.242)*(200))+350)),
+                                (UUID_TO_BIN(UUID()), @item_id, 'E', ROUND((RAND(0.342)*(200))+50));
+END//
+
+CREATE PROCEDURE register_user(
+    IN first_name VARCHAR(255) NOT NULL,
+    IN middle_name VARCHAR(255),
+    IN last_name VARCHAR(255) NOT NULL,
+    IN birth_year YEAR(4) NOT NULL,
+    IN gender CHAR(1) NOT NULL,
+    IN phone_number VARCHAR(16),
+    IN email VARCHAR(50) NOT NULL,
+    IN pw BINARY(60) NOT NULL
+)
+BEGIN
+    INSERT INTO user VALUES (
+        UUID_TO_BIN(UUID()),
+        first_name,
+        middle_name,
+        last_name,
+        birth_year,
+        gender,
+        phone_number,
+        email,
+        pw
+    );
 END//
 
 /* Insert dummy data */
@@ -202,12 +223,12 @@ BEGIN
     UNTIL @reps = 0 END REPEAT;
 
     INSERT INTO jobs (title,dept,location) VALUES
-        ('Sr. Software Engineer',NULL,'Walnut, CA'),
+        ('Sr. Software Engineer','IT','Walnut, CA'),
         ('Aircraft Support Mechanic','Cabin - Dept #5','Walnut, CA'),
         ('Aircraft Maintenance Technician','Line - Dept #32','Walnut, CA'),
-        ('Sr. Repair Coordinator',NULL,'Los Angeles, CA'),
+        ('Sr. Repair Coordinator','Repair - Dept #2','Los Angeles, CA'),
         ('Director','Global Corporate Sales','Los Angeles, CA'),
-        ('Principal Engineer',NULL,'Walnut, CA'),
+        ('Principal Engineer','Engineering','Walnut, CA'),
         ('Team Leader','Global Assistance','Los Angeles, CA'),
         ('Pre-flight Inspector','Dept #9','Los Angeles, CA'),
         ('Sr. Analyst','Inventory','Walnut, CA'),
