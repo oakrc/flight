@@ -11,7 +11,8 @@ function DatePick(props) {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
         autoOk
-        disablePast
+        disableFuture={props.disableFuture}
+        disablePast={props.disablePast}
         variant="inline"
         inputVariant="outlined"
         format="MM/dd/yyyy"
@@ -22,7 +23,6 @@ function DatePick(props) {
         KeyboardButtonProps={{
           "aria-label": "change date"
         }}
-        onError={props.error}
       />
     </MuiPickersUtilsProvider>
   );

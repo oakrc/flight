@@ -1,7 +1,7 @@
 .FlightSearch {
     display: flex;
     flex-direction: column;
-    margin: 2.5vh 0 0 0;
+    margin: 2.5vh 0 0;
     background-color: #f0f0f0;
     border-radius: 0.75vw;
     box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
@@ -79,6 +79,7 @@
             padding-top: 1vh;
             padding-bottom: 1vh;
             transition: 0.5s;
+            color: #002e54;
 
             &:focus {
                 background-color: #f0f0f0;
@@ -98,14 +99,18 @@
         .MuiFormControl-root {
             margin-right: 2vw;
         }
+
+        .MuiInputBase-root {
+            width: 13vw;
+        }
     }
 }
 
 .Bottom {
-    width: 50vw;
+    margin: 0 5vw 55vh 0;
     height: 4vh;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: row-reverse;
 
     & > * {
         position: relative;
@@ -120,6 +125,11 @@
     .MuiFab-primary:hover {
         background-color: #0277bd;
     }
+
+    .MuiFab-root {
+        text-transform: none;
+        letter-spacing: 0.75px;
+    }
 }
 
 .sidenote {
@@ -132,6 +142,6 @@
     color: red;
 }
 
-.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
-    border-color: #cc0000 !important;
+.MuiList-root.MuiMenu-list {
+    color: #002e54;
 }

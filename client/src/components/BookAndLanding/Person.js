@@ -9,7 +9,7 @@ function Person(props) {
         <div className="Person">
             <p>{props.type}</p>
             <IconButton color="inherit" onClick={(e) => {props.updater(e, props.type, props.amount - 1)}}><RemoveIcon/></IconButton>
-            <TextField id="outlined-basic" variant="outlined" value={props.amount} onChange={(e) => {props.updater(e, props.type, (e.target.value))}}/>
+            <TextField variant="outlined" value={props.amount} onChange={(e) => {props.updater(e, props.type, (e.target.value))}}/>
             <IconButton disabled={props.addDisabled} color="inherit" onClick={(e) => {props.updater(e, props.type, props.amount + 1)}}><AddIcon/></IconButton>
         </div>
     )

@@ -1,15 +1,50 @@
 @font-face {
     font-family: 'Kollektif';
-    src: url('fonts/Kollektif-Bold.ttf') format('truetype');
-}
-
-h1, h2, h3, h4, h5, p, div {
-    margin: 0;
-    font-family: 'Roboto';
+    src: url('fonts/kollektif.woff2') format('woff2');
 }
 
 html {
+    scroll-behavior: smooth;
     font-size: 14px;
+    cursor: url('./images/cursor.png'), default;
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    //background-image: url('./images/bg.jpg');
+    //background-repeat: no-repeat;
+    //background-size: cover;
+    //background-position: left center;
+    background: -webkit-linear-gradient(#005aa7, #ebe9be);
+    background: linear-gradient(#005aa7, #ebe9be);
+}
+
+.svg-container { 
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%; 
+	vertical-align: middle; 
+	overflow: hidden; 
+}
+
+.svg-content { 
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar
+{
+    display: none;
 }
 
 input::-webkit-outer-spin-button,
@@ -22,26 +57,75 @@ input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
 
-.Navbar {
-    top: 0;
-    position: fixed;
-    width: 100vw;
-    height: 8vh;
-    z-index: 2;
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.Content {
-    margin: 20vh 0 0 0;
+h1, h2, h3, h4, h5, p, div {
+    margin: 0;
+    font-family: 'Rubik';
+}
+
+.Title {
+    margin: 0 10vw 0 10vw;
+    color: white;
+
+    h2 {
+        font-size: 50px;
+        font-family: 'Kollektif';
+        text-align: center;
+    }
+}
+
+.BookingAndLanding {
+    width: 100vw;
+    margin: 30vh 0 0 0;
     display: flex;
     align-items: center;
     flex-direction: column;
 }
 
-.Title {
-    color: white;
+.scrollDown.MuiSvgIcon-root {
+    position: absolute;
+    bottom: 2vh;
+    font-size: 3rem;
+    animation: bounce 2s infinite;
+    transition: 0.5s;
+    filter: invert(1);
+    cursor: pointer;
 
-    h1 {
-        font-size: 50px;
-        font-family: 'Kollektif';
+    @keyframes bounce {
+        50% {
+          transform: translateY(-40%);
+        }
+        100% {
+          transform: translateY(0);
+        }
     }
+}
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #cc0000 !important;
+}
+
+.hidden {
+    opacity: 0;
+    transition: 1s;
+}
+
+.shown {
+    z-index: 15;
+    opacity: 1 !important;
+    transition: 1s;
+}
+
+.shownno-z {
+    opacity: 1;
+    transition: 1s;
+}
+
+.nodisplay {
+    display: none;
 }
