@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import Person from './Person';
-import Select from '../Select';
-import DatePick from '../DatePick';
+import FuzzySearch from 'fuzzy-search';
+import axios from 'axios';
+
 import { TextField, Fab, Button, Paper, Fade } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import '../../css/components/BookAndLanding/FlightSearch.scss';
-import OutsideAlerter from './OutsideAlerter';
-import axios from 'axios';
-import FuzzySearch from 'fuzzy-search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+
+import '../../css/components/BookAndLanding/FlightSearch.scss';
+import Person from './Person';
+import Select from '../Select';
+import DatePick from '../DatePick';
+import OutsideAlerter from './OutsideAlerter';
 
 class FlightSearch extends Component {
     constructor(props) {

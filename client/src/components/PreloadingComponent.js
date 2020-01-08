@@ -3,7 +3,7 @@ import '../css/preloadanim.css';
 
 function PreloadingComponent(props) {
   return (
-    <svg style={{opacity: props.opacity ? 1 : 0, zIndex: props.zIndex ? 0 : !props.opacity ? -1: 10000}}className="container" id="logo" width="567" height="125" xmlns="http://www.w3.org/2000/svg" xmlnssvg="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+    <svg style={{zIndex: props.zIndex ? 0 : 10000}}className="container" id="logo" width="567" height="125" xmlns="http://www.w3.org/2000/svg" xmlnssvg="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
         <defs>
          <symbol width="371.38876mm" height="75.847298mm" viewBox="0 0 371.38877 75.847298" id="svg_37" xmlnsXlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlnssvg="http://www.w3.org/2000/svg">
        

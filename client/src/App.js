@@ -1,11 +1,13 @@
-import React, {Suspense, Component} from 'react';
-import './css/App.scss';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import AirportFooter from './components/AirportFooter';
-import BookAndLanding from './components/BookAndLanding/BookAndLanding';
+import React, { Suspense, Component } from 'react';
 import { Preloader, Placeholder } from 'react-preloading-screen';
-import PreloadingComponent from './components/PreloadingComponent';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import axios from 'axios';
+
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+import './css/App.scss';
+import BookAndLanding from './components/BookAndLanding/BookAndLanding';
+import PreloadingComponent from './components/PreloadingComponent';
 
 const Navbar = React.lazy(() => import('./components/Navbar'));
 const LogIn = React.lazy(() => import('./components/LogIn/LogIn'));
@@ -38,13 +40,6 @@ class App extends Component {
     super(props)
 
     this.state = {
-      LogIn: false,
-      BookAndLanding: true,
-      CheckIn: false,
-      FlightStatus: false,
-      Schedules: false,
-      Careers: false,
-      ContactUs: false,
       transitionScreen: false,
       loggedIn: false
     }
@@ -53,28 +48,12 @@ class App extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
   }
   
-  showOption(option) {
-    if (!this.state[option]) {
-      this.setState({
-        transitionScreen: true,
-      }, () => {
-        setTimeout(() => {
-          this.setState({
-            LogIn: false,
-            BookAndLanding: false,
-            CheckIn: false,
-            FlightStatus: false,
-            FlightSchedules: false,
-            Careers: false,
-            ContactUs: false,
-            [option]: true
-          })
-        }, 900);
-        setTimeout(() => {
-          this.setState({transitionScreen: false})
-      }, 1500)   
-      })
-    }
+  showOption() {
+    this.setState({transitionScreen: true}, () => {
+      setTimeout(() => {
+        this.setState({transitionScreen: false})
+      }, 1000)
+    })
   }
 
   componentDidMount() {
@@ -92,30 +71,29 @@ class App extends Component {
 
   render() {
     return (
-      <Preloader fadeDuration={2500} style={{backgroundColor: '#005aa7', transition: '1s', transitionDelay: '1.5s'}}>
+      <Suspense fallback={<div></div>}>
+      <Preloader fadeDuration={2800} style={{backgroundColor: '#005aa7', transition: '1s', transitionDelay: '1.8s'}}>
         <Placeholder>
+          <PreloadingComponent opacity={true} zIndex={this.state.transitionScreen}/>
         </Placeholder>
-        <ThemeProvider theme={theme}>
-          <div className="App">
-            <Suspense fallback={<div></div>}>
-              <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
-            </Suspense>
-            <Suspense fallback={<div></div>}>
-              {this.state.LogIn ? !this.state.loggedIn ? <LogIn /> : <Dashboard /> : null}
-              {this.state.CheckIn ? <CheckIn /> : null}
-              {this.state.FlightStatus ? <FlightStatus /> : null}
-              {this.state.Schedules ? <Schedules /> : null}
-              {this.state.Careers ? <Careers /> : null}
-              {this.state.ContactUs ? <ContactUs /> : null}
-            </Suspense>
-            <PreloadingComponent opacity={this.state.BookAndLanding} zIndex={this.state.transitionScreen}/>
-            {this.state.BookAndLanding ? <BookAndLanding /> : null}
-          </div>
-          <AirportFooter />
-        </ThemeProvider> 
       </Preloader>
+      <ThemeProvider theme={theme}>
+      <div className="App">
+        <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
+            <Switch>
+              <Route exact path='/' component={BookAndLanding} />
+              {!this.state.loggedIn ? <Route path='/login' component={LogIn} /> : <Route path='/dashboard' component={Dashboard} />}
+              <Route path='/checkin' component={CheckIn} />
+              <Route path='/flightstatus' component={FlightStatus} />
+              <Route path='/flightschedules' component={Schedules} />
+              <Route path='/careers' component={Careers} />
+              <Route path='/contact' component={ContactUs} />
+            </Switch>
+        </div>
+      </ThemeProvider> 
+      </Suspense>
     );
   };
 }
 
-export default App;
+export default withRouter(App);

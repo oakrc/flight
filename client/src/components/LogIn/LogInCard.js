@@ -12,6 +12,7 @@ export class LogInCard extends Component {
 
             emailValid: true,
             passwordValid: true,
+            logInSuccess: false,
 
             display: false
         }
@@ -57,12 +58,10 @@ export class LogInCard extends Component {
               }, {withCredentials: true})
               .then((response) => {
                 if (response.status === 200) {
-                  alert('Logged In!')
-                  this.setState({email: '', password: ''})
+                  this.setState({email: '', password: '', logInSuccess: true})
                 }
               })
               .catch((error) => {
-                  console.log(error);
                   this.setState({password: ''});
               });
         }
@@ -74,7 +73,7 @@ export class LogInCard extends Component {
 
     render() {
         return (
-            <div className={`loginchild ${this.state.display ? 'shownno-z' : 'hidden'}`}>
+            <div className={`loginchild ${this.state.display ? 'shownnozfast' : 'hiddenfast'}`}>
                 <Paper elevation={5}>
                     <h1>Log In</h1>
                     <TextField id="outlined-basic" type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>

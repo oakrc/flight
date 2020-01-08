@@ -13,7 +13,7 @@ export class Dashboard extends Component {
     }
     
     logout() {
-        axios.delete('http://192.168.1.25:3000/user')
+        axios.delete('http://oak.hopto.org:3000/user')
         .then((response) => {
             console.log(response);
             console.log('logged out');

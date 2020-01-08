@@ -170,7 +170,7 @@ export class SignUpCard extends Component {
 
     render() {
         return (
-            <div className={`loginchild ${this.state.display ? 'shownno-z' : 'hidden'}`}>
+            <div className={`loginchild ${this.state.display ? 'shownnozfast' : 'hiddenfast'}`}>
                 <Paper elevation={5}>
                     <h1>Sign Up</h1>
                     <div className="half-field">

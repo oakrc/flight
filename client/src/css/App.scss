@@ -89,7 +89,7 @@ h1, h2, h3, h4, h5, p, div {
 
 .scrollDown.MuiSvgIcon-root {
     position: absolute;
-    bottom: 2vh;
+    bottom: 3.5vw;
     font-size: 3rem;
     animation: bounce 2s infinite;
     transition: 0.5s;
@@ -106,6 +106,14 @@ h1, h2, h3, h4, h5, p, div {
     }
 }
 
+.backToTop.MuiSvgIcon-root {
+    position: fixed;
+    bottom: 3vw;
+    right: 3.5vw;
+    transform: rotate(180deg);
+    animation: none;
+}
+
 .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
     border-color: #cc0000 !important;
 }
@@ -113,6 +121,11 @@ h1, h2, h3, h4, h5, p, div {
 .hidden {
     opacity: 0;
     transition: 1s;
+}
+
+.hiddenfast {
+    opacity: 0;
+    transition: 0.5s;
 }
 
 .shown {
@@ -124,6 +137,11 @@ h1, h2, h3, h4, h5, p, div {
 .shownno-z {
     opacity: 1;
     transition: 1s;
+}
+
+.shownnozfast {
+    opacity: 1;
+    transition: 0.5s;
 }
 
 .nodisplay {
