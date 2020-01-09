@@ -8,7 +8,7 @@ export class LogIn extends Component {
     super(props)
   
     this.state = {
-      signUp: false
+      signingUp: false
     }
 
     this.signUp = this.signUp.bind(this);
@@ -16,20 +16,20 @@ export class LogIn extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({signUp: false})
+    this.setState({signingUp: false})
   }
 
   signUp() {
-    setTimeout(() => this.setState({signUp: true}), 1000);
+    setTimeout(() => this.setState({signingUp: true}), 1000);
   }
 
   logIn() {
-    setTimeout(() => this.setState({signUp: false}), 1000);
+    setTimeout(() => this.setState({signingUp: false}), 1000);
   }
 
   render() {
     return (
-      <div className="LogIn">{!this.state.signUp ? <LogInCard signUp={this.signUp} /> : <SignUpCard logIn={this.logIn}/>} </div>
+      <div className="LogIn">{!this.state.signUp ? <LogInCard signUp={this.signUp} logIn={this.props.logIn}/> : <SignUpCard logIn={this.logIn}/>} </div>
     )
   }
 }

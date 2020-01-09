@@ -1,6 +1,7 @@
 import React, { Suspense, Component } from 'react';
 import { Preloader, Placeholder } from 'react-preloading-screen';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -46,13 +47,42 @@ class App extends Component {
 
     this.showOption = this.showOption.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
   
+  static propTypes = {
+    match: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  };
+
   showOption() {
     this.setState({transitionScreen: true}, () => {
       setTimeout(() => {
         this.setState({transitionScreen: false})
       }, 1000)
+    })
+  }
+
+  logIn() {
+    this.showOption();
+    setTimeout(() => {
+      this.props.history.push('/dashboard');
+      this.setState({loggedIn: true});
+    }, 500);
+  }
+
+  logOut() {
+    axios.delete('http://oak.hopto.org:3000/user', {withCredentials: true})
+    .then((response) => {
+        this.showOption();
+        setTimeout(() => {
+          this.props.history.push('/login');
+          this.setState({loggedIn: false});
+        }, 500);
+    }).catch((error) => {
+        console.log(error);
     })
   }
 
@@ -65,7 +95,6 @@ class App extends Component {
       try {
         error.response.status === 401 && this.setState({loggedIn: false})
       } catch {}
-      
     });
   }
 
@@ -82,7 +111,7 @@ class App extends Component {
         <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
             <Switch>
               <Route exact path='/' component={BookAndLanding} />
-              {!this.state.loggedIn ? <Route path='/login' component={LogIn} /> : <Route path='/dashboard' component={Dashboard} />}
+              {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} />} />}
               <Route path='/checkin' component={CheckIn} />
               <Route path='/flightstatus' component={FlightStatus} />
               <Route path='/flightschedules' component={Schedules} />

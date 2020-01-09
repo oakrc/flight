@@ -42,6 +42,12 @@ export class LogInCard extends Component {
         }
     }
 
+    enterKeyPress(e) {
+        if (e.key === "Enter") {
+            this.logIn()
+        }
+    }
+
     logIn() {
         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.email) || this.state.email.length === 0) {
             this.setState({emailValid: false})
@@ -59,6 +65,7 @@ export class LogInCard extends Component {
               .then((response) => {
                 if (response.status === 200) {
                   this.setState({email: '', password: '', logInSuccess: true})
+                  this.props.logIn();
                 }
               })
               .catch((error) => {
@@ -77,7 +84,7 @@ export class LogInCard extends Component {
                 <Paper elevation={5}>
                     <h1>Log In</h1>
                     <TextField id="outlined-basic" type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
-                    <TextField id="outlined-password-input" label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid}/>
+                    <TextField id="outlined-password-input" label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid} onKeyPress={(e) => this.enterKeyPress(e)}/>
                     <Button variant="contained" color="primary" onClick={this.logIn}>
                     Log In
                     </Button>
