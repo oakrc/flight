@@ -173,7 +173,11 @@ class FlightSearch extends Component {
         if (value === null) {
             this.setState({departDate: '', departDateValid: false})
         } else {
-            this.setState({departDate: value, departDateValid: true})
+            if (new Date(value) instanceof Date && new Date(value) > new Date().setDate(new Date().getDate() - 1) && new Date(value).getFullYear() < 2022) {
+                this.setState({departDate: value, departDateValid: true})
+            } else {
+                this.setState({departDate: value, departDateValid: false})
+            }
         }
     }
 
@@ -181,7 +185,11 @@ class FlightSearch extends Component {
         if (value === null) {
             this.setState({arriveDate: '', arriveDateValid: false})
         } else {
-            this.setState({arriveDate: value, arriveDateValid: true})
+            if (new Date(value) instanceof Date && new Date(value) > new Date().setDate(new Date().getDate() - 1) && new Date(value).getFullYear() < 2022 && new Date(value) >= new Date(this.state.departDate)) {
+                this.setState({arriveDate: value, arriveDateValid: true})
+            } else {
+                this.setState({arriveDate: value, arriveDateValid: false})
+            }
         }
     }
 
@@ -200,7 +208,11 @@ class FlightSearch extends Component {
             })
         }
 
-        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (this.state.departDate instanceof Date && !isNaN(this.state.departDate) && this.state.departDateValid) && (this.state.arriveDate instanceof Date && !isNaN(this.state.arriveDate) && this.state.arriveDateValid)) {
+        if (new Date(this.state.arriveDate) < new Date(this.state.departDate)) {
+            this.setState({ arriveDateValid: false })
+        }
+
+        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate)) {
             axios({
                 method: 'get',
                 url: 'http://oak.hopto.org:3000/flight',
@@ -208,7 +220,7 @@ class FlightSearch extends Component {
                     passengers: Number(this.state.Adults) + Number(this.state.Children) + Number(this.state.Infants),
                     depart: this.state.departLocation.slice(-4, -1),
                     arrive: this.state.arriveLocation.slice(-4, -1),
-                    date: this.state.departDate,
+                    date: this.state.departDate.toISOString(),
                     cabin: this.state.class.charAt(0)
                 }
             })
@@ -249,10 +261,10 @@ class FlightSearch extends Component {
                             </OutsideAlerter>
                         </div>
                         <div className="Middle">
-                            <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.departLocation} onChange={(e, value) => {this.departUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('departValid')} error={!this.state.departValid} className="Depart" type="text" label="Depart" variant="outlined"/>)}></Autocomplete>
-                            <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.arriveLocation} onChange={(e, value) => {this.arriveUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('arriveValid')} error={!this.state.arriveValid} className="Arrive" type="text" label="Arrive" variant="outlined"/>)}></Autocomplete>
-                            <DatePick disablePast label="Depart date    " value={this.state.departDate} updater={(e, date) => this.dDateUpdate(e, date)} error={!this.state.departDateValid}/>
-                            <DatePick disablePast label="Return date  " value={this.state.arriveDate} updater={(e, date) => {this.aDateUpdate(e, date)}} error={!this.state.arriveDateValid}/>
+                            <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.departLocation} onChange={(e, value) => {this.departUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('departValid')} error={!this.state.departValid} className="Depart" type="text" label="Depart&nbsp;" variant="outlined"/>)}></Autocomplete>
+                            <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.arriveLocation} onChange={(e, value) => {this.arriveUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('arriveValid')} error={!this.state.arriveValid} className="Arrive" type="text" label="Arrive&nbsp;" variant="outlined"/>)}></Autocomplete>
+                            <DatePick disablePast label="Depart date&nbsp;&nbsp;" value={this.state.departDate} updater={(e, date) => this.dDateUpdate(e, date)} error={!this.state.departDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
+                            <DatePick disablePast label="Return date&nbsp;&nbsp;" value={this.state.arriveDate} updater={(e, date) => this.aDateUpdate(e, date)} error={!this.state.arriveDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
                         </div>
                 </div>
                 <div className="Bottom">

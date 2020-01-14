@@ -1,6 +1,7 @@
 import React, {Suspense, Component} from 'react';
 import FlightSearch from './FlightSearch';
 import KeyboardArrowDownRoundedIcon from '@material-ui/icons/KeyboardArrowDownRounded';
+import KeyboardArrowUpRoundedIcon from '@material-ui/icons/KeyboardArrowUpRounded';
 import PreloadingComponent from '../PreloadingComponent';
 
 const CloudandCard = React.lazy(() => import('./CloudandCard'));
@@ -12,22 +13,26 @@ export class BookAndLanding extends Component {
     
         this.state = {
            hidden: false,
-           unmounting: false
+           unmounting: false,
+           goBack: false
         }
     
         this.hide = this.hide.bind(this)
+        this.backToTop = this.backToTop.bind(this)
         this.componentDidMount = this.componentDidMount.bind(this)
     }
 
     componentDidMount() {
+        setTimeout(() => window.scrollTo(0, 0), 500);
         this.setState({unmounting: false});
-        if (!this.state.hidden) {
-          window.onscroll = function() {
+        window.onscroll = () => {
             if (window.pageYOffset >= window.innerHeight / 10) {
-              this.setState({hidden: true});
-              window.onscroll = null;
+                if (window.pageYOffset >= window.innerHeight / 2) {
+                    this.setState({hidden: true, goBack: true});
+                } else {
+                    this.setState({hidden: true, goBack: false});
+                }
             }
-          }.bind(this)
         }
     }
     
@@ -37,8 +42,11 @@ export class BookAndLanding extends Component {
     }
     
     hide() {
-        document.getElementsByClassName("firstCard")[0].scrollIntoView(false);
-        this.setState({hidden: true});
+        this.setState({hidden: true}, () => window.scrollTo(0, window.innerHeight * 1.2));
+    }
+
+    backToTop() {
+        this.setState({goBack: false}, () => window.scrollTo(0,0))
     }
 
     render() {
@@ -49,14 +57,15 @@ export class BookAndLanding extends Component {
                 </div>
                 <PreloadingComponent zIndex={!this.state.unmounting}/>
                 <FlightSearch />
-                <KeyboardArrowDownRoundedIcon onClick={this.hide} className={`scrollDown ${this.state.hidden && 'backToTop'}`}/>
+                <KeyboardArrowDownRoundedIcon onClick={this.hide} className={`scrollDown ${this.state.hidden && 'hidden'}`}/>
+                <KeyboardArrowUpRoundedIcon onClick={this.backToTop} className={`backToTop ${!this.state.goBack && 'hidden'}`}/>
                 <Suspense className="cards" fallback={<div></div>}>
                     <CloudandCard src={1}/>
-                    <CloudandCard src={2}/>
-                    <CloudandCard src={3}/>
-                    <CloudandCard src={4}/>
-                    <CloudandCard src={5}/>
-                    <CloudandCard src={6}/>
+                    <CloudandCard left={0.5 - 0.402 * 12} src={2}/>
+                    <CloudandCard left={0.5 - 0.153 * 12} src={3}/>
+                    <CloudandCard left={0.5 - 0.630 * 12} src={4}/>
+                    <CloudandCard left={0.5 - 0.372 * 12} src={5}/>
+                    <CloudandCard left={0.5 - 0.592 * 12} src={6}/>
                     <AirportFooter />
                 </Suspense>
             </div>

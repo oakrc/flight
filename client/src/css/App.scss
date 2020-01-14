@@ -14,10 +14,6 @@ body {
     width: 100vw;
     min-height: 100vh;
     overflow-x: hidden;
-    //background-image: url('./images/bg.jpg');
-    //background-repeat: no-repeat;
-    //background-size: cover;
-    //background-position: left center;
     background: -webkit-linear-gradient(#005aa7, #ebe9be);
     background: linear-gradient(#005aa7, #ebe9be);
 }
@@ -81,7 +77,8 @@ h1, h2, h3, h4, h5, p, div {
 
 .BookingAndLanding {
     width: 100vw;
-    margin: 30vh 0 0 0;
+    margin: 0;
+    padding: 30vh 0 0 0;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -92,9 +89,9 @@ h1, h2, h3, h4, h5, p, div {
     bottom: 3.5vw;
     font-size: 3rem;
     animation: bounce 2s infinite;
-    transition: 0.5s;
     filter: invert(1);
     cursor: pointer;
+    transition: 0.5s;
 
     @keyframes bounce {
         50% {
@@ -110,8 +107,12 @@ h1, h2, h3, h4, h5, p, div {
     position: fixed;
     bottom: 3vw;
     right: 3.5vw;
-    transform: rotate(180deg);
+    filter: invert(1);
     animation: none;
+    cursor: pointer;
+    font-size: 3rem;
+    transition: 0.5s;;
+    z-index: 2;
 }
 
 .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {

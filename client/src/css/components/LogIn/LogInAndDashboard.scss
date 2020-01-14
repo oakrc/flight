@@ -5,6 +5,8 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
+    background: -webkit-linear-gradient(#005aa7, #528caf);
+    background: linear-gradient(#005aa7, #528caf);
 
     h1 {
         color: #0571af;
@@ -17,7 +19,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 5vh 0 0 0;
+        margin: 5vh 0 5vh 0;
         min-width: 20vw;
         padding: 2.5vh 2vw 5vh 2vw;
         border-radius: 10px;
@@ -43,6 +45,14 @@
                     border-color: #0277bd;
                 }
             }
+        }
+
+        .MuiAlert-root {
+            display: inline-flex;
+            flex-direction: row;
+            margin: 2vh 0 0 0;
+            padding: 5px;
+            border-radius: 5px;
         }
 
         .half-field {
@@ -72,4 +82,6 @@
     justify-content: center;
     width: 100vw;
     height: 100vh;
+    background: -webkit-linear-gradient(#005aa7, #528caf);
+    background: linear-gradient(#005aa7, #528caf);
 }

@@ -1,0 +1,1 @@
+{"version":3,"sources":["AirportFooter.scss"],"names":[],"mappings":"AAAA,eACI,eAAgB,CAChB,WAAY,CACZ,WAAY","file":"5.c209ee2b.chunk.css","sourcesContent":[".AirportFooter {\r\n    margin-top: 40vh;\r\n    width: 100vw;\r\n    height: 40vh;\r\n}"]}

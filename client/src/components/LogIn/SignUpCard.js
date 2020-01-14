@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Paper, TextField, Button, } from "@material-ui/core";
+import { Alert } from '@material-ui/lab';
+import axios from 'axios';
+
 import Select from '../Select';
 import DatePick from '../DatePick';
-import axios from 'axios';
 
 export class SignUpCard extends Component {
     constructor(props) {
         super(props);
-        let birthdate = new Date();
-        birthdate.setDate(birthdate.getDate() - (365 * 25) - 6);
 
         this.pwdValidate = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
     
@@ -18,18 +18,20 @@ export class SignUpCard extends Component {
             confirmpwd: '',
             firstName: '',
             lastName: '',
-            birthday: birthdate,
+            birthday: null,
             gender: '',
             phoneNumber: '',
 
             firstNameValid: true,
             lastNameValid: true,
+            birthdayValid: true,
             genderEntered: true,
             emailValid: true,
             passwordValid: true,
             confirmpwdValid: true,
             phoneNumberValid: true,
 
+            signUpSuccess: null,
             display: false,
         }
 
@@ -57,12 +59,15 @@ export class SignUpCard extends Component {
     }
 
     updateBirthday(e, value) {
-        if (value === null) {
-            this.setState({birthday: ''})
+        if (value === '') {
+            this.setState({birthday: null})
         } else {
-            this.setState({birthday: value})
+            if (value instanceof Date && !isNaN(value) && value.getFullYear() > 1909 && value.getFullYear() < 2005) {
+                this.setState({birthday: value, birthdayValid: true})
+            } else {
+                this.setState({birthday: value, birthdayValid: false})
+            }
         }
-        
     }
 
     updateGender(e, value) {
@@ -109,6 +114,7 @@ export class SignUpCard extends Component {
     signUp() {
         let firstNameValid = true;
         let lastNameValid = true;
+        let birthdayValid = true;
         let genderEntered = true;
         let emailValid = true;
         let passwordValid = true;
@@ -121,6 +127,10 @@ export class SignUpCard extends Component {
 
         if (this.state.lastName === '') {
             lastNameValid = false;
+        }
+
+        if (this.state.birthday === null || !this.state.birthday instanceof Date) {
+            birthdayValid = false;
         }
 
         if (this.state.gender.length === 0) {
@@ -143,7 +153,7 @@ export class SignUpCard extends Component {
             phoneNumberValid = false;
         }
 
-        if (firstNameValid && lastNameValid && genderEntered && emailValid && passwordValid && confirmpwdValid && phoneNumberValid) {
+        if (firstNameValid && lastNameValid && birthdayValid && genderEntered && emailValid && passwordValid && confirmpwdValid && phoneNumberValid) {
             axios.put('http://oak.hopto.org:3000/user', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
@@ -154,14 +164,36 @@ export class SignUpCard extends Component {
                 password: btoa(this.state.password)
             }, {withCredentials: true})
             .then(response => {
-                console.log(response);
+                if (response.status === 200) {
+                    this.setState({
+                        email: '',
+                        password: '',
+                        confirmpwd: '',
+                        firstName: '',
+                        lastName: '',
+                        birthday: null,
+                        gender: '',
+                        phoneNumber: '',
+                        firstNameValid: true,
+                        lastNameValid: true,
+                        birthdayValid: true,
+                        genderEntered: true,
+                        emailValid: true,
+                        passwordValid: true,
+                        confirmpwdValid: true,
+                        phoneNumberValid: true,
+                    })
+                    this.setState({signUpSuccess: true});
+                    this.props.logIn();
+                  }
             }).catch(error => {
-                console.log(error);
+                try {
+                    console.log(error);
+                  } catch {}
             })
         }
 
-        this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, genderEntered: genderEntered, emailValid: emailValid, passwordValid: passwordValid, confirmpwdValid: confirmpwdValid, phoneNumberValid: phoneNumberValid});
-
+        this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, birthdayValid: birthdayValid, genderEntered: genderEntered, emailValid: emailValid, passwordValid: passwordValid, confirmpwdValid: confirmpwdValid, phoneNumberValid: phoneNumberValid});
     }
 
     close() {
@@ -178,13 +210,14 @@ export class SignUpCard extends Component {
                         <TextField error={!this.state.lastNameValid} label="Last name" variant="outlined" value={this.state.lastName} onChange={(e) => this.updateLName(e.target.value)}/>
                     </div>
                     <div className="half-field">
-                        <DatePick disableFuture label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}}/>
+                        <DatePick disableFuture label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}} error={!this.state.birthdayValid} minDate={new Date('1910-12-31')} maxDate={new Date('2004-01-01')}/>
                         <Select error={!this.state.genderEntered} label="Gender" variant="outlined" curr={this.state.gender} options={["Male", "Female", "Other", "Prefer not to say"]} updater={(e, option) => this.updateGender(e, option)}/>
                     </div>
                     <TextField type="tel" label="Phone Number" variant="outlined" value={this.state.phoneNumber} onChange={(e) => this.updatePhoneNumber(e.target.value)} error={!this.state.phoneNumberValid}/>
                     <TextField type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <TextField label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid}/>
                     <TextField label="Confirm Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.confirmpwd} onChange={(e) => this.updateConfirmPwd(e.target.value)} error={!this.state.confirmpwdValid}/>
+                    {this.state.signUpSuccess !== null && (this.state.signUpSuccess ? <Alert severity="success">Signed Up!</Alert> : <Alert severity="error">Error!</Alert>)}
                     <Button variant="contained" color="primary" onClick={this.signUp}>
                     Sign Up
                     </Button>

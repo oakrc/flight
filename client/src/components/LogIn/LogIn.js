@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../css/components/LogIn/LogIn.scss';
+import '../../css/components/LogIn/LogInAndDashboard.scss';
 import LogInCard from './LogInCard';
 import SignUpCard from './SignUpCard';
 
@@ -29,7 +29,7 @@ export class LogIn extends Component {
 
   render() {
     return (
-      <div className="LogIn">{!this.state.signUp ? <LogInCard signUp={this.signUp} logIn={this.props.logIn}/> : <SignUpCard logIn={this.logIn}/>} </div>
+      <div className="LogIn">{!this.state.signingUp ? <LogInCard signUp={this.signUp} logIn={this.props.logIn}/> : <SignUpCard logIn={this.logIn}/>} </div>
     )
   }
 }

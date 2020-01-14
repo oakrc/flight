@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Button } from "@material-ui/core";
-import '../../css/components/LogIn/LogIn.scss';
+import '../../css/components/LogIn/LogInAndDashboard.scss';
 
 
 export class Dashboard extends Component {

@@ -7,12 +7,13 @@ import axios from 'axios';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import './css/App.scss';
-import BookAndLanding from './components/BookAndLanding/BookAndLanding';
 import PreloadingComponent from './components/PreloadingComponent';
 
+const BookAndLanding = React.lazy(() => import('./components/BookAndLanding/BookAndLanding'))
 const Navbar = React.lazy(() => import('./components/Navbar'));
 const LogIn = React.lazy(() => import('./components/LogIn/LogIn'));
 const Dashboard = React.lazy(() => import('./components/LogIn/Dashboard'));
+const WestMiles = React.lazy(() => import('./components/WestMiles/WestMiles'));
 const Careers = React.lazy(() => import('./components/Careers/Careers'));
 const CheckIn = React.lazy(() => import('./components/CheckIn/CheckIn'));
 const ContactUs = React.lazy(() => import('./components/ContactUs/ContactUs'));
@@ -61,7 +62,7 @@ class App extends Component {
     this.setState({transitionScreen: true}, () => {
       setTimeout(() => {
         this.setState({transitionScreen: false})
-      }, 1000)
+      }, 1500)
     })
   }
 
@@ -112,6 +113,7 @@ class App extends Component {
             <Switch>
               <Route exact path='/' component={BookAndLanding} />
               {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} />} />}
+              <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
               <Route path='/flightstatus' component={FlightStatus} />
               <Route path='/flightschedules' component={Schedules} />

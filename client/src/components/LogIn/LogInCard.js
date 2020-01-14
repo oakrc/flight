@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Paper, TextField, Button } from "@material-ui/core";
+import { Alert } from '@material-ui/lab';
 import axios from 'axios';
 
 export class LogInCard extends Component {
@@ -12,7 +13,7 @@ export class LogInCard extends Component {
 
             emailValid: true,
             passwordValid: true,
-            logInSuccess: false,
+            logInSuccess: null,
 
             display: false
         }
@@ -69,7 +70,9 @@ export class LogInCard extends Component {
                 }
               })
               .catch((error) => {
-                  this.setState({password: ''});
+                try {
+                    (error.response.status === 401 || error.response.status === 400) && this.setState({password: '', logInSuccess: false});
+                  } catch {}
               });
         }
     }
@@ -85,6 +88,7 @@ export class LogInCard extends Component {
                     <h1>Log In</h1>
                     <TextField id="outlined-basic" type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <TextField id="outlined-password-input" label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid} onKeyPress={(e) => this.enterKeyPress(e)}/>
+                    {this.state.logInSuccess !== null && (this.state.logInSuccess ? <Alert severity="success">Logged In!</Alert> : <Alert severity="error">Wrong email & password combination.</Alert>)}
                     <Button variant="contained" color="primary" onClick={this.logIn}>
                     Log In
                     </Button>
