@@ -4,6 +4,7 @@
   "description": "FBLA Web Design: WestFlight Airlines",
   "main": "app.js",
   "scripts": {
+    "start": "env MYSQL_HOST=localhost MYSQL_USER=root MYSQL_PORT=3306 MYSQL_PASS=MySql@1040secure MYSQL_DB=westflight nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Zhenkai Weng",
@@ -17,10 +18,11 @@
     "express-session": "^1.17.0",
     "morgan": "^1.9.1",
     "mysql": "^2.17.1",
-    "passport-auth0": "^1.3.1",
     "redis": "^2.8.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/oakrc/flight.git"

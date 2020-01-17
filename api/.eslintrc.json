@@ -26,7 +26,6 @@
   },
 
   "rules": {
-    "prettier/prettier": "error",
     "accessor-pairs": "error",
     "array-bracket-spacing": ["error", "never"],
     "arrow-spacing": ["error", { "before": true, "after": true }],

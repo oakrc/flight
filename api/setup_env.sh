@@ -1,5 +1,5 @@
 #!/bin/bash
-echo 'Using sudo to move files...'
-sudo echo 'Thanks!'
-sudo apt install mysql-server
-sudo cp airports.csv /var/lib/mysql-files/
+apt install -y mysql-server npm >/dev/null 2>/dev/null
+cp airports.csv /var/lib/mysql-files/
+npm i -g nodemon >/dev/null 2>/dev/null
+npm i >/dev/null 2>/dev/null

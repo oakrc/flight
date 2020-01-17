@@ -72,6 +72,8 @@ x32/
 *.cbt
 *.sln
 *.pdb
+Session.vim
+.idea/
 
 # Debugging
 *-dbg
@@ -81,5 +83,3 @@ Result
 # Credentials
 *.password
 
-# Session
-Session.vim
