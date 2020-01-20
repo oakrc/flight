@@ -5,8 +5,8 @@ const valid   = require('../valid')
 var   router  = express.Router()
 
 // get ticket details
-router.get('/:query', (req, res) => {
-    var uid = valid.session_uid(req,res)
+router.get('/:query', valid.uid, (req, res) => {
+    var uid = req.session.uid
     if (uid === '') return
     req.app.locals.pool.query(req.params.query === 'upcoming'?
         query.tickets_upcoming:query.tickets_history,
@@ -21,10 +21,9 @@ router.get('/:query', (req, res) => {
 })
 
 // purchase ticket
-router.put('/',(req, res) => {
+router.put('/', valid.uid, (req, res) => {
     // is user logged in?
-    var uid = valid.session_uid(req,res)
-    if (uid === '') return
+    var uid = valid.session.uid
 
     // check all params
     var fl_id = req.body.fl_id,

@@ -8,36 +8,46 @@ const cors = require('cors')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
+const path = require('path')
 
 // setup app
-const app           = express()
+const app = express()
 app.disable('x-powered-by')
 app.use(logger('dev'))
-var client        = redis.createClient()
+
+// setup session store (redis + connect-redis)
+var client = redis.createClient({
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT),
+})
+client.auth(process.env.REDIS_PASS)
 app.use(session({
-    secret: process.env.SESS_SECRET || '4n07h3rSeCr37',
-    store: new RedisStore({host: 'localhost', port: 6379, client: client, ttl: 260}),
+    secret: process.env.SESS_SECRET,
+    store: new RedisStore({
+        client: client,
+        ttl: 60*60*24*15
+    }),
     saveUninitialized: false,
     resave: false,
     cookie: {
-        expires: new Date(Date.now() + 900000),
-        secure: false //FIXME: set secure to true once https
+      //expires: new Date(Date.now() + (30 * 86400 * 1000)),
+        secure: process.env.SSL === 'true'
     }
 }))
 
-// Configuring DBPool
+// setup mysql db pool
 var pool = mysql.createPool({
     host                : process.env.MYSQL_HOST,
     user                : process.env.MYSQL_USER,
     password            : process.env.MYSQL_PASS,
     database            : process.env.MYSQL_DB,
     connectionLimit     : 100,
-    debug               : false,
+    debug               : process.env.MYSQL_DBG === 'true',
     multipleStatements  : true
 })
 app.locals.pool = pool
 
-// Configuring Middlewares
+// configure middlewares for all
 // TODO: Configure allowedOrigins
 var allowed_origins = ['http://localhost:3000', 'http://oak.hopto.org', 'https://westflightairlines.com']
 app.use(cors({
@@ -52,11 +62,18 @@ app.use(bodyParser.json({ type: 'application/*+json' }))
 app.use(bodyParser.text({ type: 'text/html' }))
 
 // Define routes
-app.get('/', (req, res) => res.status(200).send({msg: 'WestFlight Airlines API',}))
-app.use('/user', require('./routes/user'))
-app.use('/flight', require('./routes/flight'))
-app.use('/ticket', require('./routes/ticket'))
-app.use('/application', require('./routes/application'))
+var router = express.Router()
+router.get('/', (req, res) => res.status(200).send({msg: 'WestFlight Airlines API',}))
+router.use('/user', require('./routes/user'))
+router.use('/flight', require('./routes/flight'))
+router.use('/ticket', require('./routes/ticket'))
+router.use('/app', require('./routes/application'))
+app.use('/api', router)
+
+// pass unrecognized files to React
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'))
+})
 
 // Listen
 const port = process.env.PORT || 3000

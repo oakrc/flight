@@ -1,13 +1,13 @@
 SELECT
-    BIN_TO_UUID(f_id) AS fl_id,
-    BIN_TO_UUID(r_id) AS rt_id,
+    b2u(f_id) AS fl_id,
+    b2u(r_id) AS rt_id,
     rt_code AS fl_num,
     dt_dep,
     dt_arr,
-    BIN_TO_UUID(a_id) AS ac_id,
+    b2u(a_id) AS ac_id,
     fares.cap AS cap,
     remain AS avail,
-    BIN_TO_UUID(bin_af_id) AS af_id,
+    b2u(bin_af_id) AS af_id,
     cabin,
     fare
 FROM (

@@ -83,3 +83,5 @@ Result
 # Credentials
 *.password
 
+# Heroku
+.env

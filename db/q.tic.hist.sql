@@ -1,5 +1,11 @@
-SELECT 
-    BIN_TO_UUID(t.id) as tk_id,
+SELECT
+    b2u(t.id) as tk_id,
+
+    t.first_name AS first_name,
+    t.last_name AS last_name,
+    t.gender AS gender,
+    t.birthday AS dob,
+
     t.flight_id AS fl_id,
     t.fare_id AS af_id,
     rt.code AS fl_num,
@@ -17,9 +23,7 @@ FROM
 INNER JOIN airfares AS af ON t.fare_id=af.id
 INNER JOIN flight_schedule AS fs ON t.flight_id=fs.id
 INNER JOIN routes AS rt ON fs.route_id=rt.id
-INNER JOIN passengers AS ps ON ps.user_id=UUID_TO_BIN(?) AND t.passenger_id=ps.id
 WHERE
-    t.user_id=UUID_TO_BIN(?)
-    AND fs.dtime_depart >= NOW()
-ORDER BY fs.dtime_depart ASC;
-
+    t.user_id=u2b(?)
+    AND fs.dtime_depart < NOW()
+ORDER BY fs.dtime_depart DESC;
