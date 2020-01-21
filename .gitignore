@@ -72,9 +72,16 @@ x32/
 *.cbt
 *.sln
 *.pdb
+Session.vim
+.idea/
 
 # Debugging
 *-dbg
 *-dbg/
 Result
 
+# Credentials
+*.password
+
+# Heroku
+.env*
