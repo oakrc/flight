@@ -1,5 +1,5 @@
-DROP PROCEDURE IF EXISTS add_dummy;
-CREATE PROCEDURE add_dummy ()
+DROP PROCEDURE IF EXISTS add_dummy_aircrafts;
+CREATE PROCEDURE add_dummy_aircrafts ()
 BEGIN
     SET @reps = 50;
     REPEAT

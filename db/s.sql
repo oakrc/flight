@@ -13,10 +13,9 @@ CREATE TABLE IF NOT EXISTS routes (
     id              BINARY(16) PRIMARY KEY,
     src             CHAR(3) NOT NULL,
     dest            CHAR(3) NOT NULL,
-    duration        DECIMAL(10,7),
-    dist            DECIMAL(14,7),
-    code            CHAR(7) NOT NULL UNIQUE
-);
+    dist            DECIMAL(14,7),          -- in miles
+    code            INT NOT NULL UNIQUE AUTO_INCREMENT
+) AUTO_INCREMENT=1000;
 DROP TABLE IF EXISTS flight_schedule;
 CREATE TABLE IF NOT EXISTS flight_schedule (
     id              BINARY(16) PRIMARY KEY,
@@ -92,7 +91,7 @@ CREATE TABLE IF NOT EXISTS airports (
     municipality    VARCHAR(64) NOT NULL,
     state           CHAR(2) NOT NULL
 );
-INSERT INTO airports(iata_code,name,latitude,longitude,municipality,state) VALUES
+INSERT INTO airports (iata_code,name,latitude,longitude,municipality,state) VALUES
  ('PHX','Phoenix Sky Harbor International Airport',33.434299,-112.012001,'Phoenix','AZ')
 ,('TUS','Tucson International Airport',32.116100,-110.941002,'Tucson','AZ')
 ,('LAX','Los Angeles International Airport',33.942501,-118.407997,'Los Angeles','CA')
@@ -137,6 +136,37 @@ DROP FUNCTION IF EXISTS u2b;
 CREATE FUNCTION u2b (uuid CHAR(36))
 RETURNS BINARY(16) DETERMINISTIC
 RETURN UNHEX(REPLACE(uuid COLLATE utf8_unicode_ci, "-" COLLATE utf8_unicode_ci, "" COLLATE utf8_unicode_ci));
+DROP PROCEDURE IF EXISTS register_user;
+CREATE PROCEDURE register_user(
+    IN first_name VARCHAR(255),
+    IN last_name VARCHAR(255),
+    IN birthday DATE,
+    IN gender CHAR(1),
+    IN phone_number VARCHAR(16),
+    IN email VARCHAR(50),
+    IN pw BINARY(60)
+)
+BEGIN
+    SET @uuid = gen_uuid();
+    INSERT INTO users VALUES (
+        @uuid,
+        first_name,
+        last_name,
+        birthday,
+        gender,
+        phone_number,
+        email,
+        pw,
+        'B',-- bronze
+        0,
+        0
+    );
+    INSERT INTO verification_tokens (user_id, token)
+    VALUES (
+        @uuid,
+        LEFT(TO_BASE64(RANDOM_BYTES(64)),64)
+    );
+END//
 DROP PROCEDURE IF EXISTS add_aircraft;
 CREATE PROCEDURE add_aircraft (IN model VARCHAR(16), IN cap INT)
 BEGIN
@@ -172,98 +202,6 @@ BEGIN
     INSERT INTO airfares VALUES (gen_uuid(), @item_id, 'F', ROUND((RAND()*(400))+800)),
     (gen_uuid(), @item_id, 'B', ROUND((RAND()*(200))+350)),
     (gen_uuid(), @item_id, 'E', ROUND((RAND()*(200))+50));
-END//
-DROP PROCEDURE IF EXISTS register_user;
-CREATE PROCEDURE register_user(
-    IN first_name VARCHAR(255),
-    IN last_name VARCHAR(255),
-    IN birthday DATE,
-    IN gender CHAR(1),
-    IN phone_number VARCHAR(16),
-    IN email VARCHAR(50),
-    IN pw BINARY(60)
-)
-BEGIN
-    SET @uuid = gen_uuid();
-    INSERT INTO users VALUES (
-        @uuid,
-        first_name,
-        last_name,
-        birthday,
-        gender,
-        phone_number,
-        email,
-        pw,
-        'B',-- bronze
-        0,
-        0
-    );
-    INSERT INTO verification_tokens (user_id, token)
-    VALUES (
-        @uuid,
-        LEFT(TO_BASE64(RANDOM_BYTES(64)),64)
-    );
-END//
-DROP PROCEDURE IF EXISTS add_dummy;
-CREATE PROCEDURE add_dummy ()
-BEGIN
-    SET @reps = 50;
-    REPEAT
-    CALL add_aircraft('Airbus A320-200',150);
-    CALL add_aircraft('Airbus A321-200',190);
-    CALL add_aircraft('Airbus A321-200',190);
-    CALL add_aircraft('Airbus A321-200',190);
-    CALL add_aircraft('Airbus A330-200',247);
-    CALL add_aircraft('Boeing 737-800',172);
-    CALL add_aircraft('Boeing 737-800',172);
-    CALL add_aircraft('Boeing 787-9',285);
-    SET @reps = @reps - 1;
-    UNTIL @reps = 0 END REPEAT;
-END//
-DROP PROCEDURE IF EXISTS add_dummy_flights;
-CREATE PROCEDURE add_dummy_flights (IN src CHAR(3), IN dest CHAR(3), IN dtime_depart DATETIME)
-BEGIN
-    DECLARE dist DECIMAL(14,7);
-    SET dist = (SELECT 69.0 * DEGREES(ACOS(lEAST(1.0, COS(RADIANS(a.latitude))
-                    * COS(RADIANS(b.latitude))
-                    * COS(RADIANS(a.longitude - b.longitude))
-                    + SIN(RADIANS(a.latitude))
-                    * SIN(RADIANS(b.latitude)))))
-        FROM airports AS a
-        JOIN airports AS b ON a.iata_code = src AND b.iata_code = dest);
-
-    SET @duration = dist / 555.0; -- plane: 555 mph
-    SET @reps = 15;
-    REPEAT
-        SET @rt_id = gen_uuid();
-
-        INSERT INTO routes VALUES (
-            @rt_id,
-            src,
-            dest,
-            @duration + RAND()*1.07 - 0.5,
-            dist,
-            CONCAT('WF', FLOOR(RAND()*(8999)+10000))
-        );
-        SET @item_id = gen_uuid();
-        SET @depart = dtime_depart;
-        SET @arrive = @depart + INTERVAL ROUND((RAND()*(65))) MINUTE + INTERVAL @duration HOUR;
-        SET @ac_id = (SELECT id FROM aircrafts ORDER BY RAND() LIMIT 1);
-        SET @max_allowed = (SELECT capacity FROM aircrafts WHERE id=@ac_id);
-        INSERT INTO flight_schedule VALUES (
-            @item_id,
-            @rt_id,
-            @depart,
-            @arrive,
-            @ac_id,
-            0,
-            @max_allowed
-        );
-        INSERT INTO airfares VALUES (gen_uuid(), @item_id, 'F', ROUND((RAND()*(400))+800)),
-                                    (gen_uuid(), @item_id, 'B', ROUND((RAND()*(200))+350)),
-                                    (gen_uuid(), @item_id, 'E', ROUND((RAND()*(100))+50));
-        SET @reps = @reps - 1;
-    UNTIL @reps = 0 END REPEAT;
 END//
 DROP PROCEDURE IF EXISTS buy_ticket;
 CREATE PROCEDURE buy_ticket (
@@ -328,9 +266,76 @@ this_proc:BEGIN
         SET miles = miles + @mi_factor * cost
         WHERE id = UUID_TO_BIN(user_uid); -- TODO: move up tier when jason finishes the document
 END//
+DROP PROCEDURE IF EXISTS add_dummy_aircrafts;
+CREATE PROCEDURE add_dummy_aircrafts ()
+BEGIN
+    SET @reps = 50;
+    REPEAT
+    CALL add_aircraft('Airbus A320-200',150);
+    CALL add_aircraft('Airbus A321-200',190);
+    CALL add_aircraft('Airbus A321-200',190);
+    CALL add_aircraft('Airbus A321-200',190);
+    CALL add_aircraft('Airbus A330-200',247);
+    CALL add_aircraft('Boeing 737-800',172);
+    CALL add_aircraft('Boeing 737-800',172);
+    CALL add_aircraft('Boeing 787-9',285);
+    SET @reps = @reps - 1;
+    UNTIL @reps = 0 END REPEAT;
+END//
+DROP PROCEDURE IF EXISTS add_dummy_flights;
+CREATE PROCEDURE add_dummy_flights (IN src CHAR(3), IN dest CHAR(3), IN dtime_depart DATETIME)
+BEGIN
+    DECLARE dist DECIMAL(14,7);
+    DECLARE rt_id BINARY(16);
+    SELECT routes.id, routes.dist
+        INTO rt_id, dist
+        FROM routes
+        WHERE routes.src=src AND routes.dest=dest;
+    SET @duration = dist / 555.0; -- plane: 555 mph
+    SET @reps = 15;
+    REPEAT
+        SET @fl_id = gen_uuid();
+        SET @depart = DATE_ADD(dtime_depart, INTERVAL ROUND(RAND()*35) MINUTE);
+        SET @arrive = DATE_ADD(@depart, INTERVAL ROUND(RAND()*0.06*@duration*60)+ROUND(@duration*60) MINUTE);
+        SET @ac_id = (SELECT id FROM aircrafts ORDER BY RAND() LIMIT 1);
+        SET @max_allowed = (SELECT capacity FROM aircrafts WHERE id=@ac_id);
+        INSERT INTO flight_schedule VALUES (
+            @fl_id,
+            rt_id,
+            @depart,
+            @arrive,
+            @ac_id,
+            0,
+            @max_allowed
+        );
+        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(400))+@duration*30+600)),
+                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(200))+@duration*25+300)),
+                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(100))+@duration*15+30));
+        SET @reps = @reps - 1;
+    UNTIL @reps = 0 END REPEAT;
+END//
+DROP PROCEDURE IF EXISTS add_routes;
+CREATE PROCEDURE add_routes ()
+BEGIN
+    INSERT INTO routes
+    SELECT
+        gen_uuid(),
+        src_ap.iata_code,
+        dest_ap.iata_code,
+        69.0 * DEGREES(ACOS(LEAST(1.0, COS(RADIANS(src_ap.latitude))
+                    * COS(RADIANS(dest_ap.latitude))
+                    * COS(RADIANS(src_ap.longitude - dest_ap.longitude))
+                    + SIN(RADIANS(src_ap.latitude))
+                    * SIN(RADIANS(dest_ap.latitude))))),
+        NULL
+    FROM airports AS src_ap
+    CROSS JOIN airports AS dest_ap
+    ON src_ap.iata_code != dest_ap.iata_code;
+END//
 DELIMITER ;
 SET FOREIGN_KEY_CHECKS=1;
 CALL add_dummy();
+CALL add_routes();
 CALL register_user('Example','User','2000-01-01','M','5550687272','a@gmail.com','$2y$12$8Zi9WTNlwm2dZ4NRueQCWOw5ouQzXjJiHXG4oHcOzyxj5juFpJAca');
 CALL add_dummy_flights('LAX','BOI','2023-04-20 08:00:00');
 COMMIT;
