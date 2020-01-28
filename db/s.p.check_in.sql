@@ -23,6 +23,5 @@ this_proc:BEGIN
                             END FROM users HAVING id=UUID_TO_BIN(user_uid));
     UPDATE users
         SET miles = miles + @mi_factor * cost
-        WHERE id = UUID_TO_BIN(user_uid);
-    -- TODO: move up tier when jason finishes the document
+        WHERE id = UUID_TO_BIN(user_uid); -- TODO: move up tier when jason finishes the document
 END//

@@ -64,12 +64,10 @@ DROP TABLE IF EXISTS tickets;
 CREATE TABLE IF NOT EXISTS tickets (
     id              BINARY(16) PRIMARY KEY,
     user_id         BINARY(16) NOT NULL,
- -- passenger_id    BINARY(16) NOT NULL,
     tic_status      TINYINT NOT NULL DEFAULT 1,
     dtime_booked    DATETIME NOT NULL DEFAULT NOW(),
     flight_id       BINARY(16) NOT NULL,
     fare_id         BINARY(16) NOT NULL,
-    -- passenger info
     first_name      VARCHAR(255) NOT NULL,
     last_name       VARCHAR(255) NOT NULL,
     gender          CHAR(1) NOT NULL,
@@ -81,7 +79,6 @@ CREATE TABLE IF NOT EXISTS tickets (
     state           CHAR(2) NOT NULL,
     postal          CHAR(5) NOT NULL,
     UNIQUE KEY (first_name, last_name, birthday, postal, flight_id),
- -- UNIQUE KEY(flight_id, passenger_id),
     FOREIGN KEY (flight_id) REFERENCES flight_schedule(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (fare_id) REFERENCES airfares(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -115,12 +112,6 @@ INSERT INTO airports(iata_code,name,latitude,longitude,municipality,state) VALUE
 ,('BFI','Boeing Field King County International Airport',47.529999,-122.302002,'Seattle','WA')
 ,('GEG','Spokane International Airport',47.619900,-117.533997,'Spokane','WA')
 ,('SEA','Seattle Tacoma International Airport',47.449001,-122.308998,'Seattle','WA');
-DROP EVENT IF EXISTS expire_token;
-CREATE EVENT expire_token
-ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
-DO
-    DELETE FROM verification_tokens WHERE
-    dt_created < DATE_SUB(NOW(), INTERVAL 2 DAY);
 DELIMITER //
 DROP FUNCTION IF EXISTS gen_uuid;
 CREATE FUNCTION gen_uuid ()
@@ -136,50 +127,9 @@ RETURN LOWER(CONCAT(
     SUBSTR(HEX(bin_uuid), 17, 4), '-',
     SUBSTR(HEX(bin_uuid), 21)
 ));
-DROP FUNCTION IF EXISTS u2b
-CREATE FUNCTION u2b (uuid CHAR(36))
-RETURNS BINARY(16) DETERMINISTIC
-RETURN UNHEX(REPLACE(uuid COLLATE utf8_unicode_ci, "-" COLLATE utf8_unicode_ci, "" COLLATE utf8_unicode_ci));
-DROP PROCEDURE IF EXISTS add_aircraft;
-CREATE PROCEDURE add_aircraft (IN model VARCHAR(16), IN cap INT)
-BEGIN
-    INSERT INTO aircrafts VALUES (
-        gen_uuid(),
-        LEFT(MD5(RANDOM_BYTES(16)), 8),
-        cap,
-        model,
-        FLOOR(RAND()*(2020-2017)*2017)
-    );
-END//
-DROP PROCEDURE IF EXISTS add_flight;
-CREATE PROCEDURE add_flight ()
-BEGIN
-    SET @item_id = gen_uuid();
-    SET @date_from = NOW();
-    SET @date_to = DATE_ADD(NOW(), INTERVAL 120 DAY);
-    SET @sec = TIMESTAMPDIFF(SECOND, @date_from, @date_to);
-    SET @random = ROUND(((@sec-1) * RAND()), 0);
-    SET @depart = DATE_ADD(@date_from, INTERVAL @random SECOND);
-    SET @arrive = DATE_ADD(@depart, INTERVAL ROUND((RAND()*(5))+1) HOUR);
-    SET @ac_id = (SELECT id FROM aircrafts ORDER BY RAND() LIMIT 1);
-    SET @max_allowed = (SELECT capacity FROM aircrafts WHERE id=@ac_id);
-    INSERT INTO flight_schedule VALUES (
-        @item_id,
-        (SELECT id FROM routes ORDER BY RAND() LIMIT 1),
-        @depart,
-        @arrive,
-        @ac_id,
-        0,
-        @max_allowed
-    );
-    INSERT INTO airfares VALUES (gen_uuid(), @item_id, 'F', ROUND((RAND()*(400))+800)),
-    (gen_uuid(), @item_id, 'B', ROUND((RAND()*(200))+350)),
-    (gen_uuid(), @item_id, 'E', ROUND((RAND()*(200))+50));
-END//
 DROP PROCEDURE IF EXISTS register_user;
 CREATE PROCEDURE register_user(
     IN first_name VARCHAR(255),
-    -- IN middle_name VARCHAR(255),
     IN last_name VARCHAR(255),
     IN birthday DATE,
     IN gender CHAR(1),
@@ -192,7 +142,6 @@ BEGIN
     INSERT INTO users VALUES (
         gen_uuid(),
         first_name,
-        -- middle_name,
         last_name,
         birthday,
         gender,
@@ -213,7 +162,6 @@ DROP PROCEDURE IF EXISTS add_dummy;
 CREATE PROCEDURE add_dummy ()
 BEGIN
     SET @reps = 50;
-
     REPEAT
     CALL add_aircraft('Airbus A320-200',150);
     CALL add_aircraft('Airbus A321-200',190);
@@ -225,26 +173,11 @@ BEGIN
     CALL add_aircraft('Boeing 787-9',285);
     SET @reps = @reps - 1;
     UNTIL @reps = 0 END REPEAT;
-/*
-    INSERT INTO jobs (title,dept,location) VALUES
-    ('Sr. Software Engineer','IT','Walnut, CA'),
-    ('Aircraft Support Mechanic','Cabin - Dept #5','Walnut, CA'),
-    ('Aircraft Maintenance Technician','Line - Dept #32','Walnut, CA'),
-    ('Sr. Repair Coordinator','Repair - Dept #2','Los Angeles, CA'),
-    ('Director','Global Corporate Sales','Los Angeles, CA'),
-    ('Principal Engineer','Engineering','Walnut, CA'),
-    ('Team Leader','Global Assistance','Los Angeles, CA'),
-    ('Pre-flight Inspector','Dept #9','Los Angeles, CA'),
-    ('Sr. Analyst','Inventory','Walnut, CA'),
-    ('Customer Service Agent','Customer Service','Los Angeles, CA')
-    ;
-*/
 END//
 DROP PROCEDURE IF EXISTS add_dummy_flights;
 CREATE PROCEDURE add_dummy_flights (IN src CHAR(3), IN dest CHAR(3), IN dtime_depart DATETIME)
 BEGIN
     DECLARE dist DECIMAL(14,7);
-
     SET dist = (SELECT 69.0 * DEGREES(ACOS(lEAST(1.0, COS(RADIANS(a.latitude))
                     * COS(RADIANS(b.latitude))
                     * COS(RADIANS(a.longitude - b.longitude))
@@ -254,7 +187,6 @@ BEGIN
         JOIN airports AS b ON a.iata_code = src AND b.iata_code = dest);
 
     SET @duration = dist / 555.0; -- plane: 555 mph
-
     SET @reps = 15;
     REPEAT
         SET @rt_id = gen_uuid();
@@ -348,8 +280,7 @@ this_proc:BEGIN
                             END FROM users HAVING id=UUID_TO_BIN(user_uid));
     UPDATE users
         SET miles = miles + @mi_factor * cost
-        WHERE id = UUID_TO_BIN(user_uid);
-    -- TODO: move up tier when jason finishes the document
+        WHERE id = UUID_TO_BIN(user_uid); -- TODO: move up tier when jason finishes the document
 END//
 DELIMITER ;
 SET FOREIGN_KEY_CHECKS=1;

@@ -4,7 +4,7 @@ PROJ_ROOT=`git root`
 DEBUG=$1
 add() {
     cat $PROJ_ROOT/db/$@
-    if [[ $1 == 'dbg' ]]; then
+    if [[ $DEBUG == 'dbg' ]]; then
         echo "SELECT '"$@"';"
     fi
 }

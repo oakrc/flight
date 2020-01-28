@@ -1,7 +1,6 @@
 DROP PROCEDURE IF EXISTS register_user;
 CREATE PROCEDURE register_user(
     IN first_name VARCHAR(255),
-    -- IN middle_name VARCHAR(255),
     IN last_name VARCHAR(255),
     IN birthday DATE,
     IN gender CHAR(1),
@@ -14,7 +13,6 @@ BEGIN
     INSERT INTO users VALUES (
         gen_uuid(),
         first_name,
-        -- middle_name,
         last_name,
         birthday,
         gender,
@@ -29,5 +27,5 @@ BEGIN
     VALUES (
         user_id,
         token
-    )
+    );
 END//

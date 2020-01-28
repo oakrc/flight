@@ -2,7 +2,6 @@ DROP PROCEDURE IF EXISTS add_dummy_flights;
 CREATE PROCEDURE add_dummy_flights (IN src CHAR(3), IN dest CHAR(3), IN dtime_depart DATETIME)
 BEGIN
     DECLARE dist DECIMAL(14,7);
-
     SET dist = (SELECT 69.0 * DEGREES(ACOS(lEAST(1.0, COS(RADIANS(a.latitude))
                     * COS(RADIANS(b.latitude))
                     * COS(RADIANS(a.longitude - b.longitude))
@@ -12,7 +11,6 @@ BEGIN
         JOIN airports AS b ON a.iata_code = src AND b.iata_code = dest);
 
     SET @duration = dist / 555.0; -- plane: 555 mph
-
     SET @reps = 15;
     REPEAT
         SET @rt_id = gen_uuid();
