@@ -3,4 +3,4 @@ CREATE EVENT expire_token
 ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
 DO
     DELETE FROM verification_tokens WHERE
-    dt_created < DATE_SUB(NOW(), INTERVAL 2 DAY);
+    dt_created < DATE_SUB(NOW(), INTERVAL 1 DAY);

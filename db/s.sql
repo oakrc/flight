@@ -112,6 +112,12 @@ INSERT INTO airports(iata_code,name,latitude,longitude,municipality,state) VALUE
 ,('BFI','Boeing Field King County International Airport',47.529999,-122.302002,'Seattle','WA')
 ,('GEG','Spokane International Airport',47.619900,-117.533997,'Spokane','WA')
 ,('SEA','Seattle Tacoma International Airport',47.449001,-122.308998,'Seattle','WA');
+DROP EVENT IF EXISTS expire_token;
+CREATE EVENT expire_token
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+DO
+    DELETE FROM verification_tokens WHERE
+    dt_created < DATE_SUB(NOW(), INTERVAL 1 DAY);
 DELIMITER //
 DROP FUNCTION IF EXISTS gen_uuid;
 CREATE FUNCTION gen_uuid ()
@@ -127,6 +133,46 @@ RETURN LOWER(CONCAT(
     SUBSTR(HEX(bin_uuid), 17, 4), '-',
     SUBSTR(HEX(bin_uuid), 21)
 ));
+DROP FUNCTION IF EXISTS u2b;
+CREATE FUNCTION u2b (uuid CHAR(36))
+RETURNS BINARY(16) DETERMINISTIC
+RETURN UNHEX(REPLACE(uuid COLLATE utf8_unicode_ci, "-" COLLATE utf8_unicode_ci, "" COLLATE utf8_unicode_ci));
+DROP PROCEDURE IF EXISTS add_aircraft;
+CREATE PROCEDURE add_aircraft (IN model VARCHAR(16), IN cap INT)
+BEGIN
+    INSERT INTO aircrafts VALUES (
+        gen_uuid(),
+        LEFT(MD5(RANDOM_BYTES(16)), 8),
+        cap,
+        model,
+        FLOOR(RAND()*(2020-2017)*2017)
+    );
+END//
+DROP PROCEDURE IF EXISTS add_flight;
+CREATE PROCEDURE add_flight ()
+BEGIN
+    SET @item_id = gen_uuid();
+    SET @date_from = NOW();
+    SET @date_to = DATE_ADD(NOW(), INTERVAL 120 DAY);
+    SET @sec = TIMESTAMPDIFF(SECOND, @date_from, @date_to);
+    SET @random = ROUND(((@sec-1) * RAND()), 0);
+    SET @depart = DATE_ADD(@date_from, INTERVAL @random SECOND);
+    SET @arrive = DATE_ADD(@depart, INTERVAL ROUND((RAND()*(5))+1) HOUR);
+    SET @ac_id = (SELECT id FROM aircrafts ORDER BY RAND() LIMIT 1);
+    SET @max_allowed = (SELECT capacity FROM aircrafts WHERE id=@ac_id);
+    INSERT INTO flight_schedule VALUES (
+        @item_id,
+        (SELECT id FROM routes ORDER BY RAND() LIMIT 1),
+        @depart,
+        @arrive,
+        @ac_id,
+        0,
+        @max_allowed
+    );
+    INSERT INTO airfares VALUES (gen_uuid(), @item_id, 'F', ROUND((RAND()*(400))+800)),
+    (gen_uuid(), @item_id, 'B', ROUND((RAND()*(200))+350)),
+    (gen_uuid(), @item_id, 'E', ROUND((RAND()*(200))+50));
+END//
 DROP PROCEDURE IF EXISTS register_user;
 CREATE PROCEDURE register_user(
     IN first_name VARCHAR(255),
@@ -135,12 +181,12 @@ CREATE PROCEDURE register_user(
     IN gender CHAR(1),
     IN phone_number VARCHAR(16),
     IN email VARCHAR(50),
-    IN pw BINARY(60),
-    IN token CHAR(64)
+    IN pw BINARY(60)
 )
 BEGIN
+    SET @uuid = gen_uuid();
     INSERT INTO users VALUES (
-        gen_uuid(),
+        @uuid,
         first_name,
         last_name,
         birthday,
@@ -154,9 +200,9 @@ BEGIN
     );
     INSERT INTO verification_tokens (user_id, token)
     VALUES (
-        user_id,
-        token
-    )
+        @uuid,
+        LEFT(TO_BASE64(RANDOM_BYTES(64)),64)
+    );
 END//
 DROP PROCEDURE IF EXISTS add_dummy;
 CREATE PROCEDURE add_dummy ()
