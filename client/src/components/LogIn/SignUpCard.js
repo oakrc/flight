@@ -154,7 +154,7 @@ export class SignUpCard extends Component {
         }
 
         if (firstNameValid && lastNameValid && birthdayValid && genderEntered && emailValid && passwordValid && confirmpwdValid && phoneNumberValid) {
-            axios.put('https://westflight.herokuapp.com/api/user', {
+            axios.put('https://westflightairlines.com/api/user', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 birthday: this.state.birthday,

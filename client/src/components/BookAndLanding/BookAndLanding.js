@@ -34,7 +34,7 @@ export class BookAndLanding extends Component {
                 if (window.pageYOffset >= window.innerHeight / 2) {
                     this.setState({hidden: true, goBack: true});
                 } else {
-                    this.setState({hidden: true, goBack: false});
+                    this.setState({hidden: false, goBack: false});
                 }
             }
         }
@@ -50,7 +50,9 @@ export class BookAndLanding extends Component {
     }
 
     backToTop() {
-        this.setState({goBack: false}, () => window.scrollTo(0,0));
+        if (this.state.goBack) {
+            this.setState({goBack: false}, () => window.scrollTo(0,0));
+        }
     }
 
     flightQueryOK(flightInfo, query) {
@@ -64,12 +66,6 @@ export class BookAndLanding extends Component {
                         {new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} -> &nbsp;
                         {new Date(flight.dt_arr).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} &nbsp;
                         {Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br>
-                    </div>
-                    <div className="dest">
-                        {query.departLocation} -> {query.arriveLocation}
-                    </div>
-                    <div className="date">
-                        {new Date(query.departDate).toLocaleTimeString('en-us', {weekday: 'long', month: 'short', day: 'numeric', hour: '2-digit'}).slice(0, -7)}
                     </div>
                 </div>
                 <div className="priceSelect">
@@ -91,17 +87,18 @@ export class BookAndLanding extends Component {
                 <FlightSearch flightQueryOK={(flightInfo, query) => this.flightQueryOK(flightInfo, query)}/>
                 {!this.state.flightQueried ?
                 <div>
-                <div style={{display: 'flex', justifyContent: 'center'}}><KeyboardArrowDownRoundedIcon onClick={this.hide} className={`scrollDown ${this.state.hidden && 'hidden'}`}/></div>
-                <KeyboardArrowUpRoundedIcon onClick={this.backToTop} className={`backToTop ${!this.state.goBack && 'hidden'}`}/>
-                <Suspense className="cards" fallback={<div></div>}>
-                    <CloudandCard src={1}/>
-                    <CloudandCard left={0.5 - 0.402 * 12} src={2}/>
-                    <CloudandCard left={0.5 - 0.153 * 12} src={3}/>
-                    <CloudandCard left={0.5 - 0.630 * 12} src={4}/>
-                    <CloudandCard left={0.5 - 0.372 * 12} src={5}/>
-                    <CloudandCard left={0.5 - 0.592 * 12} src={6}/>
-                </Suspense>
-                <Suspense fallback={<div></div>}><AirportFooter/></Suspense>
+                <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <KeyboardArrowDownRoundedIcon onClick={this.hide} className={`scrollDown ${this.state.hidden && 'hidden'}`}/></div>
+                    <KeyboardArrowUpRoundedIcon onClick={this.backToTop} className={`backToTop ${!this.state.goBack && 'hidden'}`}/>
+                    <Suspense className="cards" fallback={<div></div>}>
+                        <CloudandCard src={1}/>
+                        <CloudandCard left={0.5 - 0.402 * 12} src={2}/>
+                        <CloudandCard left={0.5 - 0.153 * 12} src={3}/>
+                        <CloudandCard left={0.5 - 0.630 * 12} src={4}/>
+                        <CloudandCard left={0.5 - 0.372 * 12} src={5}/>
+                        <CloudandCard left={0.5 - 0.592 * 12} src={6}/>
+                    </Suspense>
+                    <Suspense fallback={<div></div>}><AirportFooter/></Suspense>
                 </div> :
                 <div>{this.state.flightList}</div>
                 }
