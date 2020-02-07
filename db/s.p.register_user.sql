@@ -19,7 +19,7 @@ BEGIN
         phone_number,
         email,
         pw,
-        'B',-- bronze
+        '_',-- bronze
         0,
         0
     );

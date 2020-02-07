@@ -107,7 +107,7 @@ router.put('/', (req, res) => {
                                                 from: 'noreply@westflightairlines.com',
                                                 to: req.body.email,
                                                 subject: 'WestFlight Airlines: Account Verification',
-                                                html: `<html><head></head><body><form method="DELETE" action="https://www.westflightairlines.com/api/user/token/` + buf + `"><input type="submit" value="Verify Your Account"></form></body></html>`
+                                                html: `<html><head></head><body><form method="DELETE" action="https://www.westflightairlines.com/api/user/token/` + buf + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
                                             }
                                             var ret = false;
                                             transporter.sendMail(mailOpts).then(() => {

@@ -70,6 +70,7 @@ router.use('/user', require('./routes/user'))
 router.use('/flight', require('./routes/flight'))
 router.use('/ticket', require('./routes/ticket'))
 router.use('/app', require('./routes/application'))
+router.use('/msg', require('./routes/msg'))
 app.use('/api', router)
 
 // pass unrecognized files to React
