@@ -1,0 +1,4 @@
+DROP FUNCTION IF EXISTS gen_uuid;
+CREATE FUNCTION gen_uuid ()
+RETURNS BINARY(16) DETERMINISTIC
+RETURN UNHEX(REPLACE(UUID() COLLATE utf8_unicode_ci, "-" COLLATE utf8_unicode_ci, "" COLLATE utf8_unicode_ci));
