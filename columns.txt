@@ -1,1 +1,0 @@
-id,name,lat,long,elevation_ft,state,municipality,gps_code,iata_code

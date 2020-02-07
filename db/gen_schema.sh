@@ -4,7 +4,7 @@ PROJ_ROOT=`git root`
 DEBUG=$1
 add() {
     cat $PROJ_ROOT/db/$@
-    if [[ $1 == 'dbg' ]]; then
+    if [[ $DEBUG == 'dbg' ]]; then
         echo "SELECT '"$@"';"
     fi
 }
@@ -30,12 +30,14 @@ add s.f.gen_uuid.sql
 add s.f.b2u.sql
 add s.f.u2b.sql
 
+add s.p.register_user.sql
 add s.p.add_aircraft.sql
 add s.p.add_flight.sql
-add s.p.register_user.sql
-add s.p.add_dummy.sql
-add s.p.add_dummy_flights.sql
 add s.p.buy_ticket.sql
 add s.p.check_in.sql
+
+add s.p.add_dummy_aircrafts.sql
+add s.p.add_dummy_flights.sql
+add s.p.add_routes.sql
 
 add s._.footer.sql

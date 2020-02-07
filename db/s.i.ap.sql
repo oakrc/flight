@@ -1,4 +1,4 @@
-INSERT INTO airports(iata_code,name,latitude,longitude,municipality,state) VALUES
+INSERT INTO airports (iata_code,name,latitude,longitude,municipality,state) VALUES
  ('PHX','Phoenix Sky Harbor International Airport',33.434299,-112.012001,'Phoenix','AZ')
 ,('TUS','Tucson International Airport',32.116100,-110.941002,'Tucson','AZ')
 ,('LAX','Los Angeles International Airport',33.942501,-118.407997,'Los Angeles','CA')

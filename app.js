@@ -55,6 +55,8 @@ app.use(cors({
         credentials: true
     }
 ))
+
+app.use(express.static(path.join(__dirname,'/client/build')))
 //app.use(cors({credentials:true}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -68,11 +70,12 @@ router.use('/user', require('./routes/user'))
 router.use('/flight', require('./routes/flight'))
 router.use('/ticket', require('./routes/ticket'))
 router.use('/app', require('./routes/application'))
+router.use('/msg', require('./routes/msg'))
 app.use('/api', router)
 
 // pass unrecognized files to React
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'))
+    res.sendFile(path.join(__dirname, '/client/build/index.html'))
 })
 
 // Listen
