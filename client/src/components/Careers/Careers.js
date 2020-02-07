@@ -15,8 +15,6 @@ export class Careers extends Component {
     
         this.state = {
             email: '',
-            password: '',
-            confirmpwd: '',
             firstName: '',
             lastName: '',
             birthday: null,
@@ -78,7 +76,7 @@ export class Careers extends Component {
         if (value === '') {
             this.setState({birthday: null})
         } else {
-            if (value instanceof Date && !isNaN(value) && value.getFullYear() > 1909 && value.getFullYear() < 2005) {
+            if (value instanceof Date && !isNaN(value) && value.getFullYear() > 1909 && value < new Date().setFullYear(new Date().getFullYear() - 18)) {
                 this.setState({birthday: value, birthdayValid: true})
             } else {
                 this.setState({birthday: value, birthdayValid: false})
@@ -134,7 +132,6 @@ export class Careers extends Component {
         let genderEntered = true;
         let emailValid = true;
         let phoneNumberValid = true;
-        let confirmpwdValid = true;
         let careerValid = true;
         let birthdayValid = true;
 
@@ -146,8 +143,8 @@ export class Careers extends Component {
             lastNameValid = false;
         }
 
-        if (this.state.birthday === null || !this.state.birthday instanceof Date) {
-            birthdayValid = false;
+        if (this.state.birthday instanceof Date && !isNaN(this.state.birthday) && this.state.birthday.getFullYear() > 1909 && this.state.birthday < new Date().setFullYear(new Date().getFullYear() - 18)) {
+            birthdayValid = true;
         }
 
         if (this.state.gender.length === 0) {
@@ -156,10 +153,6 @@ export class Careers extends Component {
 
         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.email) || this.state.email.length === 0) {
             emailValid = false;
-        }
-
-        if (this.state.password !== this.state.confirmpwd || this.state.confirmpwd.length === 0) {
-            confirmpwdValid = false;
         }
 
         if (this.state.phoneNumber.length !== 10 && (this.state.phoneNumber.length !== 11 && this.state.phoneNumber[0] !== '1')) {
@@ -171,7 +164,7 @@ export class Careers extends Component {
         } 
 
         if (firstNameValid && lastNameValid && genderEntered && emailValid && phoneNumberValid) {
-            axios.post('http://oak.hopto.org:3000/application', {
+            axios.post('https://westflight.herokuapp.com/api/application', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 birthday: this.state.birthday,
@@ -202,7 +195,7 @@ export class Careers extends Component {
             })
         }
 
-        this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, birthdayValid: birthdayValid, genderEntered: genderEntered, emailValid: emailValid, confirmpwdValid: confirmpwdValid, phoneNumberValid: phoneNumberValid, careerValid: careerValid});
+        this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, birthdayValid: birthdayValid, genderEntered: genderEntered, emailValid: emailValid, phoneNumberValid: phoneNumberValid, careerValid: careerValid});
     }
 
     render() {
@@ -215,7 +208,7 @@ export class Careers extends Component {
                         <TextField error={!this.state.lastNameValid} label="Last name" variant="outlined" value={this.state.lastName} onChange={(e) => this.updateLName(e.target.value)}/>
                     </div>
                     <div className="half-field">
-                        <DatePick label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}} error={!this.state.birthdayValid} minDate={new Date('1910-12-31')} maxDate={new Date('2004-01-01')}/>
+                        <DatePick label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}} error={!this.state.birthdayValid} minDate={new Date('1910-12-31')} maxDate={new Date().setFullYear(new Date().getFullYear() - 18)} maxDateMessage={'Must be 18 years or older'}/>
                         <Select error={!this.state.genderEntered} label="Gender" variant="outlined" curr={this.state.gender} options={["Male", "Female", "Other", "Prefer not to say"]} updater={(e, option) => this.updateGender(e, option)}/>
                     </div>
                     <TextField type="tel" label="Phone Number" variant="outlined" value={this.state.phoneNumber} onChange={(e) => this.updatePhoneNumber(e.target.value)} error={!this.state.phoneNumberValid}/>
@@ -227,6 +220,7 @@ export class Careers extends Component {
                         >
                         Upload File
                         <input
+                            accept=".pdf,.png,.jpg,.docx,.txt,.rtf,.doc,.odt"
                             type="file"
                             style={{ display: "none" }}
                             onChange={this.updateFile}

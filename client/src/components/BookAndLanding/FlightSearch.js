@@ -215,19 +215,26 @@ class FlightSearch extends Component {
         if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate)) {
             axios({
                 method: 'get',
-                url: 'http://oak.hopto.org:3000/flight',
+                url: 'https://westflight.herokuapp.com/api/flight',
                 params: {
                     passengers: Number(this.state.Adults) + Number(this.state.Children) + Number(this.state.Infants),
                     depart: this.state.departLocation.slice(-4, -1),
                     arrive: this.state.arriveLocation.slice(-4, -1),
-                    date: this.state.departDate.toISOString(),
+                    date: new Date(this.state.departDate).toISOString(),
                     cabin: this.state.class.charAt(0)
                 }
             })
-            .then(function (response) {
-                console.log(response);
+            .then(response => {
+                if (response.status === 200) {
+                    this.props.flightQueryOK(response.data, {
+                        departDate: this.state.departDate, 
+                        arriveDate: this.state.arriveDate,
+                        departLocation: this.state.departLocation,
+                        arriveLocation: this.state.arriveLocation
+                    });
+                }
             })
-            .catch(function (error) {
+            .catch(error => {
                 console.log(error);
             });
         }
@@ -245,7 +252,7 @@ class FlightSearch extends Component {
                         <div className="Top">
                             <Select curr={this.state.typeOfTrip} options={["Round trip", "One way", "Multi-city"]} updater={(e, option) => this.changeTrip(e, option)}/>
                             <Select curr={this.state.class} options={["Economy", "Business", "First Class"]} updater={(e, option) => this.changeClass(e, option)}/>
-                            <OutsideAlerter condition={this.state.passengerShown} effect={this.togglePassengers}>
+                            <OutsideAlerter condition={this.state.passengerShown} effect={this.togglePassengers}> 
                                 <div className="Vertical">
                                     <Button endIcon={<ArrowDropDownIcon />} onClick={this.togglePassengers}>{Number(this.state.Adults) + Number(this.state.Children) + Number(this.state.Infants)} Passenger{this.state.passengerPlural && 's'}</Button>
                                     <Fade in={this.state.passengerShown}>
@@ -254,7 +261,7 @@ class FlightSearch extends Component {
                                                 <Person addDisabled={this.state.maxed} amount={this.state.Children} type="Children" updater={(type, change, amount) => this.changePassenger(type, change, amount)}/>
                                                 <Person addDisabled={this.state.maxed} amount={this.state.Infants} type="Infants" updater={(type, change, amount) => this.changePassenger(type, change, amount)}/>
                                                 <br></br>
-                                                <p className={`sidenote ${this.state.maxed && 'sidenote-red'}`}>Maximum of 9 Passengers, at least one adult</p>
+                                                <p className={`sidenote ${this.state.maxed && 'sidenote-red'}`}>Maximum of 9 Passengers, <br></br>at least one adult</p>
                                             </Paper>
                                     </Fade>
                                 </div>

@@ -1,2 +1,0 @@
-(this.webpackJsonpflight=this.webpackJsonpflight||[]).push([[5],{214:function(t,e,n){},222:function(t,e,n){"use strict";n.r(e);var i=n(0),r=n.n(i);n(214);e.default=function(){return r.a.createElement("div",{className:"AirportFooter"})}}}]);
-//# sourceMappingURL=5.0b4a36ee.chunk.js.map

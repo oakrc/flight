@@ -62,7 +62,7 @@ export class SignUpCard extends Component {
         if (value === '') {
             this.setState({birthday: null})
         } else {
-            if (value instanceof Date && !isNaN(value) && value.getFullYear() > 1909 && value.getFullYear() < 2005) {
+            if (value instanceof Date && !isNaN(value) && value.getFullYear() > 1909 && value < new Date().setFullYear(new Date().getFullYear() - 18)) {
                 this.setState({birthday: value, birthdayValid: true})
             } else {
                 this.setState({birthday: value, birthdayValid: false})
@@ -114,7 +114,7 @@ export class SignUpCard extends Component {
     signUp() {
         let firstNameValid = true;
         let lastNameValid = true;
-        let birthdayValid = true;
+        let birthdayValid = false;
         let genderEntered = true;
         let emailValid = true;
         let passwordValid = true;
@@ -129,8 +129,8 @@ export class SignUpCard extends Component {
             lastNameValid = false;
         }
 
-        if (this.state.birthday === null || !this.state.birthday instanceof Date) {
-            birthdayValid = false;
+        if (this.state.birthday instanceof Date && !isNaN(this.state.birthday) && this.state.birthday.getFullYear() > 1909 && this.state.birthday < new Date().setFullYear(new Date().getFullYear() - 18)) {
+            birthdayValid = true;
         }
 
         if (this.state.gender.length === 0) {
@@ -154,7 +154,7 @@ export class SignUpCard extends Component {
         }
 
         if (firstNameValid && lastNameValid && birthdayValid && genderEntered && emailValid && passwordValid && confirmpwdValid && phoneNumberValid) {
-            axios.put('http://oak.hopto.org:3000/user', {
+            axios.put('https://westflight.herokuapp.com/api/user', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 birthday: this.state.birthday,
@@ -210,7 +210,7 @@ export class SignUpCard extends Component {
                         <TextField error={!this.state.lastNameValid} label="Last name" variant="outlined" value={this.state.lastName} onChange={(e) => this.updateLName(e.target.value)}/>
                     </div>
                     <div className="half-field">
-                        <DatePick disableFuture label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}} error={!this.state.birthdayValid} minDate={new Date('1910-12-31')} maxDate={new Date('2004-01-01')}/>
+                        <DatePick disableFuture label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}} error={!this.state.birthdayValid} minDate={new Date('1910-12-31')} maxDate={new Date().setFullYear(new Date().getFullYear() - 18)} maxDateMessage={'Must be 18 years or older'}/>
                         <Select error={!this.state.genderEntered} label="Gender" variant="outlined" curr={this.state.gender} options={["Male", "Female", "Other", "Prefer not to say"]} updater={(e, option) => this.updateGender(e, option)}/>
                     </div>
                     <TextField type="tel" label="Phone Number" variant="outlined" value={this.state.phoneNumber} onChange={(e) => this.updatePhoneNumber(e.target.value)} error={!this.state.phoneNumberValid}/>

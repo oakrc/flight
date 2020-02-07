@@ -16,9 +16,9 @@ const Dashboard = React.lazy(() => import('./components/LogIn/Dashboard'));
 const WestMiles = React.lazy(() => import('./components/WestMiles/WestMiles'));
 const Careers = React.lazy(() => import('./components/Careers/Careers'));
 const CheckIn = React.lazy(() => import('./components/CheckIn/CheckIn'));
-const ContactUs = React.lazy(() => import('./components/ContactUs/ContactUs'));
-const FlightStatus = React.lazy(() => import('./components/FlightStatus/FlightStatus'));
-const Schedules = React.lazy(() => import('./components/Schedules/Schedules'));
+const ContactUs = React.lazy(() => import('./components/Careers/ContactUs'));
+const Schedules = React.lazy(() => import('./components/BookAndLanding/Schedules'));
+const NotAPage = React.lazy(() => import('./components/NotAPage'));
 
 const theme = createMuiTheme({
   typography: {
@@ -75,7 +75,7 @@ class App extends Component {
   }
 
   logOut() {
-    axios.delete('http://oak.hopto.org:3000/user', {withCredentials: true})
+    axios.delete('https://westflight.herokuapp.com/api/user', {withCredentials: true})
     .then((response) => {
         this.showOption();
         setTimeout(() => {
@@ -88,7 +88,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://oak.hopto.org:3000/user', {withCredentials: true})
+    axios.get('https://westflight.herokuapp.com/api/user', {withCredentials: true})
     .then((response) => {
       response.status === 200 && this.setState({loggedIn: true})
     })
@@ -115,10 +115,11 @@ class App extends Component {
               {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} />} />}
               <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
-              <Route path='/flightstatus' component={FlightStatus} />
+              {/*<Route path='/flightstatus' component={FlightStatus} />*/}
               <Route path='/flightschedules' component={Schedules} />
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
+              <Route component={NotAPage} />
             </Switch>
         </div>
       </ThemeProvider> 

@@ -59,7 +59,7 @@ export class LogInCard extends Component {
         }
 
         if (this.state.password.length !== 0 && this.state.email.length !== 0 && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.email)) {
-            axios.post('http://oak.hopto.org:3000/user', {
+            axios.post('https://westflight.herokuapp.com/api/user', {
                 email: this.state.email,
                 password: btoa(this.state.password)
               }, {withCredentials: true})

@@ -12,6 +12,7 @@ function DatePick(props) {
       <KeyboardDatePicker
         minDate={props.minDate}
         maxDate={props.maxDate}
+        maxDateMessage={props.maxDateMessage}
         error={props.error}
         autoOk
         disableFuture={props.disableFuture}
