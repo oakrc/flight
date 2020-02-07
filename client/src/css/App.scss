@@ -119,6 +119,7 @@ span {
 .hidden {
     opacity: 0;
     transition: 1s;
+    cursor: url('./images/cursor.png'), default;
 }
 
 .hiddenfast {

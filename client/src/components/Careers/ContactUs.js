@@ -86,7 +86,7 @@ export class Careers extends Component {
         }
 
         if (firstNameValid && lastNameValid && emailValid && phoneNumberValid) {
-            axios.post('https://westflight.herokuapp.com/api/app', {
+            axios.post('https://westflightairlines.com/api/app', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 phone_number: this.state.phoneNumber,
