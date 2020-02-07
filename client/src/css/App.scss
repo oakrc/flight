@@ -1,0 +1,203 @@
+html {
+    scroll-behavior: smooth;
+    font-size: 14px;
+    cursor: url('./images/cursor.png'), default;
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: -webkit-linear-gradient(#005aa7, #528caf);
+    background: linear-gradient(#005aa7, #528caf);
+}
+
+.svg-container { 
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%; 
+	vertical-align: middle; 
+	overflow: hidden; 
+}
+
+.svg-content { 
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar
+{
+    display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.App {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1, h2, h3, h4, h5, p, div {
+    margin: 0;
+    font-family: 'Rubik';
+}
+
+span {
+    white-space: nowrap;
+}
+
+.Title {
+    margin: 0 10vw 0 10vw;
+    color: white;
+
+    h2 {
+        font-size: 4rem;
+        font-family: 'Kollektif';
+        text-align: center;
+    }
+}
+
+.BookingAndLanding {
+    width: 100vw;
+    background: -webkit-linear-gradient(#005aa7, #ebe9be);
+    background: linear-gradient(#005aa7, #ebe9be);
+    padding: 30vh 0 0 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.scrollDown.MuiSvgIcon-root {
+    position: absolute;
+    bottom: 3.5vw;
+    font-size: 3rem;
+    animation: bounce 2s infinite;
+    filter: invert(1);
+    cursor: pointer;
+    transition: 0.5s;
+
+    @keyframes bounce {
+        50% {
+          transform: translateY(-40%);
+        }
+        100% {
+          transform: translateY(0);
+        }
+    }
+}
+
+.backToTop.MuiSvgIcon-root {
+    position: fixed;
+    bottom: 3vw;
+    right: 3.5vw;
+    filter: invert(1);
+    animation: none;
+    cursor: pointer;
+    font-size: 3rem;
+    transition: 0.5s;;
+    z-index: 2;
+}
+
+.hidden {
+    opacity: 0;
+    transition: 1s;
+}
+
+.hiddenfast {
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.shown {
+    z-index: 15;
+    opacity: 1 !important;
+    transition: 1s;
+}
+
+.shownno-z {
+    opacity: 1;
+    transition: 1s;
+}
+
+.shownnozfast {
+    opacity: 1;
+    transition: 0.5s;
+}
+
+.nodisplay {
+    display: none;
+}
+
+/* Material UI Stuff */
+.MuiOutlinedInput-root {
+    transition: 0.5s;
+
+    &:focus {
+        background-color: #f0f0f0 !important;
+    }
+
+    &:hover {
+        background-color: #e4e4e4;
+
+        .MuiOutlinedInput-notchedOutline {
+            border-color: #0277bd;
+        }
+    }
+}
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #cc0000 !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    border: none;
+}
+
+.MuiButton-root {
+    font-size: 1rem;
+    font-weight: 400;
+    text-transform: none;
+    color: #002e54; 
+    width: 8vw;
+}
+
+.MuiSelect-root {
+    border-radius: 3px;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    transition: 0.5s;
+    color: #002e54;
+
+    &:focus {
+        background-color: #f0f0f0;
+    }
+
+    &:hover {
+        background-color: #e4e4e4;
+    }
+
+}
+
+.MuiList-root.MuiMenu-list {
+    color: #002e54;
+}
+
+/* Responsive */

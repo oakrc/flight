@@ -1,0 +1,57 @@
+.container {
+    position: absolute;
+    top: 15vh;
+}
+
+.planeSymbol {
+    transition: transform .5s;
+    transform: scale(.9);
+    fill: white;
+    stroke: white;
+    transform-origin: 50%,50%;
+    animation: hideshow 2.5s forwards;
+}
+
+.text {
+    stroke: white;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 1.3s linear forwards;
+}
+
+@keyframes hideshow {
+    60%, 100% {
+        opacity: 0;
+        transform: translate(500px, 0);
+      }
+      0% {
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+  } 
+ 
+ @keyframes dash {
+    to {
+       stroke-dashoffset: 0;
+    }
+    from{
+        fill-opacity: 0;
+     }
+     to{
+        fill-opacity: 1;
+        fill: white;
+     }
+ }
+
+.text:nth-child(1) {
+    animation-delay: .75s;
+}
+
+.layer {
+    position: absolute;
+    top: 0;
+    left: -10vh;
+    width: 100vw;
+}

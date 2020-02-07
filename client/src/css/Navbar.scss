@@ -1,0 +1,100 @@
+.Navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 93vw;
+    height: 9vh;
+    padding: 0 3.5vw;
+    z-index: 10;
+
+    .MuiSvgIcon-root {
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+        z-index: 11;
+    }
+
+    .menu {
+        width: 40px;
+        height: 40px;
+        background-image: url('./images/menu.svg');
+        background-repeat: no-repeat;
+        transition: 0.5s;
+        transition-timing-function: steps(30);
+        filter: invert(1);
+        cursor: pointer;
+    }
+    
+    .menuToggled {
+        background-position: -1200px 0px;
+    }
+
+}
+
+.Nav {
+    padding: 13vh 0 0 0;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-end;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 80vh;
+    padding: 12.5vh 3.5vw 7.5vh 3.5vw;
+    transition: 0.5s;
+    color: white;
+
+    h1 {
+        font-size: 25px;
+        cursor: pointer;
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    }
+
+    .extras {
+        margin-top: 1vh;
+        height: 22.5vh;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-around;
+        
+        h2 {
+            font-size: 15px;
+            cursor: pointer;
+            
+            a {
+                color: white;
+                text-decoration: none;
+            }
+        }
+
+        .MuiSvgIcon-root {
+            cursor: pointer;
+        }
+    }
+}
+
+.nav-open {
+    opacity: 1;
+    z-index: 10;
+}
+
+.transitionScreen {
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #005aa7;
+    transition: .75s;
+}
