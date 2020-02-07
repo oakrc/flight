@@ -1,0 +1,54 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "description": "FBLA Web Design: WestFlight Airlines",
+  "main": "app.js",
+  "engines": {
+      "node": "12.14.0"
+  },
+  "scripts": {
+    "dev": "env MYSQL_HOST=localhost MYSQL_USER=root MYSQL_PORT=3306 MYSQL_PASS=MySql@1040secure MYSQL_DB=westflight REDIS_HOST=localhost REDIS_SECRET=4n07h3rSeCr37 SSL=false nodemon app.js",
+    "start": "heroku local",
+    "reset": "db/gen_schema.sh dbg | mysql -uroot -pMySql@1040secure westflight",
+    "db": "mysql -uroot -pMySql@1040secure westflight",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "contributors": [
+      "Zhenkai Weng <oakrc@protonmail.com>",
+      "Daniel Ji <Jidaniel1234@gmail.com>"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "body-parser": "^1.19.0",
+    "connect-redis": "^4.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.2",
+    "mysql": "^2.17.1",
+    "nodemailer": "^6.4.2",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oakrc/flight.git"
+  },
+  "keywords": [
+    "flight",
+    "web",
+    "development",
+    "airlines",
+    "FBLA",
+    "demo"
+  ],
+  "bugs": {
+    "url": "https://github.com/oakrc/flight/issues"
+  },
+  "homepage": "https://github.com/oakrc/flight#readme"
+}
