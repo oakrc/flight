@@ -49,7 +49,7 @@ app.locals.pool = pool
 
 // configure middlewares for all
 // TODO: Configure allowedOrigins
-var allowed_origins = ['http://localhost:3000', 'http://oak.hopto.org', 'https://westflightairlines.com']
+var allowed_origins = ['www.westflightairlines.com']
 app.use(cors({
         origin: allowed_origins,
         credentials: true
