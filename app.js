@@ -49,9 +49,9 @@ app.locals.pool = pool
 
 // configure middlewares for all
 // TODO: Configure allowedOrigins
-var allowed_origins = ['www.westflightairlines.com']
+var allowed_origins = []
 app.use(cors({
-        origin: allowed_origins,
+        origin: process.env.CORS === 'true'?'www.westflightairlines.com': undefined,
         credentials: true
     }
 ))
@@ -79,5 +79,5 @@ app.get('*', (req, res) => {
 })
 
 // Listen
-const port = process.env.EXPRESS_PORT || 3000
+const port = process.env.PORT || 3000
 app.listen(port)
