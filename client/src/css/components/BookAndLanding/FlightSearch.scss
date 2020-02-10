@@ -152,14 +152,19 @@
     margin: 0 0 5vh 0;
     box-sizing: border-box;
     padding: 2vh 3vw 3vh 3vw;
-    width: 50vw;
+    width: 40vw;
     height: 20vh;
+    font-size: 1.1rem;
     z-index: 100000000;
+
+    .time {
+        display: flex;
+        align-items: center;
+    }
 
     .priceSelect {
         display: flex;
         align-items: center;
-        justify-content: center;
         flex-direction: column;
 
         .MuiButtonBase-root {
