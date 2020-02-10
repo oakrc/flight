@@ -2,6 +2,7 @@ import React, {Suspense, Component} from 'react';
 import FlightSearch from './FlightSearch';
 import KeyboardArrowDownRoundedIcon from '@material-ui/icons/KeyboardArrowDownRounded';
 import KeyboardArrowUpRoundedIcon from '@material-ui/icons/KeyboardArrowUpRounded';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Paper, Button } from '@material-ui/core';
 import PreloadingComponent from '../PreloadingComponent';
 
@@ -63,9 +64,10 @@ export class BookAndLanding extends Component {
             return <Paper key={flight.fl_id} className="flightResult">
                 <div className="timeDestDate">
                     <div className="time">
-                        {new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} -> &nbsp;
+                        {new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                        <ArrowForwardIcon />
                         {new Date(flight.dt_arr).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} &nbsp;
-                        {Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br>
+                        <div className="dur">{Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br></div>
                     </div>
                 </div>
                 <div className="priceSelect">
