@@ -60,8 +60,13 @@ var router = express.Router()
 router.use(process.env.SECURE_CORS==='true'?cors({
         origin: 'www.westflightairlines.com',
         credentials: true
-    }
-):cors({credentials: true}))
+    })
+    :
+    cors({
+        origin: '*',
+        credentials: true
+    })
+)
 router.get('/', (req, res) => res.status(200).send({msg: 'WestFlight Airlines API',}))
 router.use('/user', require('./routes/user'))
 router.use('/flight', require('./routes/flight'))
