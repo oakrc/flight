@@ -48,13 +48,11 @@ var pool = mysql.createPool({
 app.locals.pool = pool
 
 // configure middlewares for all
-// TODO: Configure allowedOrigins
-var allowed_origins = []
-app.use(cors({
-        origin: process.env.CORS === 'true'?'www.westflightairlines.com': undefined,
+app.use(process.env.SECURE_CORS==='true'?cors({
+        origin: 'www.westflightairlines.com',
         credentials: true
     }
-))
+):cors())
 
 app.use(express.static(path.join(__dirname,'/client/build')))
 //app.use(cors({credentials:true}))
