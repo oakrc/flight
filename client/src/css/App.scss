@@ -1,7 +1,6 @@
 html {
     scroll-behavior: smooth;
     font-size: 14px;
-    cursor: url('./images/cursor.png'), default;
 }
 
 body {
@@ -93,6 +92,7 @@ span {
     filter: invert(1);
     cursor: pointer;
     transition: 0.5s;
+    z-index: 2;
 
     @keyframes bounce {
         50% {
@@ -119,12 +119,22 @@ span {
 .hidden {
     opacity: 0;
     transition: 1s;
-    cursor: url('./images/cursor.png'), default;
+    cursor: default;
+    z-index: 0;
 }
 
 .hiddenfast {
     opacity: 0;
     transition: 0.5s;
+}
+
+.hiddenfandis {
+    opacity: 0;
+    width: 0;
+    margin: 0!important;
+    transition: all 0.5s, opacity 0s;
+    cursor: default;
+    z-index: 0;
 }
 
 .shown {
@@ -199,6 +209,10 @@ span {
 
 .MuiList-root.MuiMenu-list {
     color: #002e54;
+}
+
+.MuiAutocomplete-popper {
+    z-index: 100000!important;
 }
 
 /* Responsive */

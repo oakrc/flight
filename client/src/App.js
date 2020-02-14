@@ -18,6 +18,7 @@ const Careers = React.lazy(() => import('./components/Careers/Careers'));
 const CheckIn = React.lazy(() => import('./components/CheckIn/CheckIn'));
 const ContactUs = React.lazy(() => import('./components/Careers/ContactUs'));
 const Schedules = React.lazy(() => import('./components/BookAndLanding/Schedules'));
+const Purchase = React.lazy(() => import('./components/BookAndLanding/Purchase'));
 const NotAPage = React.lazy(() => import('./components/NotAPage'));
 
 const theme = createMuiTheme({
@@ -75,7 +76,7 @@ class App extends Component {
   }
 
   logOut() {
-    axios.delete('https://westflight.herokuapp.com/api/user', {withCredentials: true})
+    axios.delete('http://localhost:5000/api/user', {withCredentials: true})
     .then((response) => {
         this.showOption();
         setTimeout(() => {
@@ -88,7 +89,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get('https://westflight.herokuapp.com/api/user', {withCredentials: true})
+    axios.get('http://localhost:5000/api/user', {withCredentials: true})
     .then((response) => {
       response.status === 200 && this.setState({loggedIn: true})
     })
@@ -111,7 +112,7 @@ class App extends Component {
       <div className="App">
         <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
             <Switch>
-              <Route exact path='/' component={BookAndLanding} />
+              <Route exact path='/' render={(props) => <BookAndLanding {...props} showOption={this.showOption} />} />
               {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} />} />}
               <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
@@ -119,6 +120,7 @@ class App extends Component {
               <Route path='/flightschedules' component={Schedules} />
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
+              <Route path='/book' component={Purchase} />
               <Route component={NotAPage} />
             </Switch>
         </div>
