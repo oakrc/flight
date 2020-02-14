@@ -145,6 +145,13 @@
     }
 }
 
+.fullFlightList {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 0 10vw 0 10vw;
+}
+
 .flightResult {
     display: flex;
     justify-content: space-between;
@@ -152,24 +159,31 @@
     margin: 0 0 5vh 0;
     box-sizing: border-box;
     padding: 2vh 3vw 3vh 3vw;
-    width: 40vw;
-    height: 20vh;
-    font-size: 1.1rem;
-    z-index: 100000000;
+    height: 15vh;
+    min-width: 50vw;
+    font-size: 1.5rem;
+    z-index: 3;
+    transition: 0.5s;
 
-    .time {
+    .times {
+        display: flex;
+        justify-content: space-between;
+        min-width: 30vw;
+    }
+
+    .flightSelect {
         display: flex;
         align-items: center;
     }
 
-    .priceSelect {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
+    .MuiButtonBase-root {
+        margin: 0 0 0 2vw;
+        font-size: 1rem;
+        text-transform: none;
+    }
 
-        .MuiButtonBase-root {
-            margin-top: 1vh;
-        }
+    &:hover {
+        background-color: #e4e4e4;
     }
 }
 

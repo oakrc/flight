@@ -26,9 +26,9 @@ export class Navbar extends Component {
         return (
             <div>
                 <div className={`Nav ${this.state.navOpen && 'nav-open'}`}>
-                    <h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-1 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}><DelayLink to='/westmiles'>West Miles</DelayLink></h1>
+                    <h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-1 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}><DelayLink to='/'>Book A Flight</DelayLink></h1>
                     <h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-2 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}>{this.props.loggedIn ? <DelayLink to='/dashboard'>Dashboard</DelayLink> : <DelayLink to='login'>Log In / Sign Up</DelayLink>}</h1>
-                    <h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-3 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}><DelayLink to='/'>Book A Flight</DelayLink></h1>
+                    <h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-3 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}><DelayLink to='/westmiles'>West Miles</DelayLink></h1>
                     <h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-4 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}><DelayLink to='/checkin'>Check In</DelayLink></h1>
                     {/*<h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-4 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}><DelayLink to='/flightstatus'>Flight Status</DelayLink></h1>*/}
                     <h1 onClick={() => {this.props.optionHandler(); this.toggleNav();}} className={`option-5 animated ${this.state.navOpen ? 'slideInRight' : 'slideOutRight'}`}><DelayLink to='/flightschedules'>Schedules</DelayLink></h1>

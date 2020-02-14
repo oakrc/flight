@@ -41,6 +41,7 @@ class FlightSearch extends Component {
             arriveValid: true,
             departDateValid: true,
             arriveDateValid: true,
+            arriveDateShow: true,
 
             airportNames: [
                 'Boeing Field King County (BFI)',
@@ -131,13 +132,17 @@ class FlightSearch extends Component {
 
     changeTrip(e, option) {
         e.preventDefault();
-
-        this.setState({typeOfTrip: option})
+        this.setState({typeOfTrip: option}, () => {
+            if (this.state.typeOfTrip === 'Round trip') {
+                this.setState({arriveDateShow: true})
+            } else {
+                this.setState({arriveDateShow: false})
+            }
+        })
     }
 
     changeClass(e, option) {
         e.preventDefault();
-
         this.setState({class: option})
     } 
 
@@ -212,7 +217,38 @@ class FlightSearch extends Component {
             this.setState({ arriveDateValid: false })
         }
 
-        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate)) {
+        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate)) {            
+            this.props.reset();
+            if (this.state.typeOfTrip === 'Round trip') {
+                axios({
+                    method: 'get',
+                    url: 'https://westflight.herokuapp.com/api/flight',
+                    params: {
+                        passengers: Number(this.state.Adults) + Number(this.state.Children) + Number(this.state.Infants),
+                        depart: this.state.arriveLocation.slice(-4, -1),
+                        arrive: this.state.departLocation.slice(-4, -1),
+                        date: new Date(this.state.arriveDate).toISOString(),
+                        cabin: this.state.class.charAt(0)
+                    }
+                })
+                .then(response => {
+                    console.log(response);
+                    if (response.status === 200) {
+                        this.props.roundFlightQueryOK(response.data, {
+                            departDate: this.state.arriveDate, 
+                            arriveDate: this.state.departDate,
+                            departLocation: this.state.arriveLocation,
+                            arriveLocation: this.state.departLocation,
+                            typeOfTrip: this.state.typeOfTrip,
+                            passengers: this.state.Adults + this.state.Children + this.state.Infants
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+            
             axios({
                 method: 'get',
                 url: 'https://westflight.herokuapp.com/api/flight',
@@ -230,7 +266,9 @@ class FlightSearch extends Component {
                         departDate: this.state.departDate, 
                         arriveDate: this.state.arriveDate,
                         departLocation: this.state.departLocation,
-                        arriveLocation: this.state.arriveLocation
+                        arriveLocation: this.state.arriveLocation,
+                        typeOfTrip: this.state.typeOfTrip,
+                        passengers: this.state.Adults + this.state.Children + this.state.Infants
                     });
                 }
             })
@@ -271,7 +309,7 @@ class FlightSearch extends Component {
                             <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.departLocation} onChange={(e, value) => {this.departUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('departValid')} error={!this.state.departValid} className="Depart" type="text" label="Depart&nbsp;" variant="outlined"/>)}></Autocomplete>
                             <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.arriveLocation} onChange={(e, value) => {this.arriveUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('arriveValid')} error={!this.state.arriveValid} className="Arrive" type="text" label="Arrive&nbsp;" variant="outlined"/>)}></Autocomplete>
                             <DatePick disablePast label="Depart date&nbsp;&nbsp;" value={this.state.departDate} updater={(e, date) => this.dDateUpdate(e, date)} error={!this.state.departDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
-                            <DatePick disablePast label="Return date&nbsp;&nbsp;" value={this.state.arriveDate} updater={(e, date) => this.aDateUpdate(e, date)} error={!this.state.arriveDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
+                            <DatePick className={!this.state.arriveDateShow ? 'hiddenfandis' : 'shownnozfast'} disablePast label="Return date&nbsp;&nbsp;" value={this.state.arriveDate} updater={(e, date) => this.aDateUpdate(e, date)} error={!this.state.arriveDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
                         </div>
                 </div>
                 <div className="Bottom">

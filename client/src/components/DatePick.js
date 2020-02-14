@@ -10,6 +10,7 @@ function DatePick(props) {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
+        className={props.className}
         minDate={props.minDate}
         maxDate={props.maxDate}
         maxDateMessage={props.maxDateMessage}
