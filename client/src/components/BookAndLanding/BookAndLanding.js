@@ -22,7 +22,8 @@ export class BookAndLanding extends Component {
            flightQueried: false,
            flightList: [],
            roundResponse: [],
-           roundQuery: {}
+           roundQuery: {},
+           selectDisabled: false,
         }
     
         this.hide = this.hide.bind(this)
@@ -35,6 +36,7 @@ export class BookAndLanding extends Component {
     componentDidMount() {
         setTimeout(() => window.scrollTo(0, 0), 500);
         this.setState({unmounting: false});
+        this.props.resetFlData();
         window.onscroll = () => {
             if (window.pageYOffset >= window.innerHeight / 10) {
                 if (window.pageYOffset >= window.innerHeight / 2) {
@@ -71,6 +73,7 @@ export class BookAndLanding extends Component {
     }
 
     flightQueryOK(flightInfo, query) {
+        this.props.resetFlData();
         this.setState({flightQueried: true, 
             flightList: flightInfo.map((flight, index) => {
             let depTime = new Date(flight.dt_arr);
@@ -87,9 +90,12 @@ export class BookAndLanding extends Component {
                 </div>
                 <div className="flightSelect">
                     <div>${flight.fare * query.passengers}</div>
-                    {this.state.roundQuery.typeOfTrip === 'Round trip' ?
-                    <Button onClick={() => this.handleFlight(flightInfo, index, query)} variant="outlined" color="primary">Select Flight</Button> :
-                    <Button onClick={this.props.showOption} variant="outlined" color="primary"><DelayLink style={{textDecoration: 'none', color: 'inherit'}} to='/book'>Select Flight</DelayLink></Button>
+                    {query.typeOfTrip === 'Round trip' ?
+                    <Button onClick={() => this.handleFlight(flightInfo, index, query)} variant="outlined" color="primary">Select First Flight</Button> :
+                    <Button onClick={() => {
+                        this.setState({searchDisabled: true}, () => setTimeout(() => {this.setState({searchDisabled: false})}, 1000))
+                        this.props.showPurchase([[flightInfo[index], query]]);
+                    }} variant="outlined" color="primary"><DelayLink style={{textDecoration: 'none', color: 'inherit'}} to='/book'>Select Flight</DelayLink></Button>
                     }
                 </div>
             </Paper>;
@@ -102,27 +108,35 @@ export class BookAndLanding extends Component {
     }
 
     handleFlight(flightInfo, index, query) {
-        this.setState({
-            flightList: this.state.roundResponse.map((flight, index) => {
-            let depTime = new Date(flight.dt_arr);
-            let depTimeL = new Date(flight.dt_dep);
-            return <Paper key={flight.fl_id} className="flightResult">
-                <div className="times">
-                    <div>{this.state.roundQuery.departLocation.slice(-5)}</div>
-                    <div><ArrowForwardIcon /></div>
-                    <div>{this.state.roundQuery.arriveLocation.slice(-5)}</div>
-                    <div>{new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
-                    <div><ArrowForwardIcon /></div>
-                    <div>{new Date(flight.dt_arr).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
-                    <div>{Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br></div>
-                </div>
-                <div className="flightSelect">
-                    <div>${flight.fare * this.state.roundQuery.passengers}</div>
-                    <Button onClick={this.props.showOption} variant="outlined" color="primary"><DelayLink style={{textDecoration: 'none', color: 'inherit'}} to='/book'>Select Flight</DelayLink></Button>
-                </div>
-            </Paper>;
-            }) 
-        });
+        if (!this.state.searchDisabled) {
+            this.setState({
+                searchDisabled: true,
+                flightList: this.state.roundResponse.map((flight, index) => {
+                let depTime = new Date(flight.dt_arr);
+                let depTimeL = new Date(flight.dt_dep);
+                return <Paper key={flight.fl_id} className="flightResult">
+                    <div className="times">
+                        <div>{this.state.roundQuery.departLocation.slice(-5)}</div>
+                        <div><ArrowForwardIcon /></div>
+                        <div>{this.state.roundQuery.arriveLocation.slice(-5)}</div>
+                        <div>{new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                        <div><ArrowForwardIcon /></div>
+                        <div>{new Date(flight.dt_arr).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                        <div>{Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br></div>
+                    </div>
+                    <div className="flightSelect">
+                        <div>${flight.fare * this.state.roundQuery.passengers}</div>
+                        <Button onClick={() => {
+                            this.setState({searchDisabled: true}, () => setTimeout(() => {this.setState({searchDisabled: false})}, 1000))
+                            this.props.showPurchase([[flightInfo[index], query], [this.state.roundResponse[index], this.state.roundQuery]])}
+                        } variant="outlined" color="primary"><DelayLink style={{textDecoration: 'none', color: 'inherit'}} to='/book'>Select Second Flight</DelayLink></Button>
+                    </div>
+                </Paper>;
+                }) 
+            }, () => {
+                setTimeout(() => {this.setState({searchDisabled: false})}, 1000);
+            });
+        }
     }
 
     render() {

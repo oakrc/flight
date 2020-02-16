@@ -116,6 +116,13 @@ span {
     z-index: 2;
 }
 
+.Redirect {
+    margin-top: 20vh;
+    color: #f0f0f0;
+    font-size: 2rem;
+    z-index: 2;
+}
+
 .hidden {
     opacity: 0;
     transition: 1s;
@@ -138,7 +145,7 @@ span {
 }
 
 .shown {
-    z-index: 15;
+    z-index: 15 !important;
     opacity: 1 !important;
     transition: 1s;
 }

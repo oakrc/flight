@@ -218,37 +218,6 @@ class FlightSearch extends Component {
         }
 
         if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate)) {            
-            this.props.reset();
-            if (this.state.typeOfTrip === 'Round trip') {
-                axios({
-                    method: 'get',
-                    url: 'https://westflight.herokuapp.com/api/flight',
-                    params: {
-                        passengers: Number(this.state.Adults) + Number(this.state.Children) + Number(this.state.Infants),
-                        depart: this.state.arriveLocation.slice(-4, -1),
-                        arrive: this.state.departLocation.slice(-4, -1),
-                        date: new Date(this.state.arriveDate).toISOString(),
-                        cabin: this.state.class.charAt(0)
-                    }
-                })
-                .then(response => {
-                    console.log(response);
-                    if (response.status === 200) {
-                        this.props.roundFlightQueryOK(response.data, {
-                            departDate: this.state.arriveDate, 
-                            arriveDate: this.state.departDate,
-                            departLocation: this.state.arriveLocation,
-                            arriveLocation: this.state.departLocation,
-                            typeOfTrip: this.state.typeOfTrip,
-                            passengers: this.state.Adults + this.state.Children + this.state.Infants
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-            }
-            
             axios({
                 method: 'get',
                 url: 'https://westflight.herokuapp.com/api/flight',
@@ -275,6 +244,35 @@ class FlightSearch extends Component {
             .catch(error => {
                 console.log(error);
             });
+            
+            if (this.state.typeOfTrip === 'Round trip') {
+                axios({
+                    method: 'get',
+                    url: 'https://westflight.herokuapp.com/api/flight',
+                    params: {
+                        passengers: Number(this.state.Adults) + Number(this.state.Children) + Number(this.state.Infants),
+                        depart: this.state.arriveLocation.slice(-4, -1),
+                        arrive: this.state.departLocation.slice(-4, -1),
+                        date: new Date(this.state.arriveDate).toISOString(),
+                        cabin: this.state.class.charAt(0)
+                    }
+                })
+                .then(response => {
+                    if (response.status === 200) {
+                        this.props.roundFlightQueryOK(response.data, {
+                            departDate: this.state.arriveDate, 
+                            arriveDate: this.state.departDate,
+                            departLocation: this.state.arriveLocation,
+                            arriveLocation: this.state.departLocation,
+                            typeOfTrip: this.state.typeOfTrip,
+                            passengers: this.state.Adults + this.state.Children + this.state.Infants
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
         }
     }
 
