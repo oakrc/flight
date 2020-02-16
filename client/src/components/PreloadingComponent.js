@@ -16,7 +16,7 @@ function PreloadingComponent(props) {
            <rect id="svg_7" width="1331.4286" height="734.28571" x="105.71429" y="644.0495"/>
            <text fontStyle="normal" fontWeight="normal" fontSize="70px" fontFamily="sans-serif" fill="none" stroke="#000000" strokeMiterlimit="4" xmlSpace="preserve" x="89.89095" y="74.23542" id="svg_4">
             <tspan fill="none" stroke="#000000" strokeMiterlimit="4" x="89.89095" y="74.23542" id="svg_5">
-             <tspan text-anchor='middle' className="text" fontStyle="normal" fontWeight="normal" fontSize="5rem" fontFamily="Kollektif" textAnchor="start" fill="none" stroke="#000000" strokeMiterlimit="4" x="89.89095" y="74.23542" id="svg_6">WestFlight</tspan>
+             <tspan className="text" fontStyle="normal" fontWeight="normal" fontSize="5rem" fontFamily="Kollektif" textAnchor="start" fill="none" stroke="#000000" strokeMiterlimit="4" x="89.89095" y="74.23542" id="svg_6">WestFlight</tspan>
             </tspan>
            </text>
            <rect id="svg_3" width="294.28571" height="154.28572" x="342.85715" y="729.76379"/>

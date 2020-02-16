@@ -43,10 +43,13 @@ class App extends Component {
     super(props)
 
     this.state = {
+      flightData: [],
       transitionScreen: false,
       loggedIn: false
     }
 
+    this.resetFlData = this.resetFlData.bind(this);
+    this.showPurchase = this.showPurchase.bind(this);
     this.showOption = this.showOption.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.logIn = this.logIn.bind(this);
@@ -59,12 +62,28 @@ class App extends Component {
     history: PropTypes.object.isRequired
   };
 
+  resetFlData() {
+    this.setState({flightData: []})
+  }
+
   showOption() {
     this.setState({transitionScreen: true}, () => {
       setTimeout(() => {
         this.setState({transitionScreen: false})
       }, 1500)
     })
+  }
+
+  showPurchase(flightData) {
+    this.setState({
+      transitionScreen: true,
+      flightData: flightData
+    }, () => {
+      setTimeout(() => {
+        this.setState({transitionScreen: false})
+      }, 1500)
+    })
+
   }
 
   logIn() {
@@ -112,7 +131,7 @@ class App extends Component {
       <div className="App">
         <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
             <Switch>
-              <Route exact path='/' render={(props) => <BookAndLanding {...props} showOption={this.showOption} />} />
+              <Route exact path='/' render={(props) => <BookAndLanding {...props} showPurchase={(flightData) => this.showPurchase(flightData)} resetFlData={this.resetFlData}/>} />
               {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} />} />}
               <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
@@ -120,7 +139,7 @@ class App extends Component {
               <Route path='/flightschedules' component={Schedules} />
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
-              <Route path='/book' component={Purchase} />
+              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={this.showOption}/>} />
               <Route component={NotAPage} />
             </Switch>
         </div>

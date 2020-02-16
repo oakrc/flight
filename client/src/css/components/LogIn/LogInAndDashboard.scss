@@ -64,6 +64,22 @@
                 width: 45%;
             }
         }
+
+        .half-field1 {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .third-field {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            & > * {
+                width: 31%;
+            }
+        }
     }
 
     .MuiButton-root {
@@ -71,6 +87,16 @@
         min-width: 6vw;
         height: 4vh;
         text-transform: none;
+        align-self: flex-end;
+    }
+}
+
+.Purchase {
+    .MuiPaper-root {
+        min-width: 50vw;
+    }
+
+    .payButton {
         align-self: flex-end;
     }
 }
