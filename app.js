@@ -47,13 +47,6 @@ var pool = mysql.createPool({
 })
 app.locals.pool = pool
 
-// configure middlewares for all
-app.use(process.env.SECURE_CORS==='true'?cors({
-        origin: 'www.westflightairlines.com',
-        credentials: true
-    }
-):cors())
-
 app.use(express.static(path.join(__dirname,'/client/build')))
 //app.use(cors({credentials:true}))
 app.use(bodyParser.json())
@@ -63,7 +56,13 @@ app.use(bodyParser.text({ type: 'text/html' }))
 
 // Define routes
 var router = express.Router()
-router.get('/', (req, res) => res.status(200).send({msg: 'WestFlight Airlines API',}))
+// configure middlewares for API only
+router.use(cors({
+        origin: 'www.westflightairlines.com',
+        credentials: true
+    })
+)
+router.get('/', (_, res) => res.status(200).send({msg: 'WestFlight Airlines API',}))
 router.use('/user', require('./routes/user'))
 router.use('/flight', require('./routes/flight'))
 router.use('/ticket', require('./routes/ticket'))
@@ -72,7 +71,7 @@ router.use('/msg', require('./routes/msg'))
 app.use('/api', router)
 
 // pass unrecognized files to React
-app.get('*', (req, res) => {
+app.get('*', (_, res) => {
     res.sendFile(path.join(__dirname, '/client/build/index.html'))
 })
 

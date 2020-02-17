@@ -37,7 +37,8 @@ router.put('/', valid.uid, (req, res) => {
         addr2 = req.body.addr2,
         city = req.body.city,
         state = req.body.state,
-        postal = req.body.postal
+        postal = req.body.postal,
+        email = req.body.email
 
     // ensure MySQL NULL
     if (addr2 == '') addr2 = null
@@ -49,6 +50,7 @@ router.put('/', valid.uid, (req, res) => {
         && valid.uuid(last_name)
         && valid.gender(gender)
         && (valid.phone_number(phone) || phone == '')
+        && valid.email(email)
         && addr1.length > 1
         && city.length > 1
         && state.length == 2
@@ -63,6 +65,7 @@ router.put('/', valid.uid, (req, res) => {
             last_name,
             gender,
             phone,
+            email,
             birthday,
             addr1,
             addr2,

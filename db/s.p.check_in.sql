@@ -24,21 +24,21 @@ this_proc:BEGIN
                                 ELSE 0
                             END FROM users HAVING id=u2b(user_uid));
     UPDATE users
-        SET miles = miles + @mi_factor * cost;
+        SET miles = miles + @mi_factor * cost
         WHERE id = u2b(user_uid);
     SET @miles = (SELECT miles FROM users WHERE id=u2b(user_uid));
     SELECT users.tier INTO tier FROM users HAVING id=u2b(user_uid);
-    IF tier == '_' AND @miles >= 15000 AND @miles < 30000 THEN
+    IF tier = '_' AND @miles >= 15000 AND @miles < 30000 THEN
         UPDATE users
             SET tier = 'B'
             WHERE id=u2b(user_uid);
-    ELSEIF tier == 'B' AND @miles >= 30000 AND @miles < 45000 THEN
+    ELSEIF tier = 'B' AND @miles >= 30000 AND @miles < 45000 THEN
         UPDATE users
             SET tier = 'S'
             WHERE id=u2b(user_uid);
-    ELSEIF tier == 'S' AND @miles >= 45000 THEN
+    ELSEIF tier = 'S' AND @miles >= 45000 THEN
         UPDATE users
             SET tier = 'G'
             WHERE id=u2b(user_uid);
-    ENDIF;
+    END IF;
 END//
