@@ -37,7 +37,7 @@ export class BookAndLanding extends Component {
         setTimeout(() => window.scrollTo(0, 0), 500);
         this.setState({unmounting: false});
         this.props.resetFlData();
-        window.onscroll = () => {
+        /*window.onscroll = () => {
             if (window.pageYOffset >= window.innerHeight / 10) {
                 if (window.pageYOffset >= window.innerHeight / 2) {
                     this.setState({hidden: true, goBack: true});
@@ -45,7 +45,7 @@ export class BookAndLanding extends Component {
                     this.setState({hidden: false, goBack: false});
                 }
             }
-        }
+        }*/
     }
     
     componentWillUnmount() {
@@ -76,29 +76,29 @@ export class BookAndLanding extends Component {
         this.props.resetFlData();
         this.setState({flightQueried: true, 
             flightList: flightInfo.map((flight, index) => {
-            let depTime = new Date(flight.dt_arr);
-            let depTimeL = new Date(flight.dt_dep);
-            return <Paper key={flight.fl_id} className="flightResult">
-                <div className="times">
-                    <div>{query.departLocation.slice(-5)}</div>
-                    <div><ArrowForwardIcon /></div>
-                    <div>{query.arriveLocation.slice(-5)}</div>
-                    <div>{new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
-                    <div><ArrowForwardIcon /></div>
-                    <div>{new Date(flight.dt_arr).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
-                    <div>{Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br></div>
-                </div>
-                <div className="flightSelect">
-                    <div>${flight.fare * query.passengers}</div>
-                    {query.typeOfTrip === 'Round trip' ?
-                    <Button onClick={() => this.handleFlight(flightInfo, index, query)} variant="outlined" color="primary">Select First Flight</Button> :
-                    <Button onClick={() => {
-                        this.setState({searchDisabled: true}, () => setTimeout(() => {this.setState({searchDisabled: false})}, 1000))
-                        this.props.showPurchase([[flightInfo[index], query]]);
-                    }} variant="outlined" color="primary"><DelayLink style={{textDecoration: 'none', color: 'inherit'}} to='/book'>Select Flight</DelayLink></Button>
-                    }
-                </div>
-            </Paper>;
+                let depTime = new Date(flight.dt_arr);
+                let depTimeL = new Date(flight.dt_dep);
+                return <Paper key={flight.fl_id} className="flightResult">
+                    <div className="times">
+                        <div>{query.departLocation.slice(-5)}</div>
+                        <div><ArrowForwardIcon /></div>
+                        <div>{query.arriveLocation.slice(-5)}</div>
+                        <div>{new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                        <div><ArrowForwardIcon /></div>
+                        <div>{new Date(flight.dt_arr).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                        <div>{Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br></div>
+                    </div>
+                    <div className="flightSelect">
+                        <div>${flight.fare * query.passengers}</div>
+                        {query.typeOfTrip === 'Round trip' ?
+                        <Button onClick={() => this.handleFlight(flightInfo, index, query)} variant="outlined" color="primary">Select First Flight</Button> :
+                        <Button onClick={() => {
+                            this.setState({searchDisabled: true}, () => setTimeout(() => {this.setState({searchDisabled: false})}, 1000))
+                            this.props.showPurchase([[flightInfo[index], query]]);
+                        }} variant="outlined" color="primary"><DelayLink style={{textDecoration: 'none', color: 'inherit'}} to='/book'>Select Flight</DelayLink></Button>
+                        }
+                    </div>
+                </Paper>;
             }) 
         });
     }
@@ -153,12 +153,7 @@ export class BookAndLanding extends Component {
                     <KeyboardArrowDownRoundedIcon onClick={this.hide} className={`scrollDown ${(this.state.hidden || this.state.unmounting) && 'hidden'}`}/></div>
                     <KeyboardArrowUpRoundedIcon onClick={this.backToTop} className={`backToTop ${!this.state.goBack && 'hidden'}`}/>
                     <Suspense className="cards" fallback={<div></div>}>
-                        <CloudandCard src={1}/>
-                        <CloudandCard left={0.5 - 0.402 * 12} src={2}/>
-                        <CloudandCard left={0.5 - 0.153 * 12} src={3}/>
-                        <CloudandCard left={0.5 - 0.630 * 12} src={4}/>
-                        <CloudandCard left={0.5 - 0.372 * 12} src={5}/>
-                        <CloudandCard left={0.5 - 0.592 * 12} src={6}/>
+                        <CloudandCard/>
                     </Suspense>
                     <Suspense fallback={<div></div>}><AirportFooter/></Suspense>
                 </div> :

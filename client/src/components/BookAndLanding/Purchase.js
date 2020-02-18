@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { Paper, TextField, Button, } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Alert } from '@material-ui/lab';
 
 import Select from '../Select';
 import DatePick from '../DatePick';
@@ -44,7 +45,7 @@ export class Purchase extends Component {
                 'AK', 'AL', 'AR', 'AS', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'GU', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UM', 'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'
             ],
 
-            display: false,
+            paid: false
         }
 
         this.back = this.back.bind(this)
@@ -56,9 +57,21 @@ export class Purchase extends Component {
         let emptyObj = [];
         if (this.props.flightData.length !== 0) {
             for (let i = 0; i < this.props.flightData[0][1].passengers; i++) {
-                emptyObj.push({});
+                emptyObj.push({
+                    firstName: '',
+                    lastName: '',
+                    gender: '',
+                    email: '',
+                    phoneNumber: '',
+                    birthday: null,
+                    address1: '',
+                    address2: '',
+                    city: '',
+                    state: '',
+                    postal: '',
+                });
             }
-            this.setState({display: true});
+            this.setState({passengerRequestData: emptyObj});
         }
     }
 
@@ -144,7 +157,7 @@ export class Purchase extends Component {
     }
 
     updatePostal(value) {
-        if (value.length !== 5 || !(/^\d+$/.test(value))) {
+        if (value.length !== 5) {
             this.setState({postal: value, postalValid: false})
         } else {
             this.setState({postal: value, postalValid: true})
@@ -195,7 +208,7 @@ export class Purchase extends Component {
             cityValid = false;
         }
 
-        if (this.state.postal.length !== 5 || !(/^\d+$/.test(this.state.postal.length))) {
+        if (this.state.postal.length !== 5) {
             postalValid = false;
         }
 
@@ -210,7 +223,7 @@ export class Purchase extends Component {
                 gender: this.state.gender,
                 email: this.state.email,
                 phoneNumber: this.state.phoneNumber,
-                birthday: new Date(this.state.birthday),
+                birthday: this.state.birthday,
                 address1: this.state.address1,
                 address2: this.state.address2,
                 city: this.state.city,
@@ -218,26 +231,62 @@ export class Purchase extends Component {
                 postal: this.state.postal,
             }
             this.forceUpdate()
-
-            this.setState({
-                firstName: this.state.passengerRequestData[this.state.currentPassenger - 1].firstName,
-                lastName: this.state.passengerRequestData[this.state.currentPassenger - 1].lastName,
-                gender: this.state.passengerRequestData[this.state.currentPassenger - 1].gender,
-                email: this.state.passengerRequestData[this.state.currentPassenger - 1].email,
-                phoneNumber: this.state.passengerRequestData[this.state.currentPassenger - 1].phoneNumber,
-                birthday: new Date(this.state.passengerRequestData[this.state.currentPassenger - 1].birthday),
-                address1: this.state.passengerRequestData[this.state.currentPassenger - 1].address1,
-                address2: this.state.passengerRequestData[this.state.currentPassenger - 1].address2,
-                city: this.state.passengerRequestData[this.state.currentPassenger - 1].city,
-                state: this.state.passengerRequestData[this.state.currentPassenger - 1].state,
-                postal: this.state.passengerRequestData[this.state.currentPassenger - 1].postal,
-                currentPassenger: this.state.currentPassenger + 1,
-            })
             
             if (this.state.currentPassenger === this.props.flightData[0][1].passengers) {
+                this.setState({
+                    firstName: '',
+                    lastName: '',
+                    gender: '',
+                    email: '',
+                    phoneNumber: '',
+                    birthday: null,
+                    address1: '',
+                    address2: '',
+                    city: '',
+                    state: '',
+                    postal: '',
+                    paid: true
+                }, () => {
+                    for (let i = 0; i < this.props.flightData[0][1].passengers; i++) {
+                        axios.put('https://westflight.herokuapp.com:5000/api/ticket', {
+                            fl_id: this.props.flightData[0][0].fl_id,
+                            af_id: this.props.flightData[0][0].af_id,
+                            first_name: this.state.passengerRequestData[i].firstName,
+                            last_name: this.state.passengerRequestData[i].lastName,
+                            gender: this.state.passengerRequestData[i].gender,
+                            email: this.state.passengerRequestData[i].email,
+                            phone: this.state.passengerRequestData[i].phoneNumber,
+                            birthday: this.state.passengerRequestData[i].birthday,
+                            addr1: this.state.passengerRequestData[i].address1,
+                            addr2: this.state.passengerRequestData[i].address2,
+                            city: this.state.passengerRequestData[i].city,
+                            state: this.state.passengerRequestData[i].state,
+                            postal: this.state.passengerRequestData[i].postal,
+                        }, {withCredentials: true})
+                        .then(response => {console.log(response)})
+                        .catch(error => {console.log(error)})
+                    }
+                })
                 setTimeout(() => {
                     alert('As for this is a mock website for FBLA Web Design, we will not be taking any actual payments. However, We will still process your order for your (pretend) flight.');
+                    this.props.history.push('/');
                 }, 1000)
+                
+            } else {
+                this.setState({
+                    firstName: this.state.passengerRequestData[this.state.currentPassenger].firstName,
+                    lastName: this.state.passengerRequestData[this.state.currentPassenger].lastName,
+                    gender: this.state.passengerRequestData[this.state.currentPassenger].gender,
+                    email: this.state.passengerRequestData[this.state.currentPassenger].email,
+                    phoneNumber: this.state.passengerRequestData[this.state.currentPassenger].phoneNumber,
+                    birthday: this.state.passengerRequestData[this.state.currentPassenger].birthday,
+                    address1: this.state.passengerRequestData[this.state.currentPassenger].address1,
+                    address2: this.state.passengerRequestData[this.state.currentPassenger].address2,
+                    city: this.state.passengerRequestData[this.state.currentPassenger].city,
+                    state: this.state.passengerRequestData[this.state.currentPassenger].state,
+                    postal: this.state.passengerRequestData[this.state.currentPassenger].postal,
+                    currentPassenger: this.state.currentPassenger + 1,
+                })
             }
             /*axios.put('https://westflightairlines.com/api/user', {
                 first_name: this.state.firstName,
@@ -276,7 +325,7 @@ export class Purchase extends Component {
     back() {
         let firstNameValid = true;
         let lastNameValid = true;
-        let birthdayValid = false;
+        let birthdayValid = true;
         let genderEntered = true;
         let emailValid = true;
         let phoneNumberValid = true;
@@ -291,7 +340,7 @@ export class Purchase extends Component {
             gender: this.state.gender,
             email: this.state.email,
             phoneNumber: this.state.phoneNumber,
-            birthday:  new Date(this.state.birthday),
+            birthday:  this.state.birthday,
             address1: this.state.address1,
             address2: this.state.address2,
             city: this.state.city,
@@ -306,13 +355,13 @@ export class Purchase extends Component {
             gender: this.state.passengerRequestData[this.state.currentPassenger - 2].gender,
             email: this.state.passengerRequestData[this.state.currentPassenger - 2].email,
             phoneNumber: this.state.passengerRequestData[this.state.currentPassenger - 2].phoneNumber,
-            birthday: new Date(this.state.passengerRequestData[this.state.currentPassenger - 2].birthday),
+            birthday: this.state.passengerRequestData[this.state.currentPassenger - 2].birthday,
             address1: this.state.passengerRequestData[this.state.currentPassenger - 2].address1,
             address2: this.state.passengerRequestData[this.state.currentPassenger - 2].address2,
             city: this.state.passengerRequestData[this.state.currentPassenger - 2].city,
             state: this.state.passengerRequestData[this.state.currentPassenger - 2].state,
             postal: this.state.passengerRequestData[this.state.currentPassenger - 2].postal,
-            currentPassenger: this.state.currentPassenger - 1
+            currentPassenger: this.state.currentPassenger - 1,
         })
 
         this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, birthdayValid: birthdayValid, genderEntered: genderEntered, emailValid: emailValid, phoneNumberValid: phoneNumberValid, address1Valid: address1Valid, cityValid: cityValid, stateValid: stateValid, postalValid: postalValid});
@@ -358,6 +407,7 @@ export class Purchase extends Component {
                             }
                             </Button>
                         </div>
+                        {this.state.paid && <Alert className="payButton" severity="success">Booked!</Alert>}
                     </Paper>            
                 </div>
                 }

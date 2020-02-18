@@ -20,6 +20,7 @@ var client = redis.createClient({
         host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT),
 })
+console.log(process.env.SESS_SECRET)
 client.auth(process.env.REDIS_PASS)
 app.use(session({
     secret: process.env.SESS_SECRET,
@@ -34,6 +35,7 @@ app.use(session({
         secure: process.env.SSL === 'true'
     }
 }))
+
 
 // setup mysql db pool
 var pool = mysql.createPool({
@@ -57,6 +59,7 @@ app.use(bodyParser.text({ type: 'text/html' }))
 var router = express.Router()
 // configure middlewares for API only
 router.get('/', (_, res) => res.status(200).send({msg: 'WestFlight Airlines API',}))
+router.use(cors({origin:[`http://localhost:3000`, `http://localhost:5000`] , withCredentials: true, credentials: true}))
 router.use('/user', require('./routes/user'))
 router.use('/flight', require('./routes/flight'))
 router.use('/ticket', require('./routes/ticket'))
@@ -70,5 +73,5 @@ app.get('*', (_, res) => {
 })
 
 // Listen
-const port = process.env.PORT || 3000
+const port = 5000
 app.listen(port)

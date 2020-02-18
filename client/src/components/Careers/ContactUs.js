@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Paper, TextField, Button, } from "@material-ui/core";
+import { Alert } from '@material-ui/lab';
 import axios from 'axios';
 
 import '../../css/components/Careers/Careers.scss';
@@ -13,11 +14,17 @@ export class Careers extends Component {
             firstName: '',
             lastName: '',
             phoneNumber: '',
+            subject: '',
+            message: '',
 
             firstNameValid: true,
             lastNameValid: true,
             emailValid: true,
             phoneNumberValid: true,
+            subjectValid: true,
+            messageValid: true,
+
+            sent: false
         }
 
         this.send = this.send.bind(this);
@@ -63,11 +70,29 @@ export class Careers extends Component {
         }
     }
 
+    updateSubject(value) {
+        if (value.trim().length === 0 || value.length > 120) {
+            this.setState({subject: value, subjectValid: false})
+        } else {
+            this.setState({subject: value, subjectValid: true})
+        }
+    }
+
+    updateMessage(value) {
+        if (value.trim().length === 0 || value.length > 500) {
+            this.setState({message: value, messageValid: false})
+        } else {
+            this.setState({message: value, messageValid: true})
+        }
+    }
+
     send() {
         let firstNameValid = true;
         let lastNameValid = true;
         let emailValid = true;
         let phoneNumberValid = true;
+        let subjectValid = true;
+        let messageValid = true;
 
         if (this.state.firstName === '') {
             firstNameValid = false;
@@ -85,13 +110,23 @@ export class Careers extends Component {
             phoneNumberValid = false;
         }
 
-        if (firstNameValid && lastNameValid && emailValid && phoneNumberValid) {
-            axios.post('https://westflightairlines.com/api/app', {
+        if (this.state.subject.trim().length === 0 || this.state.subject.length > 120) {
+            subjectValid = false;
+        }
+        
+        if (this.state.message.trim().length === 0 || this.state.message.length > 500) {
+            messageValid = false;
+        }
+
+        if (firstNameValid && lastNameValid && emailValid && phoneNumberValid && subjectValid && messageValid) {
+            axios.post('http://localhost:5000/api/msg', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 phone_number: this.state.phoneNumber,
                 email: this.state.email,
-            }, {headers: {'content-type': 'multipart/form-data'}, withCredentials: true})
+                subject: this.state.subject.trim(),
+                message: this.state.message.trim()
+            })
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -99,10 +134,15 @@ export class Careers extends Component {
                         firstName: '',
                         lastName: '',
                         phoneNumber: '',
+                        subject: '',
+                        message: '',
                         firstNameValid: true,
                         lastNameValid: true,
                         emailValid: true,
                         phoneNumberValid: true,
+                        subjectValid: true,
+                        messageValid: true,
+                        sent: true
                     })
                 }
             }).catch(error => {
@@ -110,22 +150,24 @@ export class Careers extends Component {
             })
         }
 
-        this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, emailValid: emailValid, phoneNumberValid: phoneNumberValid});
+        this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, emailValid: emailValid, phoneNumberValid: phoneNumberValid, subjectValid: subjectValid, messageValid: messageValid});
     }
 
     render() {
         return (
-            <div className={`Careers ${this.state.display ? 'shownnozfast' : 'hiddenfast'}`}>
+            <div className={`Careers Contact ${this.state.display ? 'shownnozfast' : 'hiddenfast'}`}>
                 <Paper elevation={5}>
                     <h1>Send Us A Message!</h1>
-                    <div className="half-field">
+                    <div className="third-field">
                         <TextField error={!this.state.firstNameValid} label="First name" variant="outlined" value={this.state.firstName} onChange={(e) => this.updateFName(e.target.value)}/>
                         <TextField error={!this.state.lastNameValid} label="Last name" variant="outlined" value={this.state.lastName} onChange={(e) => this.updateLName(e.target.value)}/>
+                        <TextField type="tel" label="Phone Number" variant="outlined" value={this.state.phoneNumber} onChange={(e) => this.updatePhoneNumber(e.target.value)} error={!this.state.phoneNumberValid}/>
                     </div>
-                    <TextField type="tel" label="Phone Number" variant="outlined" value={this.state.phoneNumber} onChange={(e) => this.updatePhoneNumber(e.target.value)} error={!this.state.phoneNumberValid}/>
                     <TextField type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
-                    {this.state.resume !== null ? <p className="resumeTitle">{this.state.resumeTitle}</p> : null}
-                    <Button className="submitButton" variant="contained" color="primary" onClick={this.signUp}>Submit</Button>
+                    <TextField type="text" label="Subject" variant="outlined" value={this.state.subject} onChange={(e) => this.updateSubject(e.target.value)} error={!this.state.subjectValid}/>
+                    <TextField label="Message" multiline rowsMax="6" value={this.state.message} onChange={(e) => this.updateMessage(e.target.value)} error={!this.state.messageValid} variant="outlined"/>
+                    <Button className="submitButton" variant="contained" color="primary" onClick={this.send}>Submit</Button>
+                    {this.state.sent && <Alert severity="success">Sent!</Alert>}
                 </Paper>            
             </div>
         )

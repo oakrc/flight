@@ -20,7 +20,7 @@
         flex-direction: column;
         align-items: center;
         margin: 5vh 0 5vh 0;
-        min-width: 20vw;
+        min-width: 30vw;
         padding: 2.5vh 2vw 5vh 2vw;
         border-radius: 10px;
         background-color: #f0f0f0;
@@ -94,6 +94,10 @@
 .Purchase {
     .MuiPaper-root {
         min-width: 50vw;
+    }
+
+    .MuiAlert-root {
+        min-width: 0!important;
     }
 
     .payButton {

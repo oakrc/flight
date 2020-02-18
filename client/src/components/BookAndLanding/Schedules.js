@@ -134,7 +134,7 @@ class FlightSearch extends Component {
         if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate)) {
             axios({
                 method: 'get',
-                url: 'https://westflightairlines.com/api/sched',
+                url: 'http://localhost:5000/api/sched',
                 params: {
                     depart: this.state.departLocation.slice(-4, -1),
                     arrive: this.state.arriveLocation.slice(-4, -1),
@@ -143,12 +143,6 @@ class FlightSearch extends Component {
             })
             .then(response => {
                 if (response.status === 200) {
-                    this.props.flightQueryOK(response.data, {
-                        departDate: this.state.departDate, 
-                        arriveDate: this.state.arriveDate,
-                        departLocation: this.state.departLocation,
-                        arriveLocation: this.state.arriveLocation
-                    });
                 }
             })
             .catch(error => {

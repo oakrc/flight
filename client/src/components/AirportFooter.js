@@ -3,9 +3,10 @@ import '../css/AirportFooter.scss'
 
 function AirportFooter() {
     return (
-        <div className="AirportFooter">
+        <div></div>
+        /*<div className="AirportFooter">
             
-        </div>
+        </div>*/
     )
 }
 

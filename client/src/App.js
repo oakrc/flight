@@ -66,12 +66,14 @@ class App extends Component {
     this.setState({flightData: []})
   }
 
-  showOption() {
-    this.setState({transitionScreen: true}, () => {
-      setTimeout(() => {
-        this.setState({transitionScreen: false})
-      }, 1500)
-    })
+  showOption(value) {
+    if (this.props.location.pathname !== value) {
+      this.setState({transitionScreen: true}, () => {
+        setTimeout(() => {
+          this.setState({transitionScreen: false})
+        }, 1500)
+      })
+    }
   }
 
   showPurchase(flightData) {
@@ -139,7 +141,7 @@ class App extends Component {
               <Route path='/flightschedules' component={Schedules} />
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
-              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={this.showOption}/>} />
+              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={(value) => this.showOption(value)}/>} />
               <Route component={NotAPage} />
             </Switch>
         </div>
