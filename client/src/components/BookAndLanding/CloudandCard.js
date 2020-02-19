@@ -1,6 +1,8 @@
 import React from 'react';
 
-import logo from '../../css/images/logo.jpg';
+import airplane from '../../css/images/airplane.jpg';
+import hawaii from '../../css/images/hawaii.jpg';
+import saltlake from '../../css/images/saltlake.jpg';
 import losAngeles from '../../css/images/losangeles.jpg';
 import sanfran from '../../css/images/sanfran.jpg';
 import seattle from '../../css/images/seattle.jpg';
@@ -10,6 +12,7 @@ function CloudandCard(props) {
     return (
         <div className="Clouds">
             <div className="cloudpic">
+                <img alt="airplane" src={airplane} />
                 <div className="cloud">
                     <h1>About West Flight</h1>
                     <p>
@@ -27,10 +30,9 @@ function CloudandCard(props) {
                         We hope to see you flying with us soon!
                     </p>
                 </div>
-                <img alt="logo" src={logo} />
             </div>
             <div className="cloudpic">
-                <img alt="logo" src={logo} />
+                <img alt="Hawaii" src={hawaii} />
                 <div className="cloud">
                     <h1>Start Flying</h1>
                     <p>
@@ -49,6 +51,7 @@ function CloudandCard(props) {
                 </div>
             </div>
             <div className="cloudpic">
+                <img alt="Salt Lake City" src={saltlake} />
                 <div className="cloud">
                     <h1>Careers With Us</h1>
                     <p>
@@ -58,7 +61,6 @@ function CloudandCard(props) {
                     Check the careers section in the dropdown menu to apply for a career.
                     </p>
                 </div>
-                <img alt="logo" src={logo} />
             </div>
             <div className="cloudpic">
                 <img alt="Los Angeles Beach" src={losAngeles} />
@@ -73,6 +75,7 @@ function CloudandCard(props) {
                 </div>
             </div>
             <div className="cloudpic">
+                <img alt="San Francisco - Golden Gate Bridge" src={sanfran} />
                 <div className="cloud">
                     <h1>Vacation Spot - San Francisco</h1>
                     <p>
@@ -82,7 +85,6 @@ function CloudandCard(props) {
                     Plan your journey and book a flight now!
                     </p>
                 </div>
-                <img alt="San Francisco - Golden Gate Bridge" src={sanfran} />
             </div>
             <div className="cloudpic">
                 <img alt="Seattle" src={seattle} />

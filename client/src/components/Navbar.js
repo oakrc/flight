@@ -36,10 +36,11 @@ export class Navbar extends Component {
                         <h2 onClick={() => {this.props.optionHandler('/careers'); this.toggleNav();}} className={`option-6 animated ${this.state.navOpen ? 'slideInUp' : 'slideOutUp'}`}><DelayLink to='/careers'>Careers</DelayLink></h2>
                         <h2 onClick={() => {this.props.optionHandler('/contact'); this.toggleNav();}} className={`option-7 animated ${this.state.navOpen ? 'slideInUp' : 'slideOutUp'}`}><DelayLink to='/contact'>Contact Us</DelayLink></h2>
                         <div className={`option-8 social animated ${this.state.navOpen ? 'slideInUp' : 'slideOutUp'}`}>
-                            <InstagramIcon fontSize="large"/>
-                            <FacebookIcon fontSize="large"/>
-                            <TwitterIcon fontSize="large"/>
+                            <a href="https://instagram.com/westflightairlines" target="_blank" rel="noopener noreferrer"><InstagramIcon fontSize="large"/></a>
+                            <a href="https://facebook.com/westflightairlines" target="_blank" rel="noopener noreferrer"><FacebookIcon fontSize="large"/></a>
+                            <a href="https://twitter.com/westflightairlines" target="_blank" rel="noopener noreferrer"><TwitterIcon fontSize="large"/></a>
                         </div> 
+                        <h2 className={`option-8 animated ${this.state.navOpen ? 'slideInUp' : 'slideOutUp'}`}><a href="https://docs.google.com/document/d/1hXhZ9vK3IizCvQzdjiuk3PD4Lv72TYH5hMi-CLAleSc/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Sources</a></h2>
                     </div>
                 </div>
                 <div className="Navbar">

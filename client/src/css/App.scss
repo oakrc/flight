@@ -28,6 +28,70 @@ body {
 	left: 0;
 }
 
+.container {
+    position: absolute;
+    top: 15vh;
+    margin: auto;
+    width: 567px;
+
+    .text {
+        font-size: 5rem;
+    }
+}
+
+.planeSymbol {
+    transition: transform .5s;
+    transform: scale(.9);
+    fill: white;
+    stroke: white;
+    transform-origin: 50%,50%;
+    animation: hideshow 2.5s forwards;
+}
+
+.text {
+    stroke: white;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 1.3s linear forwards;
+}
+
+@keyframes hideshow {
+    60%, 100% {
+        opacity: 0;
+        transform: translate(500px, 0);
+      }
+      0% {
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+  } 
+ 
+ @keyframes dash {
+    to {
+       stroke-dashoffset: 0;
+    }
+    from{
+        fill-opacity: 0;
+     }
+     to{
+        fill-opacity: 1;
+        fill: white;
+     }
+ }
+
+.text:nth-child(1) {
+    animation-delay: .75s;
+}
+
+.layer {
+    position: absolute;
+    top: 0;
+    left: -10vh;
+    width: 100vw;
+}
+
 ::-webkit-scrollbar-track {
     display: none;
 }
@@ -223,3 +287,180 @@ span {
 }
 
 /* Responsive */
+@media only screen and (max-width: 480px) {
+    html {
+        font-size: 10px;
+    }
+
+    .Title h2 {
+        font-size: 2.5rem;
+    }
+
+    .container {
+        top: 12vh;
+        width: 95vw;
+        font-size: 9.25px;
+        .text {
+            font-size: 5em;
+        }
+    }
+
+    .FlightSearch {
+        border-radius: 2vw!important;
+        width: 70vw;
+
+        .Top {
+            justify-content: space-around;
+            
+            .MuiButton-root {
+                width: 25vw;
+
+                .MuiButton-iconSizeMedium > *:first-child {
+                    position: relative;
+                    bottom: 4.5px;
+                    font-size: 15px;
+                }
+            }
+
+            .MuiButton-text {
+                padding-top: 1vh;
+            }
+        }
+
+        .Middle {
+            justify-content: space-around;
+            flex-direction: column;
+            align-items: center;
+
+            .Depart, .Arrive {
+                .MuiInputBase-root {
+                    width: 60vw!important;
+                }
+            }
+
+            .Arrive {
+                margin-top: 2vh;
+            }
+
+            .Date {
+                margin-top: 2vh;
+                .MuiInputBase-root {
+                    width: 60vw!important;
+    
+                    .MuiIconButton-root {
+                        padding: 0;
+                    }
+                }
+            }
+        }
+
+        .Vertical {
+            
+            .Person {
+                justify-content: space-around;
+            }
+
+            .sidenote {
+                text-align: center;
+            }
+
+            .MuiMenuItem-root {
+                min-height: 25px!important;
+            }
+        
+            .MuiPopover-paper {
+                padding: 1vh 0!important;
+            }
+        
+            .MuiPaper-elevation1 {
+                left: 20vw;
+            }
+
+            .MuiPaper-root {
+                min-width: 40vw!important;
+                .MuiFormControl-root {
+                    margin-top: 0vh!important;
+                }
+            }
+
+            .MuiOutlinedInput-root {
+                width: 10vw!important;
+            }
+        }
+    }
+
+    .Clouds {
+        margin-top: 25vh!important;
+        
+        .cloudpic {
+            flex-direction: column!important;
+            align-items: center;
+
+            .cloud {
+                margin-top: 5vh!important;
+                margin-bottom: 15vh!important;
+                width: 70vw!important;
+                height: 60vh!important;
+
+                h1 {
+                    font-size: 2rem!important;
+                    margin-bottom: 2vh!important;
+                }
+                p {
+                    font-size: 0.7rem;
+                }
+            }
+
+            img {
+                width: 70vw!important;
+                height: 70vw!important;
+            }
+        }
+    }
+
+    .Nav {
+        height: 85vh!important;
+        padding: 12.5vh 0 2.5vh 0!important;
+        .extras {
+            width: 90vw;
+        }
+    }
+
+    .MuiPaper-root {
+        min-width: 50vw!important;
+        padding: 2.5vh 4vw 5vh 4vw!important;
+        
+        h1 {
+            margin-bottom: 2vh;
+        }
+
+        .MuiButton-root {
+            width: 20vw;
+        }
+
+        .MuiFormControl-root {
+            margin-top: 2vh!important;
+        }
+
+        .MuiInputLabel-outlined {
+            transform: translate(14px, 15px) scale(1)
+        }
+
+        .MuiOutlinedInput-input {
+            height: 2.5vh;
+            padding: 10px 14px;
+        }
+    }
+
+    .Contact {
+        .MuiPaper-root {
+            width: 75vw!important;
+        }
+    }
+  }
+
+  @media only screen and (max-width: 380px) {
+    .container {
+        font-size: 8.6px;
+    }
+  }

@@ -7,7 +7,7 @@
     box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
     -webkit-box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
     -moz-box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
-    padding: 2vh 0 4vh 2vw;
+    padding: 2vh 2vw 4vh 2vw;
     
     .MuiOutlinedInput-root {
         transition: 0.5s;
@@ -41,6 +41,10 @@
             text-transform: none;
             color: #002e54; 
             box-sizing: content-box;
+
+            svg {
+                color: #6E6E6E;
+            }
         }
 
         .MuiButton-text {
