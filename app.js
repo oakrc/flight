@@ -59,7 +59,6 @@ app.use(bodyParser.text({ type: 'text/html' }))
 var router = express.Router()
 // configure middlewares for API only
 router.get('/', (_, res) => res.status(200).send({msg: 'WestFlight Airlines API',}))
-router.use(cors({origin:[`http://localhost:3000`, `http://localhost:5000`] , withCredentials: true, credentials: true}))
 router.use('/user', require('./routes/user'))
 router.use('/flight', require('./routes/flight'))
 router.use('/ticket', require('./routes/ticket'))
@@ -73,5 +72,5 @@ app.get('*', (_, res) => {
 })
 
 // Listen
-const port = 5000
+const port = process.env.PORT || 3000
 app.listen(port)
