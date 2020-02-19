@@ -368,10 +368,6 @@ span {
                 min-height: 25px!important;
             }
         
-            .MuiPopover-paper {
-                padding: 1vh 0!important;
-            }
-        
             .MuiPaper-elevation1 {
                 left: 20vw;
             }
@@ -389,6 +385,26 @@ span {
         }
     }
 
+    .fullFlightList {
+        width: 90vw;
+
+        .flightResult {
+            font-size: 1.25rem;
+
+            .times {
+                min-width: 60vw;
+            }
+
+            .flightSelect {
+                flex-direction: column;
+            }
+
+            .MuiButtonBase-root {
+                font-size: 0.8rem;
+            }
+        }
+    }
+
     .Clouds {
         margin-top: 25vh!important;
         
@@ -400,7 +416,7 @@ span {
                 margin-top: 5vh!important;
                 margin-bottom: 15vh!important;
                 width: 70vw!important;
-                height: 60vh!important;
+                height: auto!important;
 
                 h1 {
                     font-size: 2rem!important;
@@ -455,6 +471,51 @@ span {
     .Contact {
         .MuiPaper-root {
             width: 75vw!important;
+        }
+    }
+
+    .Careers, .Purchase {
+        .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
+            padding: 0!important;
+        }
+    }
+
+    .Purchase {
+        .MuiPaper-root {
+            width: 80vw;
+
+            .third-field .spaceGot {
+                width: 40%!important;
+            }
+
+            .third-field .spaceTaken {
+                width: 25%!important;
+            }
+        }
+        
+        .MuiOutlinedInput-adornedEnd {
+            padding: 0;
+        }
+    }
+
+    .LogIn {
+        .MuiIconButton-root {
+            padding: 0;
+        }
+    }
+    
+    .MuiPopover-paper {
+        padding: 1vh 0!important; 
+
+        .MuiMenuItem-root {
+            min-height: 0;
+        }
+    }
+
+    .MuiAutocomplete-paper {
+        padding: 0!important ;
+        .MuiAutocomplete-option {
+            min-height: 0!important;
         }
     }
   }
