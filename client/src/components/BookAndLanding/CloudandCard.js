@@ -35,33 +35,22 @@ function CloudandCard(props) {
             <div className="cloudpic">
                 <img alt="Hawaii" src={hawaii} />
                 <div className="cloud">
-                    <h1>Start Flying</h1>
+                    <h1>Vacation Spot - Hawaii</h1>
                     <hr></hr>
                     <p>
-                    To get started, navigate to the dropdown menu in the top-right corner of the screen. You can click on any of the links to visit the other parts of the website.
-                        <ul>
-                            <li>To learn more about our frequent flyer program, click on “WestMiles”.</li>
-                            <li>To book flights and join our frequent flyer program, sign up or log in with the Log In option.</li>
-                            <li>After logging in, visit your dashboard to see upcoming flights you have booked.</li>  
-                            <li>To book a flight, you can use the home page to find a flight, or click “Book A Flight” in the menu.</li> 
-                            <li>To check in before your flight, click on “Check In”.</li> 
-                            <li>To check the schedule of arriving/departing flights, click on “Schedules”.</li>
-                            <li>Feel free to contact us with the smaller options at the bottom.</li>
-                            <li>Take a look at our open positions if your interested in working for us.</li>
-                        </ul> 
+                    From volcanic landscapes to hidden waterfalls… active adventures to an energetic nightlife… a holiday on the Hawaiian Islands offers infinite experiences in one destination. Each of the six major islands – Kauai, Oahu, Molokai, Lanai, Maui, and the island of Hawaii – has its own distinct personality, but no matter which ones you choose, you’ll discover endless opportunities for adventure, dining, culture and relaxation. Popular tourist attractions include the Volcanoes National Park, the Polynesian Cultural Center, as well as the beautiful beaches surrounding the island.
+<br></br>Come journey through the islands and explore the rich culture of Hawaii!
                     </p>
                 </div>
             </div>
             <div className="cloudpic">
                 <img alt="Salt Lake City" src={saltlake} />
                 <div className="cloud">
-                    <h1>Careers With Us</h1>
+                    <h1>Vacation Spot - Salt Lake City</h1>
                     <hr></hr>
                     <p>
-                    WestFlight Airlines offers a wide variety of careers to people interested in joining the company. We are proud to provide positions in customer service, engineering, as well as other career opportunities covering various corporate functions. Our company is seeking hard-working, and talented individuals who are passionate about working for WestFlight airlines. If you contain these traits, --- we want to hear from you!
-                    <br></br><br></br>
-                    Interested in applying?
-                    Check the careers section in the dropdown menu to apply for a career.
+                    Whether you're visiting Salt Lake for business or pleasure, you're in for a great time. Salt Lake City is the capital and most populous municipality of the U.S. state of Utah, and it is filled with lots of activities and fun. Popular tourist attractions include visiting the Utah Olympic Park, which was built for the 2002 Olympic Winter games and offers a multitude of summer/winter activities year round. Another great place to visit is the Great Salt Lake Marina, where you can do things like kayaking, paddle boarding, and pedal boating. Overall, Salt Lake City contains many new adventures that you should consider trying out. 
+<br></br>Come and explore the city by booking a flight!
                     </p>
                 </div>
             </div>

@@ -518,10 +518,137 @@ span {
             min-height: 0!important;
         }
     }
+
+    .MuiFab-extended {
+        height: 40px!important;
+    }
   }
 
   @media only screen and (max-width: 380px) {
     .container {
         font-size: 8.6px;
+    }
+  }
+
+  @media only screen and (max-width: 1024px) and (min-width: 768px) {
+    html {
+        font-size: 12px;
+    }
+
+    .MuiPaper-root {
+        min-width: 50vw!important;
+        padding: 2.5vh 4vw 5vh 4vw!important;
+        
+        h1 {
+            margin-bottom: 2vh;
+        }
+
+        .MuiButton-root {
+            width: 20vw;
+        }
+
+        .MuiFormControl-root {
+            margin-top: 2vh!important;
+        }
+
+        .MuiInputLabel-outlined {
+            transform: translate(14px, 15px) scale(1)
+        }
+
+        .MuiOutlinedInput-input {
+            height: 2.5vh;
+            padding: 10px 14px;
+        }
+    }
+
+    .MuiFormControl-root {
+        margin-right: 0!important;
+    }
+
+    .container {
+        font-size: 14px;
+        .text {
+            font-size: 5em;
+        }
+    }
+
+    .Top {
+        .MuiButton-text {
+            width: 15vw;
+
+            .MuiSvgIcon-root {
+                position: relative;
+                bottom: 2px;
+            }
+        }
+    }
+
+    .Middle {
+        justify-content: space-around;
+        flex-direction: column;
+        align-items: center;
+
+        .Depart, .Arrive {
+            .MuiInputBase-root {
+                width: 50vw!important;
+            }
+        }
+
+        .Arrive {
+            margin-top: 2vh;
+        }
+
+        .Date {
+            margin-top: 2vh;
+            .MuiInputBase-root {
+                width: 50vw!important;
+
+                .MuiIconButton-root {
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    .Nav {
+        height: 85vh!important;
+        padding: 12.5vh 0 2.5vh 0!important;
+        .extras {
+            width: 70vw;
+        }
+    }
+
+    .Clouds {
+        margin-top: 25vh!important;
+        
+        .cloudpic {
+            flex-direction: column!important;
+            align-items: center;
+
+            .cloud {
+                margin-top: 5vh!important;
+                margin-bottom: 15vh!important;
+                width: 60vw!important;
+                height: auto!important;
+
+                h1 {
+                    font-size: 2rem!important;
+                    margin-bottom: 2vh!important;
+                }
+                p {
+                    font-size: 0.7rem;
+                }
+            }
+
+            img {
+                width: 60vw!important;
+                height: 60vw!important;
+            }
+        }
+    }
+
+    .FlightSched .FlightSearch {
+        width: fit-content;
+        margin: 2.5vh auto 0vh auto;
     }
   }
