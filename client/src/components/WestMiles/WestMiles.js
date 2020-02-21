@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import KeyboardArrowDownRoundedIcon from '@material-ui/icons/KeyboardArrowDownRounded';
-import KeyboardArrowUpRoundedIcon from '@material-ui/icons/KeyboardArrowUpRounded';
 import '../../css/components/BookAndLanding/WestMiles.scss';
 
 export class WestMiles extends Component {

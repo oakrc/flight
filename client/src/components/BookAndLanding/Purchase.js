@@ -248,7 +248,7 @@ export class Purchase extends Component {
                     paid: true
                 }, () => {
                     for (let i = 0; i < this.props.flightData[0][1].passengers; i++) {
-                        axios.put('https://westflight.herokuapp.com:5000/api/ticket', {
+                        axios.put('/api/ticket', {
                             fl_id: this.props.flightData[0][0].fl_id,
                             af_id: this.props.flightData[0][0].af_id,
                             first_name: this.state.passengerRequestData[i].firstName,

@@ -97,7 +97,7 @@ class App extends Component {
   }
 
   logOut() {
-    axios.delete('https://westflightairlines.com/api/user', {withCredentials: true})
+    axios.delete('/api/user', {withCredentials: true})
     .then((response) => {
         this.showOption();
         setTimeout(() => {
@@ -117,7 +117,9 @@ class App extends Component {
     .catch((error) => {
       try {
         error.response.status === 401 && this.setState({loggedIn: false})
-      } catch {}
+      } catch {
+
+      }
     });
   }
 

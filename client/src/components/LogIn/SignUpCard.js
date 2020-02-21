@@ -154,7 +154,7 @@ export class SignUpCard extends Component {
         }
 
         if (firstNameValid && lastNameValid && birthdayValid && genderEntered && emailValid && passwordValid && confirmpwdValid && phoneNumberValid) {
-            axios.put('http://localhost:5000/api/user', {
+            axios.put('/api/user', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 birthday: this.state.birthday,

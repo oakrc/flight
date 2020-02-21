@@ -119,7 +119,7 @@ export class Careers extends Component {
         }
 
         if (firstNameValid && lastNameValid && emailValid && phoneNumberValid && subjectValid && messageValid) {
-            axios.post('http://localhost:5000/api/msg', {
+            axios.post('/api/msg', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 phone_number: this.state.phoneNumber,
