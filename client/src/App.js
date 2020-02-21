@@ -97,7 +97,7 @@ class App extends Component {
   }
 
   logOut() {
-    axios.delete('http://localhost:5000/api/user', {withCredentials: true})
+    axios.delete('https://westflightairlines.com/api/user', {withCredentials: true})
     .then((response) => {
         this.showOption();
         setTimeout(() => {
@@ -110,7 +110,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/api/user', {withCredentials: true})
+    axios.get('/api/user', {withCredentials: true})
     .then((response) => {
       response.status === 200 && this.setState({loggedIn: true})
     })
