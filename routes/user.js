@@ -9,6 +9,10 @@ const nodemailer = require('nodemailer')
 
 var router = express.Router()
 
+var dbg = true
+const log = (msg) => {
+    if (dbg) console.log(msg)
+}
 // register
 router.put('/', (req, res) => {
     // register user
@@ -18,6 +22,7 @@ router.put('/', (req, res) => {
     // checks login & password against requirements
     const invalid_password = valid.password(plain_pw)
     if (invalid_password.length) { // only ascii accepted
+        msg('pwrq')
         res.status(400).send({ error: 'Password Requirements Unmet', reasons: invalid_password })
         return
     }
@@ -29,11 +34,13 @@ router.put('/', (req, res) => {
     // checks if user already exists
     req.app.locals.pool.query(query.user_exists, [req.body.email], (err, result) => {
         if (err) {
+            log('e1')
             res.status(500).send({ error: 'Error registering user' })
             return
         }
         var user_exists = result[0].exists
         if (user_exists) {
+            log('e2')
             res.status(403).send({ error: 'Email already registered' })
             return
         }
@@ -41,6 +48,7 @@ router.put('/', (req, res) => {
         // hash & store password
         bcrypt.hash(plain_pw, salt_rounds, (err, hashed) => {
             if (err) {
+                log('e3')
                 res.status(500).send({ error: 'Error registering user' })
                 return
             }
@@ -60,15 +68,18 @@ router.put('/', (req, res) => {
             }
             crypto.randomBytes(64, (err, buf) => {
                 if (err) {
+                    log('e4')
                     res.status(500).send({ error: 'Error registering user' })
                 }
                 if (hashed.length > 1) {
                     req.app.locals.pool.getConnection((err,conn) => {
                         if (err) {
+                            log('e5')
                             res.status(500).send({ error: 'Error registering user' })
                         }
                         else conn.beginTransaction((err) => {
                             if (err) {
+                                log('e6')
                                 res.status(500).send({ error: 'Error registering user' })
                             }
                             else conn.query(query.register_user, [
@@ -85,6 +96,7 @@ router.put('/', (req, res) => {
                                 if (err) {
                                     conn.rollback(() => {
                                         conn.release()
+                                        log('e7')
                                         res.status(500).send({ error: 'Error registering user' })
                                     })
                                 } else {
@@ -92,6 +104,7 @@ router.put('/', (req, res) => {
                                         if (err) {
                                             conn.rollback(() => {
                                                 conn.release()
+                                                log('e7')
                                                 res.status(500).send({ error: 'Error registering user' })
                                             })
                                         } else {
@@ -109,11 +122,11 @@ router.put('/', (req, res) => {
                                                 subject: 'WestFlight Airlines: Account Verification',
                                                 html: `<html><head></head><body><form method="DELETE" action="https://www.westflightairlines.com/api/user/token/` + buf + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
                                             }
-                                            var ret = false;
                                             transporter.sendMail(mailOpts).then(() => {
                                                 res.status(200).send({ msg: 'Sucessful Registration' })
                                             },
                                             () => {
+                                                log('e8')
                                                 res.status(500).send({ error: 'Failed to send verification email.'})
                                             })
                                         }
