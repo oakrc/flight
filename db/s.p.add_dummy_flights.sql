@@ -24,9 +24,9 @@ BEGIN
             0,
             @max_allowed
         );
-        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(600))+@duration*30+500)),
-                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(300))+@duration*25+300)),
-                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(200))+@duration*15+30));
+        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(200))+@duration*95+300)),
+                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(100))+@duration*65+250)),
+                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(50))+@duration*25+25));
         SET @reps = @reps - 1;
     UNTIL @reps = 0 END REPEAT;
 END//
