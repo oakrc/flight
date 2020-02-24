@@ -32,8 +32,8 @@ router.put('/', (req, res) => {
             res.status(500).send({ error: 'Error registering user' })
             return
         }
-        var user_exists = result[0].exists
-        if (user_exists) {
+        var user_exists = JSON.parse(JSON.stringify(result))[0].exist
+        if (user_exists >= 1) {
             res.status(403).send({ error: 'Email already registered' })
             return
         }
@@ -58,74 +58,80 @@ router.put('/', (req, res) => {
                 res.status(400).send({ error: codes })
                 return
             }
-            crypto.randomBytes(64, (err, buf) => {
-                if (err) {
-                    res.status(500).send({ error: 'Error registering user' })
-                }
-                if (hashed.length > 1) {
-                    req.app.locals.pool.getConnection((err,conn) => {
+            if (hashed.length > 1) {
+                req.app.locals.pool.getConnection((err,conn) => {
+                    if (err) {
+                        res.status(500).send({ error: 'Error registering user' })
+                    }
+                    else conn.beginTransaction((err) => {
                         if (err) {
                             res.status(500).send({ error: 'Error registering user' })
                         }
-                        else conn.beginTransaction((err) => {
+                        else conn.query(query.register_user, [
+                            req.body.first_name,
+                            req.body.last_name,
+                            new Date(req.body.birthday),
+                            req.body.gender,
+                            req.body.phone_number,
+                            req.body.email,
+                            hashed
+                        ], (err, _) => {
                             if (err) {
-                                res.status(500).send({ error: 'Error registering user' })
-                            }
-                            else conn.query(query.register_user, [
-                                req.body.first_name,
-                                // req.body.middle_name,
-                                req.body.last_name,
-                                new Date(req.body.birthday),
-                                req.body.gender,
-                                req.body.phone_number,
-                                req.body.email,
-                                hashed,
-                                buf.toString('hex')
-                            ], (err, _) => {
-                                if (err) {
-                                    conn.rollback(() => {
-                                        conn.release()
-                                        res.status(500).send({ error: 'Error registering user' })
-                                    })
-                                } else {
-                                    conn.commit((err) => {
-                                        if (err) {
-                                            conn.rollback(() => {
-                                                conn.release()
-                                                res.status(500).send({ error: 'Error registering user' })
-                                            })
-                                        } else {
-                                            conn.release();
+                                conn.rollback(() => {
+                                    conn.release()
+                                    res.status(500).send({ error: 'Error registering user' })
+                                })
+                            } else {
+                                conn.commit((err) => {
+                                    if (err) {
+                                        conn.rollback(() => {
+                                            conn.release()
+                                            res.status(500).send({ error: 'Error registering user' })
+                                        })
+                                    } else {
+                                        conn.release();
+                                        req.app.locals.pool.query(query.get_token_w_email, [req.body.email], (err, result) => {
+                                            if (err) {
+                                                res.status(500).send({ error: 'Failed to send verification email.' })
+                                                return
+                                            }
                                             let transporter = nodemailer.createTransport({
                                                 service: 'Gmail',
                                                 auth: {
-                                                    user: process.env.MAIL_USER,
+                                                    user: 'westflightairlines@gmail.com',//process.env.MAIL_USER,
                                                     pass: process.env.MAIL_PASS
                                                 }
                                             })
-                                            var mailOpts = {
-                                                from: 'noreply@westflightairlines.com',
-                                                to: req.body.email,
-                                                subject: 'WestFlight Airlines: Account Verification',
-                                                html: `<html><head></head><body><form method="DELETE" action="https://www.westflightairlines.com/api/user/token/` + buf + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
-                                            }
-                                            var ret = false;
-                                            transporter.sendMail(mailOpts).then(() => {
-                                                res.status(200).send({ msg: 'Sucessful Registration' })
-                                            },
-                                            () => {
-                                                res.status(500).send({ error: 'Failed to send verification email.'})
+                                            transporter.verify((err,succ) => {
+                                                if (err) {
+                                                    res.status(500).send({ error: 'Failed to send verification email.'})
+                                                    return
+                                                }
+                                                var mailOpts = {
+                                                    from:'noreply@westflightairlines.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
+                                                    to: req.body.email,
+                                                    subject: 'WestFlight Airlines: Account Verification',
+                                                    html: `<html><head></head><body><form method="DELETE" action="https://www.westflightairlines.com/api/user/token/` + encodeURIComponent(JSON.parse(JSON.stringify(result))[0].token) + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
+                                                }
+                                                transporter.sendMail(mailOpts).then(
+                                                    () => {
+                                                        res.status(200).send({ msg: 'Sucessful Registration' })
+                                                    },
+                                                    () => {
+                                                        res.status(500).send({ error: 'Failed to send verification email.'})
+                                                    }
+                                                )
                                             })
-                                        }
-                                    })
-                                }
-                            })
-
+                                        })
+                                    }
+                                })
+                            }
                         })
 
                     })
-                } else res.status(500).end()
-            })
+
+                })
+            } else res.status(500).end()
         })
     })
 })
@@ -145,9 +151,10 @@ router.post('/', (req, res) => {
                 res.status(401).send({ error: 'Authentication Failure' })
                 return
             }
-            pw_hash = result[0].pw
-            uid = result[0].user_uid
-            if (result[0].verified != 1) {
+            var js_res = JSON.parse(JSON.stringify(res))
+            pw_hash = js_res[0].pw
+            uid = js_res[0].user_uid
+            if (js_res[0].verified != 1) {
                 res.status(423).send({ error: 'Account not verified.' })
                 return
             }
@@ -163,9 +170,8 @@ router.post('/', (req, res) => {
 })
 
 // verify account
-router.delete('/token/:token', valid.uid, (req, res) => {
-    var token = req.params.token
-    var uid = req.session.uid
+router.delete('/token/:token', (req, res) => {
+    var token = decodeURIComponent(req.params.token)
     if (token.length != 64) {
         res.status(403).send({ error:'Invalid token.' })
         return
@@ -175,7 +181,7 @@ router.delete('/token/:token', valid.uid, (req, res) => {
             res.status(500).send({ error: 'Internal Server Error.' })
             return;
         }
-        conn.query(query.get_token, [uid, token], (err, result) => {
+        conn.query(query.get_token, [token], (err, result) => {
             if (err) {
                 res.status(500).send({ error: 'Internal Server Error.' })
                 return;
@@ -184,10 +190,11 @@ router.delete('/token/:token', valid.uid, (req, res) => {
                 res.status(403).send({ error: 'Invalid token.' })
             }
             else conn.beginTransaction((err) => {
+                var uid = JSON.parse(JSON.stringify(result))[0].user_id
                 if (err) {
                     res.status(500).send({ error: 'Internal Server Error.' })
                 }
-                else conn.query(query.del_token + query.set_usr_verified, [uid, token], (err, result) => {
+                else conn.query(query.del_token + query.set_usr_verified, [uid, uid, token], (err, result) => {
                     if (err) {
                         conn.rollback(() => {
                             conn.release()

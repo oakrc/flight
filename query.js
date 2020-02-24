@@ -10,9 +10,10 @@ module.exports = {
     // /api/user
     get_user_data     : `SELECT ? AS uid,email,phone_number,first_name,last_name,birthday,gender,tier,miles FROM users WHERE id=u2b(?);`,
     user_exists       : `SELECT COUNT(*) AS exist FROM users WHERE email=?;`,
-    register_user     : `CALL register_user(?,?,?,?,?,?,?,?);`,
+    register_user     : `CALL register_user(?,?,?,?,?,?,?);`,
     get_user_id_pw    : `SELECT b2u(id) AS user_uid, pw, verified FROM westflight.users WHERE email=?;`,
-    get_token         : `SELECT b2u(user_id) AS user_id, token FROM verification_tokens WHERE user_id=u2b(?) AND token=?;`,
+    get_token         : `SELECT b2u(user_id) AS user_id, token FROM verification_tokens WHERE token=?;`,
+    get_token_w_email : `SELECT vt.token FROM verification_tokens AS vt INNER JOIN users AS us ON vt.user_id=us.id WHERE us.email=?;`,
     del_token         : `DELETE FROM verification_tokens WHERE user_id=u2b(?) AND token=?;`,
     set_usr_verified  : `UPDATE users SET verified=1 WHERE id=u2b(?);`,
 
