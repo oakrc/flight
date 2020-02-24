@@ -1,14 +1,77 @@
-.firstCard {
-    padding-top: 15vh;
+.Clouds {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 50vh;
+
+    .cloudpic {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        width: 100vw;
+
+        img {
+            margin: 0 5vw 0 5vw;
+            width: 30vw;
+            height: 30vw;
+            border-radius: 0.75vw;
+            animation: cloudBounce 4s infinite;
+            background-position: center center;     
+        }
+
+        .cloud {
+            margin: 0 0 30vh 0;
+            padding: 2vw 2vw 2vw 2vw;
+            box-sizing: border-box;
+            width: 40vw;
+            height: 30vw;
+            border-radius: 0.75vw;
+            background-color: transparent;
+            box-shadow: none;
+            text-align: center;
+            background-color: #f0f0f0;
+            color: #0068a6;
+            animation: cloudBounce 4s infinite;
+            animation-delay: 2s;
+    
+            h1 {    
+                font-family: 'Kollektif';
+                font-size: 3rem;
+                margin: 0 0 0vh 0;
+            }
+            
+            hr {
+                border: 0;
+                border-top: 2px solid #0068a6;
+            }
+            
+            p {
+                margin: 3vh 0 0 0;
+                text-align: justify;
+                font-size: 1.2rem;
+            }
+        }
+    }
+}
+@keyframes cloudBounce {
+    50% {
+      transform: translateY(.75vh);
+    }
+    100% {
+      transform: translateY(0);
+    }
+}
+/*.firstCard {
+    padding-top: 60vh;
 }
 
 .followingCard {
-    top: -3vh;
+    top: -20vh;
 }
 
 .cardContainer {
     position: relative;
-    margin-top: 50vh;
+    margin: 0;
     width: 100vw;
     display: flex;
     flex-direction: column;
@@ -49,4 +112,4 @@
           transform: translateY(0);
         }
     }
-}
+}*/

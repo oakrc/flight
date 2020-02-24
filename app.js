@@ -20,6 +20,7 @@ var client = redis.createClient({
         host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT),
 })
+console.log(process.env.SESS_SECRET)
 client.auth(process.env.REDIS_PASS)
 app.use(session({
     secret: process.env.SESS_SECRET,
@@ -34,6 +35,7 @@ app.use(session({
         secure: process.env.SSL === 'true'
     }
 }))
+
 
 // setup mysql db pool
 var pool = mysql.createPool({
@@ -70,5 +72,5 @@ app.get('*', (_, res) => {
 })
 
 // Listen
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 app.listen(port)

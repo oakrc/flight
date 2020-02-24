@@ -18,6 +18,7 @@ const Careers = React.lazy(() => import('./components/Careers/Careers'));
 const CheckIn = React.lazy(() => import('./components/CheckIn/CheckIn'));
 const ContactUs = React.lazy(() => import('./components/Careers/ContactUs'));
 const Schedules = React.lazy(() => import('./components/BookAndLanding/Schedules'));
+const Purchase = React.lazy(() => import('./components/BookAndLanding/Purchase'));
 const NotAPage = React.lazy(() => import('./components/NotAPage'));
 
 const theme = createMuiTheme({
@@ -42,10 +43,13 @@ class App extends Component {
     super(props)
 
     this.state = {
+      flightData: [],
       transitionScreen: false,
       loggedIn: false
     }
 
+    this.resetFlData = this.resetFlData.bind(this);
+    this.showPurchase = this.showPurchase.bind(this);
     this.showOption = this.showOption.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.logIn = this.logIn.bind(this);
@@ -58,12 +62,30 @@ class App extends Component {
     history: PropTypes.object.isRequired
   };
 
-  showOption() {
-    this.setState({transitionScreen: true}, () => {
+  resetFlData() {
+    this.setState({flightData: []})
+  }
+
+  showOption(value) {
+    if (this.props.location.pathname !== value) {
+      this.setState({transitionScreen: true}, () => {
+        setTimeout(() => {
+          this.setState({transitionScreen: false})
+        }, 1500)
+      })
+    }
+  }
+
+  showPurchase(flightData) {
+    this.setState({
+      transitionScreen: true,
+      flightData: flightData
+    }, () => {
       setTimeout(() => {
         this.setState({transitionScreen: false})
       }, 1500)
     })
+
   }
 
   logIn() {
@@ -75,7 +97,7 @@ class App extends Component {
   }
 
   logOut() {
-    axios.delete('https://westflight.herokuapp.com/api/user', {withCredentials: true})
+    axios.delete('/api/user', {withCredentials: true})
     .then((response) => {
         this.showOption();
         setTimeout(() => {
@@ -88,14 +110,16 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get('https://westflight.herokuapp.com/api/user', {withCredentials: true})
+    axios.get('/api/user', {withCredentials: true})
     .then((response) => {
       response.status === 200 && this.setState({loggedIn: true})
     })
     .catch((error) => {
       try {
         error.response.status === 401 && this.setState({loggedIn: false})
-      } catch {}
+      } catch {
+
+      }
     });
   }
 
@@ -111,7 +135,7 @@ class App extends Component {
       <div className="App">
         <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
             <Switch>
-              <Route exact path='/' component={BookAndLanding} />
+              <Route exact path='/' render={(props) => <BookAndLanding {...props} showPurchase={(flightData) => this.showPurchase(flightData)} resetFlData={this.resetFlData}/>} />
               {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} />} />}
               <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
@@ -119,6 +143,7 @@ class App extends Component {
               <Route path='/flightschedules' component={Schedules} />
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
+              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={(value) => this.showOption(value)}/>} />
               <Route component={NotAPage} />
             </Switch>
         </div>

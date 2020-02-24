@@ -88,6 +88,22 @@
     }
 }
 
+.Contact {
+    .MuiPaper-root {
+        min-width: 40vw;
+    }
+
+    .third-field {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        & > * {
+            width: 30% !important;
+        }
+    }
+}
+
 .submitButton {
     margin-top: 2vh !important;
 }

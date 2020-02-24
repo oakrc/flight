@@ -164,7 +164,7 @@ export class Careers extends Component {
         } 
 
         if (firstNameValid && lastNameValid && genderEntered && emailValid && phoneNumberValid) {
-            axios.post('https://westflightairlines.com/api/application', {
+            axios.post('/api/app', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 birthday: this.state.birthday,
@@ -172,7 +172,7 @@ export class Careers extends Component {
                 phone_number: this.state.phoneNumber,
                 email: this.state.email,
                 resume: this.state.resume
-            }, {headers: {'content-type': 'multipart/form-data'}, withCredentials: true})
+            }, {headers: {'content-type': 'multipart/form-data'}})
             .then(response => {
                 if (response.status === 200) {
                     this.setState({

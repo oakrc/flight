@@ -7,7 +7,7 @@
     box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
     -webkit-box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
     -moz-box-shadow: 0px 1px 15px 6px rgba(100,100,100,0.5);
-    padding: 2vh 0 4vh 2vw;
+    padding: 2vh 2vw 4vh 2vw;
     
     .MuiOutlinedInput-root {
         transition: 0.5s;
@@ -41,6 +41,10 @@
             text-transform: none;
             color: #002e54; 
             box-sizing: content-box;
+
+            svg {
+                color: #6E6E6E;
+            }
         }
 
         .MuiButton-text {
@@ -53,7 +57,7 @@
             display: flex;
             flex-direction: column;
             padding: 1vh 1.5vw 2vh 1.5vw;
-            z-index: 2;
+            z-index: 4;
             color: #002e54; 
 
             .Person {
@@ -145,6 +149,13 @@
     }
 }
 
+.fullFlightList {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 0 10vw 0 10vw;
+}
+
 .flightResult {
     display: flex;
     justify-content: space-between;
@@ -152,19 +163,31 @@
     margin: 0 0 5vh 0;
     box-sizing: border-box;
     padding: 2vh 3vw 3vh 3vw;
-    width: 50vw;
-    height: 20vh;
-    z-index: 100000000;
+    height: 15vh;
+    min-width: 50vw;
+    font-size: 1.5rem;
+    z-index: 3;
+    transition: 0.5s;
 
-    .priceSelect {
+    .times {
+        display: flex;
+        justify-content: space-between;
+        min-width: 30vw;
+    }
+
+    .flightSelect {
         display: flex;
         align-items: center;
-        justify-content: center;
-        flex-direction: column;
+    }
 
-        .MuiButtonBase-root {
-            margin-top: 1vh;
-        }
+    .MuiButtonBase-root {
+        margin: 0 0 0 2vw;
+        font-size: 1rem;
+        text-transform: none;
+    }
+
+    &:hover {
+        background-color: #e4e4e4;
     }
 }
 

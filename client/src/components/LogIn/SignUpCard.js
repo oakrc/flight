@@ -154,7 +154,7 @@ export class SignUpCard extends Component {
         }
 
         if (firstNameValid && lastNameValid && birthdayValid && genderEntered && emailValid && passwordValid && confirmpwdValid && phoneNumberValid) {
-            axios.put('https://westflightairlines.com/api/user', {
+            axios.put('/api/user', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
                 birthday: this.state.birthday,
@@ -215,7 +215,7 @@ export class SignUpCard extends Component {
                     </div>
                     <TextField type="tel" label="Phone Number" variant="outlined" value={this.state.phoneNumber} onChange={(e) => this.updatePhoneNumber(e.target.value)} error={!this.state.phoneNumberValid}/>
                     <TextField type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
-                    <TextField label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid}/>
+                    <TextField label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid} helperText={!this.state.passwordValid && 'At least 10 characters, containing lowercase letters, uppercase letters, and numbers'}/>
                     <TextField label="Confirm Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.confirmpwd} onChange={(e) => this.updateConfirmPwd(e.target.value)} error={!this.state.confirmpwdValid}/>
                     {this.state.signUpSuccess !== null && (this.state.signUpSuccess ? <Alert severity="success">Signed Up!</Alert> : <Alert severity="error">Error!</Alert>)}
                     <Button variant="contained" color="primary" onClick={this.signUp}>

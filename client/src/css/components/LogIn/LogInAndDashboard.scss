@@ -20,7 +20,7 @@
         flex-direction: column;
         align-items: center;
         margin: 5vh 0 5vh 0;
-        min-width: 20vw;
+        min-width: 30vw;
         padding: 2.5vh 2vw 5vh 2vw;
         border-radius: 10px;
         background-color: #f0f0f0;
@@ -64,6 +64,22 @@
                 width: 45%;
             }
         }
+
+        .half-field1 {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .third-field {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            & > * {
+                width: 31%;
+            }
+        }
     }
 
     .MuiButton-root {
@@ -71,6 +87,20 @@
         min-width: 6vw;
         height: 4vh;
         text-transform: none;
+        align-self: flex-end;
+    }
+}
+
+.Purchase {
+    .MuiPaper-root {
+        min-width: 50vw;
+    }
+
+    .MuiAlert-root {
+        min-width: 0!important;
+    }
+
+    .payButton {
         align-self: flex-end;
     }
 }
