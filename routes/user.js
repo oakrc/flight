@@ -158,13 +158,17 @@ router.post('/', (req, res) => {
                 res.status(423).send({ error: 'Account not verified.' })
                 return
             }
-            const comp = bcrypt.compareSync(Buffer.from(req.body.password, 'base64').toString(), pw_hash)
-            if (comp) {
-                req.session.uid = uid
-                res.status(200).end()
-            } else {
-                res.status(401).send({ error: 'Authentication Failure' })
-            }
+            bcrypt.compare(Buffer.from(req.body.password, 'base64').toString(), pw_hash, (err, comp) => {
+                if (err) {
+                    res.status(500).send({ error: 'Internal Server Error.' })
+                }
+                if (comp) {
+                    req.session.uid = uid
+                    res.status(200).end()
+                } else {
+                    res.status(401).send({ error: 'Authentication Failure' })
+                }
+            })
         }
     )
 })

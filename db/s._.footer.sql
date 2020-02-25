@@ -10,7 +10,7 @@ INSERT INTO users VALUES (
     'O',
     '555-000-8888',
     'noreply@westflightairlines.com',
-    '$2y$12$aOmZunnLVI2.IoZzwayhd.KmPVO6N7etV1OhS.v4Jt5APeyEE5qn6',
+    '$2b$15$zC9DXzeml0kjYON27KX1I.jzqifjd6Ne2lRpzP7GNCkrmCeaINsyO',
     'G',-- bronze
     10000000,
     1
