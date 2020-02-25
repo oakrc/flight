@@ -151,7 +151,7 @@ router.post('/', (req, res) => {
                 res.status(401).send({ error: 'Authentication Failure' })
                 return
             }
-            var js_res = JSON.parse(JSON.stringify(res))
+            var js_res = JSON.parse(JSON.stringify(result))
             pw_hash = js_res[0].pw
             uid = js_res[0].user_uid
             if (js_res[0].verified != 1) {
