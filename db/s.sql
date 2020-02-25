@@ -175,7 +175,7 @@ BEGIN
         LEFT(MD5(RANDOM_BYTES(16)), 8),
         cap,
         model,
-        FLOOR(RAND()*(2020-2017)*2017)
+        FLOOR(RAND()*3+2016)
     );
 END//
 DROP PROCEDURE IF EXISTS add_flight;
@@ -327,9 +327,9 @@ BEGIN
             0,
             @max_allowed
         );
-        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(600))+@duration*30+500)),
-                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(300))+@duration*25+300)),
-                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(200))+@duration*15+30));
+        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(200))+@duration*95+300)),
+                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(100))+@duration*65+250)),
+                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(50))+@duration*25+25));
         SET @reps = @reps - 1;
     UNTIL @reps = 0 END REPEAT;
 END//
@@ -355,7 +355,18 @@ DELIMITER ;
 SET FOREIGN_KEY_CHECKS=1;
 CALL add_dummy();
 CALL add_routes();
-CALL register_user('Example','User','2000-01-01','M','5550687272','a@gmail.com','$2y$12$8Zi9WTNlwm2dZ4NRueQCWOw5ouQzXjJiHXG4oHcOzyxj5juFpJAca');
-CALL add_dummy_flights('LAX','BOI','2023-04-20 08:00:00');
+INSERT INTO users VALUES (
+    gen_uuid(),
+    'West',
+    'Flight',
+    '1995-01-01',
+    'O',
+    '555-000-8888',
+    'noreply@westflightairlines.com',
+    '$2y$12$aOmZunnLVI2.IoZzwayhd.KmPVO6N7etV1OhS.v4Jt5APeyEE5qn6',
+    'G',-- bronze
+    10000000,
+    1
+);
 COMMIT;
 SET autocommit = 1;

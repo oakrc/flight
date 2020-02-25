@@ -6,6 +6,6 @@ BEGIN
         LEFT(MD5(RANDOM_BYTES(16)), 8),
         cap,
         model,
-        FLOOR(RAND()*(2020-2017)*2017)
+        FLOOR(RAND()*3+2016)
     );
 END//
