@@ -1,11 +1,11 @@
 SELECT
-    b2u(f_id) AS fl_id,
-    b2u(r_id) AS rt_id,
-    rt_code AS fl_num,
-    dt_dep,
-    dt_arr,
-    flights.cap AS cap,
-    remain AS avail
+    b2u(res.f_id) AS fl_id,
+    b2u(res.r_id) AS rt_id,
+    res.rt_code AS fl_num,
+    res.dt_dep,
+    res.dt_arr,
+    res.cap AS cap,
+    res.remain AS avail
 FROM (
     SELECT
         f.id AS f_id,
@@ -21,6 +21,6 @@ FROM (
         DATE(f.dtime_depart) = DATE(?)
         AND r.src=?
         AND r.dest=?
-) AS flights
+) AS res
 WHERE flights.remain > 0
 LIMIT 20;
