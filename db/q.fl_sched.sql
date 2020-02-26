@@ -13,8 +13,7 @@ FROM (
         r.code AS rt_code,
         f.dtime_depart AS dt_dep,
         f.dtime_arrive AS dt_arr,
-        (f.max_allowed - f.booked) AS remain,
-        ac.capacity AS cap,
+        (f.max_allowed - f.booked) AS remain
     FROM
         flight_schedule AS f
     INNER JOIN routes AS r ON f.route_id=r.id
