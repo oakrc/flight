@@ -5,7 +5,7 @@ SELECT
     dt_dep,
     dt_arr,
     flights.cap AS cap,
-    remain AS avail,
+    remain AS avail
 FROM (
     SELECT
         f.id AS f_id,
