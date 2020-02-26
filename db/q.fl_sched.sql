@@ -5,7 +5,7 @@ SELECT
     dt_dep,
     dt_arr,
     flights.cap AS cap,
-    remain AS avail,
+    remain AS avail
 FROM (
     SELECT
         f.id AS f_id,
@@ -13,19 +13,7 @@ FROM (
         r.code AS rt_code,
         f.dtime_depart AS dt_dep,
         f.dtime_arrive AS dt_arr,
-        (f.max_allowed - f.booked) AS remain,
-<<<<<<< Updated upstream
-||||||| merged common ancestors
-        ac.capacity AS cap,
-=======
-<<<<<<< HEAD
-        ac.capacity AS cap,
-||||||| merged common ancestors
-        ac.capacity AS cap,
-        af.id AS bin_af_id,
-=======
->>>>>>> api
->>>>>>> Stashed changes
+        (f.max_allowed - f.booked) AS remain
     FROM
         flight_schedule AS f
     INNER JOIN routes AS r ON f.route_id=r.id
