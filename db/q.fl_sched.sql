@@ -4,7 +4,6 @@ SELECT
     res.rt_code AS fl_num,
     res.dt_dep,
     res.dt_arr,
-    res.cap AS cap,
     res.remain AS avail
 FROM (
     SELECT
