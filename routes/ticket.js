@@ -78,6 +78,7 @@ router.put('/', valid.uid, (req, res) => {
     )
 })
 
+/*
 // check-in
 router.post('/:id', valid.uid, (req, res) => {
     var uid = req.session.uid
@@ -87,6 +88,26 @@ router.post('/:id', valid.uid, (req, res) => {
         return
     }
     req.app.locals.pool.query(query.check_in, [uid,tid], (err, result) => {
+        if (err) {
+            res.status(403).send({error: 'Invalid Request'})
+        }
+        else res.status(200).send({msg: 'Sucessfully checked-in.'})
+    })
+})
+*/
+
+router.post('/check-in', (req, res) => {
+    var tid     = req.body.tid,
+        first   = req.body.first_name,
+        last    = req.body.last_name
+
+    if (!(valid.uuid(tid)
+            && valid.first_last(first)
+            && valid.first_last(last)
+    )) {
+        res.status(400).send({ error: 'Invalid request' })
+    }
+    req.app.locals.pool.query(query.check_in, [tid,first,last], (err, result) => {
         if (err) {
             res.status(403).send({error: 'Invalid Request'})
         }
