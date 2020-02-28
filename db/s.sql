@@ -242,18 +242,29 @@ BEGIN
     );
 END//
 DROP PROCEDURE IF EXISTS check_in;
-CREATE PROCEDURE check_in (IN user_uid CHAR(36), IN ticket_id CHAR(36))
+CREATE PROCEDURE check_in (
+    IN ticket_id CHAR(36),
+    IN _first_name VARCHAR(255),
+    IN _last_name VARCHAR(255)
+)
 this_proc:BEGIN
     DECLARE tk_stat TINYINT;
     DECLARE cost DECIMAL(8,2);
     DECLARE af_id BINARY(60);
     DECLARE tier CHAR(1);
+    DECLARE uid BINARY(60) DEFAULT NULL;
+    SELECT user_id INTO uid FROM tickets WHERE first_name = _first_name AND last_name = _last_name AND id = u2b(ticket_id);
+    IF uid = NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ticket not found';
+    END IF;
     SELECT tk_stat = tic_status, af_id = fare_id
                     FROM tickets
                     WHERE user_id=u2b(user_uid)
                         AND id=u2b(ticket_id);
     IF tk_stat != 1 THEN
-        LEAVE this_proc;
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ticket not available for check-in';
     END IF;
     SET cost = (SELECT fare FROM airfares HAVING id=af_id);
     UPDATE tickets
@@ -327,9 +338,9 @@ BEGIN
             0,
             @max_allowed
         );
-        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(200))+@duration*95+300)),
-                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(100))+@duration*65+250)),
-                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(50))+@duration*25+25));
+        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(100))+@duration*75+300)),
+                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(50))+@duration*55+250)),
+                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(20))+@duration*20+25));
         SET @reps = @reps - 1;
     UNTIL @reps = 0 END REPEAT;
 END//

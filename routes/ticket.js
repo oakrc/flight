@@ -46,16 +46,17 @@ router.put('/', valid.uid, (req, res) => {
 
     if (!(valid.uuid(fl_id)
         && valid.uuid(af_id)
-        && valid.uuid(first_name)
-        && valid.uuid(last_name)
+        && valid.first_last(first_name)
+        && valid.first_last(last_name)
         && valid.gender(gender)
-        && (valid.phone_number(phone) || phone == '')
+        && (valid.phone_number(phone) || phone == null)
         && valid.email(email)
         && addr1.length > 1
         && city.length > 1
         && state.length == 2
         && valid.postal(postal))) {
         res.status(400).end()
+        return
     }
     req.app.locals.pool.query(query.buy_ticket,[
             uid,
@@ -78,24 +79,6 @@ router.put('/', valid.uid, (req, res) => {
     )
 })
 
-/*
-// check-in
-router.post('/:id', valid.uid, (req, res) => {
-    var uid = req.session.uid
-    var tid = req.params.id;
-    if (!valid.uuid(tid)) {
-        res.status(400).send({error: 'Invalid Ticket ID'})
-        return
-    }
-    req.app.locals.pool.query(query.check_in, [uid,tid], (err, result) => {
-        if (err) {
-            res.status(403).send({error: 'Invalid Request'})
-        }
-        else res.status(200).send({msg: 'Sucessfully checked-in.'})
-    })
-})
-*/
-
 router.post('/check-in', (req, res) => {
     var tid     = req.body.tid,
         first   = req.body.first_name,
@@ -109,7 +92,7 @@ router.post('/check-in', (req, res) => {
     }
     req.app.locals.pool.query(query.check_in, [tid,first,last], (err, result) => {
         if (err) {
-            res.status(403).send({error: 'Invalid Request'})
+            res.status(400).send({error: 'Invalid Request'})
         }
         else res.status(200).send({msg: 'Sucessfully checked-in.'})
     })
