@@ -21,5 +21,5 @@ FROM (
         AND r.src=?
         AND r.dest=?
 ) AS res
-WHERE flights.remain > 0
+WHERE res.remain > 0
 LIMIT 20;
