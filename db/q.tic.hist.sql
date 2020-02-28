@@ -20,9 +20,9 @@ SELECT
     af.fare
 FROM
     tickets AS t
-INNER JOIN airfares AS af ON af.id=t.fare_id
-INNER JOIN flight_schedule AS fs ON fs.id=t.flight_id
-INNER JOIN routes AS rt ON rt.id=fs.route_id
+JOIN airfares AS af ON af.id=t.fare_id
+JOIN flight_schedule AS fs ON fs.id=t.flight_id
+JOIN routes AS rt ON rt.id=fs.route_id
 WHERE
     t.user_id=u2b(?)
     AND fs.dtime_depart < NOW()
