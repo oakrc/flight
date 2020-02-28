@@ -6,8 +6,8 @@ SELECT
     t.gender AS gender,
     t.birthday AS dob,
 
-    t.flight_id AS fl_id,
-    t.fare_id AS af_id,
+    b2u(t.flight_id) AS fl_id,
+    b2u(t.fare_id) AS af_id,
     rt.code AS fl_num,
     rt.src,
     rt.dest,
@@ -20,9 +20,9 @@ SELECT
     af.fare
 FROM
     tickets AS t
-INNER JOIN airfares AS af ON t.fare_id=af.id
-INNER JOIN flight_schedule AS fs ON t.flight_id=fs.id
-INNER JOIN routes AS rt ON fs.route_id=rt.id
+INNER JOIN airfares AS af ON af.id=t.fare_id
+INNER JOIN flight_schedule AS fs ON fs.id=t.flight_id
+INNER JOIN routes AS rt ON rt.id=fs.route_id
 WHERE
     t.user_id=u2b(?)
     AND fs.dtime_depart >= NOW()
