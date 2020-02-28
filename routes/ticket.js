@@ -2,6 +2,7 @@
 const express = require('express')
 const query   = require('../query')
 const valid   = require('../valid')
+const nodemailer = require('nodemailer')
 var   router  = express.Router()
 
 // get ticket details
@@ -74,7 +75,49 @@ router.put('/', valid.uid, (req, res) => {
             state,
             postal
         ], (err, _) => {
-            return err?res.status(500).end():res.status(200).end()
+            if (err) {
+                res.status(500).end()
+                return
+            }
+            
+            req.app.locals.pool.query(
+                query.get_tic_id,
+                [uid,first_name,last_name,birthday],
+                (err, result) => {
+                    var conf = JSON.parse(JSON.stringify(result))[0].tk_id
+                    if (err) {
+                        res.status(500).send({ error: 'Failed to send confirmation email.'})
+                        return
+                    }
+                    let transporter = nodemailer.createTransport({
+                        service: 'Gmail',
+                        auth: {
+                            user: 'westflightairlines@gmail.com',//process.env.MAIL_USER,
+                            pass: process.env.MAIL_PASS
+                        }
+                    })
+                    transporter.verify((err,succ) => {
+                        if (err || !succ) {
+                            res.status(500).send({ error: 'Failed to send confirmation email.'})
+                            return
+                        }
+                        var mailOpts = {
+                            from:'noreply@westflightairlines.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
+                            to: req.body.email,
+                            subject: 'WestFlight Airlines: Account Verification',
+                            html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf + `</body></html>`
+                        }
+                        transporter.sendMail(mailOpts).then(
+                            () => {
+                                res.status(200).end()
+                            },
+                            () => {
+                                res.status(500).send({ error: 'Failed to send confirmation email.'})
+                            }
+                        )
+                    })
+                }
+            )
         }
     )
 })
@@ -85,8 +128,8 @@ router.post('/check-in', (req, res) => {
         last    = req.body.last_name
 
     if (!(valid.uuid(tid)
-            && valid.first_last(first)
-            && valid.first_last(last)
+        && valid.first_last(first)
+        && valid.first_last(last)
     )) {
         res.status(400).send({ error: 'Invalid request' })
     }
