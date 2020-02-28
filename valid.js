@@ -39,7 +39,7 @@ module.exports = {
     },
 
     phone_number: (num) => {
-        return /^[0-9]{7,15}$/.test(num)
+        return /^\d{7,15}$/.test(num)
     },
 
     gender: (gender) => {

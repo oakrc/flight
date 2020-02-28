@@ -29,11 +29,11 @@ FROM (
     INNER JOIN airfares AS af ON af.flight_id=f.id
     INNER JOIN aircrafts AS ac ON ac.id=f.aircraft_id
     WHERE
-        DATE(f.dtime_depart) = DATE(?)
+        CAST (f.dtime_depart AS DATE) = CAST(? AS DATE)
         AND r.src=?
         AND r.dest=?
         AND af.cabin=?
-        AND f.max_allowed - f.booked - ? > 0
+        AND f.max_allowed - f.booked - ? >= 0
     ORDER BY
         af.fare ASC
 ) AS fares
