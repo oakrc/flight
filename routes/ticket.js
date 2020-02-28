@@ -11,7 +11,7 @@ router.get('/:query', valid.uid, (req, res) => {
     if (uid === '') return
     req.app.locals.pool.query(req.params.query === 'upcoming'?
         query.tickets_upcoming:query.tickets_history,
-        [uid,uid],
+        [uid],
         (err,results)=>{
         if (err) {
             res.status(500).send({code: 'srv_err', loc: 'sel_tk_query'})
