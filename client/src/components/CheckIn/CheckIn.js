@@ -68,9 +68,16 @@ export class CheckIn extends Component {
             confSuccess = false;
         }
 
-        axios({
-            method: 'put',
-            url: '/api/ticket/' + this.state.id,
+        axios.post('/api/ticket/check-in', {
+            first_name: this.state.passengerFirstName,
+            last_name: this.state.passengerLastName,
+            conf: this.state.confirmationNumber
+        }, {withCredentials: true})
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((err) => {
+            console.log(err);
         })
 
         this.setState({fNameValid: fNameValid, lNameValid: lNameValid, confNumberValid: confNumberValid, confSuccess: confSuccess});

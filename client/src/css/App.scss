@@ -136,6 +136,12 @@ span {
     margin: 0 10vw 0 10vw;
     color: white;
 
+    h1 {
+        font-size: 7rem;
+        font-family: 'Kollektif';
+        text-align: center;
+    }
+
     h2 {
         font-size: 4rem;
         font-family: 'Kollektif';
@@ -143,11 +149,69 @@ span {
     }
 }
 
+.logo {
+    position: absolute;
+    top: 15vh;
+    animation: bounceAndOut 2s infinite;
+
+    @keyframes bounceAndOut {
+        50% {
+          transform: scale(1.1, 1.1);
+        }
+        100% {
+          transform: scale(1, 1);
+        }
+    }
+}
+
+.spinner {
+    display: flex;
+    justify-content: space-around;
+    margin: 100px auto 0;
+    width: 6.5vw;
+    text-align: center;
+  }
+  
+  .spinner > div {
+    width: 1vw;
+    height: 1vw;
+    background-color: white;
+    border-radius: 100%;
+    display: inline-flex;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  }
+  
+  .spinner .bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  
+  .spinner .bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+  
+  @-webkit-keyframes sk-bouncedelay {
+    0%, 80%, 100% { -webkit-transform: scale(0) }
+    40% { -webkit-transform: scale(1.0) }
+  }
+  
+  @keyframes sk-bouncedelay {
+    0%, 80%, 100% { 
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    } 40% { 
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+    }
+  }
+
 .BookingAndLanding {
     width: 100vw;
     background: -webkit-linear-gradient(#005aa7, #95B5B6);
     background: linear-gradient(#005aa7, #95B5B6);
-    padding: 30vh 0 0 0;
+    padding: 15vh 0 0 0;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -658,7 +722,7 @@ span {
     }
   }
 
-  @media only screen and (max-width: 1500px) and (min-width: 1024px) {
+  @media only screen and (max-width: 2000px) and (min-width: 1024px) {
     .flightResult {
         min-width: 65vw !important;
 

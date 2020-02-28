@@ -115,4 +115,32 @@
     height: 100vh;
     background: -webkit-linear-gradient(#005aa7, #528caf);
     background: linear-gradient(#005aa7, #528caf);
+
+    .tickets {
+        width: 90vw;
+        display: inline-flex;
+        justify-content: space-evenly;
+
+        .MuiPaper-root {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            width: 35vw;
+            min-height: 60vh;
+            border-radius: 0.5vw;
+        }
+    }
+
+    .MuiButton-root {
+        margin: 5vh 0 0 0;
+        background-color: #f0f0f0;
+        color: #005aa7;
+    }
+
+    h1 {
+        margin: 0 0 5vh 0;
+        font-size: 3rem;
+        color: white;
+    }
 }

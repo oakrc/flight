@@ -67,7 +67,8 @@ class FlightSearch extends Component {
             ],
             departSearchResult: '',
 
-            needToLogIn: false
+            loggedIn: true,
+            searched: false
         }
 
         this.flightSearcher = new FuzzySearch(this.state.airportNames);
@@ -77,6 +78,20 @@ class FlightSearch extends Component {
         this.aDateUpdate = this.aDateUpdate.bind(this);
         this.searchFlights = this.searchFlights.bind(this);
 
+    }
+
+    componentDidMount() {
+        axios.get('/api/user', {withCredentials: true})
+        .then((response) => {
+          response.status === 200 && this.setState({loggedIn: true})
+        })
+        .catch((error) => {
+          try {
+            error.response.status === 401 && this.setState({loggedIn: false})
+          } catch {
+    
+          }
+        });
     }
 
     togglePassengers() {
@@ -202,24 +217,7 @@ class FlightSearch extends Component {
     }
 
     searchFlights() {
-        let needToLogIn;
-        axios.get('/api/user', {withCredentials: true})
-        .then((response) => {
-            if (response.status === 200 || response.status === 304) {
-                this.setState({needToLogIn: false})
-                needToLogIn = false;
-                console.log(needToLogIn);
-            } else {
-                this.setState({needToLogIn: true})
-                needToLogIn = true;
-            }
-        }).catch((error) => {
-            if (error.status === 401) {
-                this.setState({needToLogIn: true})
-                needToLogIn = true;
-            }
-        });
-
+        this.setState({searched: true});
         if (!this.state.departLocation.replace(/\s/g, '').length) {
             this.setState({
                 departValid: false, 
@@ -238,8 +236,7 @@ class FlightSearch extends Component {
             this.setState({ arriveDateValid: false })
         }
 
-        console.log(!needToLogIn)
-        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate) && !needToLogIn) {            
+        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate) && this.state.loggedIn) {            
             axios({
                 method: 'get',
                 url: '/api/flight',
@@ -332,7 +329,7 @@ class FlightSearch extends Component {
                             <DatePick className='Date' disablePast label="Depart date&nbsp;&nbsp;" value={this.state.departDate} updater={(e, date) => this.dDateUpdate(e, date)} error={!this.state.departDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
                             <DatePick className={!this.state.arriveDateShow ? 'hiddenfandis Date' : 'shownnozfast Date'} disablePast label="Return date&nbsp;&nbsp;" value={this.state.arriveDate} updater={(e, date) => this.aDateUpdate(e, date)} error={!this.state.arriveDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
                         </div>
-                        {this.state.needToLogIn && <Alert severity="info" style={{marginTop: '1.5vh', width: '50vw', padding: '0', backgroundColor: 'transparent'}}>Please Sign Up / Log In First!</Alert>}
+                        {!this.state.loggedIn && this.state.searched && <Alert severity="info" style={{marginTop: '1.5vh', width: '50vw', padding: '0', backgroundColor: 'transparent'}}>Please Sign Up / Log In First!</Alert>}
                 </div>
                 <div className="Bottom">
                     <Fab onClick={this.searchFlights} color="primary" variant="extended">

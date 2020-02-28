@@ -7,7 +7,7 @@ import axios from 'axios';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import './css/App.scss';
-import PreloadingComponent from './components/PreloadingComponent';
+import logo from './css/images/logo3.png';
 
 const BookAndLanding = React.lazy(() => import('./components/BookAndLanding/BookAndLanding'))
 const Navbar = React.lazy(() => import('./components/Navbar'));
@@ -129,7 +129,12 @@ class App extends Component {
       <Suspense fallback={<div></div>}>
       <Preloader fadeDuration={2800} style={{backgroundColor: '#005aa7', transition: '1s', transitionDelay: '1.8s'}}>
         <Placeholder>
-          <PreloadingComponent opacity={true} zIndex={this.state.transitionScreen}/>
+          <img src={logo} alt="logo" className="logo"/>
+          <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
         </Placeholder>
       </Preloader>
       <ThemeProvider theme={theme}>

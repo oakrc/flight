@@ -157,7 +157,7 @@ export class Careers extends Component {
         return (
             <div className={`Careers Contact ${this.state.display ? 'shownnozfast' : 'hiddenfast'}`}>
                 <Paper elevation={5}>
-                    <h1>Send Us A Message!</h1>
+                    <h1 style={{textAlign: 'center'}}>Send Us A Message!<br></br><span style={{fontSize: '1.2rem'}}>Customer Service: 909-555-0146</span></h1>
                     <div className="third-field">
                         <TextField error={!this.state.firstNameValid} label="First name" variant="outlined" value={this.state.firstName} onChange={(e) => this.updateFName(e.target.value)}/>
                         <TextField error={!this.state.lastNameValid} label="Last name" variant="outlined" value={this.state.lastName} onChange={(e) => this.updateLName(e.target.value)}/>

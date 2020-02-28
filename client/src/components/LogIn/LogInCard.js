@@ -15,6 +15,7 @@ export class LogInCard extends Component {
             passwordValid: true,
             logInSuccess: null,
             loading: null,
+            logInText: -1,
 
             display: false
         }
@@ -73,7 +74,8 @@ export class LogInCard extends Component {
               })
               .catch((error) => {
                 try {
-                    (error.response.status === 401 || error.response.status === 400 || error.response.status === 423) && this.setState({password: '', logInSuccess: false, loading: false});
+                    (error.response.status === 401 || error.response.status === 400) && this.setState({password: '', logInSuccess: false, loading: false, logInText: 0});
+                    (error.response.status === 423) && this.setState({password: '', logInSuccess: false, loading: false, logInText: 1});
                   } catch {}
               });
         }
@@ -90,13 +92,16 @@ export class LogInCard extends Component {
                     <h1>Log In</h1>
                     <TextField id="outlined-basic" type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <TextField id="outlined-password-input" label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid} onKeyPress={(e) => this.enterKeyPress(e)}/>
-                    <Button variant="contained" color="primary" onClick={this.logIn}>
-                    Log In
-                    </Button>
-                    <Button color="primary" variant="outlined" onClick={() => {this.props.signUp(); this.close()}}>Sign Up</Button>
-                    {this.state.logInSuccess !== null && (this.state.logInSuccess ? <Alert severity="success">Logged In!</Alert> : <Alert severity="error">Wrong email & password combination. If just signed up, please verify account.</Alert>)}
-                    {this.state.loading !== null && this.state.loading && <Alert severity="info">Loading...</Alert>}
-                    {((this.state.loading === null || this.state.logInSuccess === null) && !this.state.loading) && <div className="MuiAlert-root" style={{height: '36px'}}>&nbsp;</div>}
+                    <div style={{display: 'flex', alignSelf: 'flex-end', width: '100%', justifyContent: 'space-between'}}>
+                        <div style={{alignSelf: 'flex-end'}}>
+                            {this.state.logInSuccess !== null && (this.state.logInSuccess ? <Alert severity="success">Logged In!</Alert> : this.state.logInText === 0 ? <Alert severity="error">Wrong email & password combination.</Alert> : <Alert severity="error">Please verify your account.</Alert>)}
+                            {this.state.loading !== null && this.state.loading && <Alert severity="info">Loading...</Alert>}
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                        <Button variant="contained" color="primary" onClick={this.logIn}>Log In</Button>
+                        <Button color="primary" variant="outlined" onClick={() => {this.props.signUp(); this.close()}}>Sign Up</Button>
+                        </div>
+                    </div>
                 </Paper>
             </div>
         )

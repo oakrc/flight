@@ -4,7 +4,6 @@ import KeyboardArrowDownRoundedIcon from '@material-ui/icons/KeyboardArrowDownRo
 import KeyboardArrowUpRoundedIcon from '@material-ui/icons/KeyboardArrowUpRounded';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Paper, Button } from '@material-ui/core';
-import PreloadingComponent from '../PreloadingComponent';
 
 import DelayLink from '../DelayLink';
 
@@ -143,9 +142,9 @@ export class BookAndLanding extends Component {
         return (
             <div className="BookingAndLanding">
                 <div className="Title">
+                    <h1>West Flight</h1>
                     <h2>Flying West, Prices Best.</h2>
                 </div>
-                <PreloadingComponent zIndex={!this.state.unmounting}/>
                 <FlightSearch reset={this.reset} flightQueryOK={(flightInfo, query) => this.flightQueryOK(flightInfo, query)} roundFlightQueryOK={(response, query) => this.roundFlightQueryOK(response, query)}/>
                 {!this.state.flightQueried ?
                 <div>
