@@ -23,7 +23,7 @@ router.get('/:query', valid.uid, (req, res) => {
 // purchase ticket
 router.put('/', valid.uid, (req, res) => {
     // is user logged in?
-    var uid = valid.session.uid
+    var uid = req.session.uid
 
     // check all params
     var fl_id = req.body.fl_id,
