@@ -1,16 +1,27 @@
 DROP PROCEDURE IF EXISTS check_in;
-CREATE PROCEDURE check_in (IN user_uid CHAR(36), IN ticket_id CHAR(36))
+CREATE PROCEDURE check_in (
+    IN ticket_id CHAR(36),
+    IN _first_name VARCHAR(255),
+    IN _last_name VARCHAR(255)
+)
 this_proc:BEGIN
     DECLARE tk_stat TINYINT;
     DECLARE cost DECIMAL(8,2);
     DECLARE af_id BINARY(60);
     DECLARE tier CHAR(1);
+    DECLARE uid BINARY(60) DEFAULT NULL;
+    SELECT user_id INTO uid FROM tickets WHERE first_name = _first_name AND last_name = _last_name AND id = u2b(ticket_id);
+    IF uid = NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ticket not found';
+    END IF;
     SELECT tk_stat = tic_status, af_id = fare_id
                     FROM tickets
                     WHERE user_id=u2b(user_uid)
                         AND id=u2b(ticket_id);
     IF tk_stat != 1 THEN
-        LEAVE this_proc;
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ticket not available for check-in';
     END IF;
     SET cost = (SELECT fare FROM airfares HAVING id=af_id);
     UPDATE tickets
