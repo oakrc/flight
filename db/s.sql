@@ -223,11 +223,11 @@ CREATE PROCEDURE buy_ticket (
 BEGIN
     INSERT INTO tickets VALUES (
         gen_uuid(),
-        UUID_TO_BIN(user_id),
+        u2b(user_id),
         1,
         NOW(),
-        UUID_TO_BIN(fl_id),
-        UUID_TO_BIN(af_id),
+        u2b(fl_id),
+        u2b(af_id),
         fname,
         lname,
         gender,
@@ -338,8 +338,8 @@ BEGIN
             0,
             @max_allowed
         );
-        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(100))+@duration*75+300)),
-                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(50))+@duration*55+250)),
+        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(100))+@duration*75+170)),
+                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(50))+@duration*55+140)),
                                     (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(20))+@duration*20+25));
         SET @reps = @reps - 1;
     UNTIL @reps = 0 END REPEAT;

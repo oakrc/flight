@@ -18,11 +18,11 @@ CREATE PROCEDURE buy_ticket (
 BEGIN
     INSERT INTO tickets VALUES (
         gen_uuid(),
-        UUID_TO_BIN(user_id),
+        u2b(user_id),
         1,
         NOW(),
-        UUID_TO_BIN(fl_id),
-        UUID_TO_BIN(af_id),
+        u2b(fl_id),
+        u2b(af_id),
         fname,
         lname,
         gender,
