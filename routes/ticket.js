@@ -55,7 +55,7 @@ router.put('/', valid.uid, (req, res) => {
         && city.length > 1
         && state.length == 2
         && valid.postal(postal))) {
-        res.send(400).end()
+        res.status(400).end()
     }
     req.app.locals.pool.query(query.buy_ticket,[
             uid,
@@ -73,7 +73,7 @@ router.put('/', valid.uid, (req, res) => {
             state,
             postal
         ], (err, _) => {
-            return err?res.send(500).end():res.send(200).end()
+            return err?res.status(500).end():res.status(200).end()
         }
     )
 })

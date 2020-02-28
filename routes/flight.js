@@ -84,6 +84,7 @@ router.get('/', (req, res) => {
     // incompetent users / spammers
     if ((src == 'LAX' && dest == 'ONT') || (src == 'ONT' && dest == 'LAX')) {
         res.status(200).send([])
+        return
     }
 
     // query
