@@ -8,16 +8,17 @@ var   router  = express.Router()
 // get ticket details
 router.get('/:query', valid.uid, (req, res) => {
     var uid = req.session.uid
-    if (uid === '') return
-    req.app.locals.pool.query(req.params.query === 'upcoming'?
+    req.app.locals.pool.query(
+        req.params.query === 'upcoming'?
         query.tickets_upcoming:query.tickets_history,
         [uid],
-        (err,results)=>{
+        (err,result)=>{
         if (err) {
-            res.status(500).send({code: 'srv_err', loc: 'sel_tk_query'})
+            console.log(err)
+            res.status(500).send({error: 'Internal Server Error'})
             return
         }
-        res.status(200).send(results[1])
+        res.status(200).send(JSON.parse(JSON.stringify(result)))
     })
 })
 

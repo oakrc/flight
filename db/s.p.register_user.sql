@@ -6,7 +6,7 @@ CREATE PROCEDURE register_user(
     IN gender CHAR(1),
     IN phone_number VARCHAR(16),
     IN email VARCHAR(50),
-    IN pw BINARY(60)
+    IN pw BINARY(16)
 )
 BEGIN
     SET @uuid = gen_uuid();
