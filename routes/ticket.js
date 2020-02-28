@@ -85,11 +85,12 @@ router.put('/', valid.uid, (req, res) => {
                 query.get_conf,
                 [uid,first_name,last_name,birthday],
                 (err, result) => {
-                    var conf = JSON.parse(JSON.stringify(result))[0].tk_id.slice(0,6)
                     if (err) {
+                        console.log(err)
                         res.status(500).send({ error: 'Failed to send confirmation email.'})
                         return
                     }
+                    var conf = JSON.parse(JSON.stringify(result))[0].conf
                     let transporter = nodemailer.createTransport({
                         service: 'Gmail',
                         auth: {
