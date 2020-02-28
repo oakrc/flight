@@ -20,7 +20,7 @@ BEGIN
         gen_uuid(),
         u2b(user_id),
         1,
-        CURDATE(),
+        NOW(),
         u2b(fl_id),
         u2b(af_id),
         fname,
@@ -33,6 +33,7 @@ BEGIN
         addr2,
         city,
         state,
-        postal
+        postal,
+        LEFT(MD5(RANDOM_BYTES(15)),6)
     );
 END//

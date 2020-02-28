@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS tickets (
     city            VARCHAR(60) NOT NULL,
     state           CHAR(2) NOT NULL,
     postal          CHAR(5) NOT NULL,
+    conf            CHAR(6) NOT NULL
     UNIQUE KEY (first_name, last_name, birthday, postal, flight_id),
     FOREIGN KEY (flight_id) REFERENCES flight_schedule(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (fare_id) REFERENCES airfares(id) ON UPDATE CASCADE ON DELETE CASCADE,

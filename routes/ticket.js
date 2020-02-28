@@ -105,7 +105,7 @@ router.put('/', valid.uid, (req, res) => {
                             from:'noreply@westflightairlines.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
                             to: req.body.email,
                             subject: 'WestFlight Airlines: Account Verification',
-                            html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf + `</body></html>`
+                            html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf.slice(0,6) + `</body></html>`
                         }
                         transporter.sendMail(mailOpts).then(
                             () => {
@@ -123,17 +123,17 @@ router.put('/', valid.uid, (req, res) => {
 })
 
 router.post('/check-in', (req, res) => {
-    var tid     = req.body.tid,
+    var conf    = req.body.conf,
         first   = req.body.first_name,
         last    = req.body.last_name
 
-    if (!(valid.uuid(tid)
+    if (!(conf.length == 6
         && valid.first_last(first)
         && valid.first_last(last)
     )) {
         res.status(400).send({ error: 'Invalid request' })
     }
-    req.app.locals.pool.query(query.check_in, [tid,first,last], (err, result) => {
+    req.app.locals.pool.query(query.check_in, [conf,first,last], (err, result) => {
         if (err) {
             res.status(400).send({error: 'Invalid Request'})
         }
