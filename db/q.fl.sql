@@ -29,7 +29,8 @@ FROM (
     INNER JOIN airfares AS af ON af.flight_id=f.id
     INNER JOIN aircrafts AS ac ON ac.id=f.aircraft_id
     WHERE
-        CAST (f.dtime_depart AS DATE) = CAST(? AS DATE)
+        f.dtime_depart >= ?
+        AND f.dtime_depart < DATE_ADD(?, INTERVAL 1 DAY)
         AND r.src=?
         AND r.dest=?
         AND af.cabin=?

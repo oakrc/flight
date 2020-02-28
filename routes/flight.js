@@ -89,7 +89,7 @@ router.get('/', (req, res) => {
 
     // query
     req.app.locals.pool.query(query.add_dummy_flights+query.search_flights,
-        [src,dest,date,date,src,dest,cabin,passengers],
+        [src,dest,date, /**/ date,date,src,dest,cabin,passengers],
         (err, result) => {
             if (err) {
                 res.status(500).send({code: 'Internal Server Error'})
