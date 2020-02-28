@@ -82,10 +82,10 @@ router.put('/', valid.uid, (req, res) => {
             }
             
             req.app.locals.pool.query(
-                query.get_tic_id,
+                query.get_conf,
                 [uid,first_name,last_name,birthday],
                 (err, result) => {
-                    var conf = JSON.parse(JSON.stringify(result))[0].tk_id
+                    var conf = JSON.parse(JSON.stringify(result))[0].tk_id.slice(0,6)
                     if (err) {
                         res.status(500).send({ error: 'Failed to send confirmation email.'})
                         return
@@ -106,7 +106,7 @@ router.put('/', valid.uid, (req, res) => {
                             from:'noreply@westflightairlines.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
                             to: req.body.email,
                             subject: 'WestFlight Airlines: Account Verification',
-                            html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf.slice(0,6) + `</body></html>`
+                            html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf + `</body></html>`
                         }
                         transporter.sendMail(mailOpts).then(
                             () => {
