@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS tickets (
     last_name       VARCHAR(255) NOT NULL,
     gender          CHAR(1) NOT NULL,
     phone_number    VARCHAR(16),
+    email           VARCHAR(50),
     birthday        DATE NOT NULL,
     addr1           VARCHAR(255) NOT NULL,
     addr2           VARCHAR(255),

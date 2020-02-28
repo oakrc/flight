@@ -20,7 +20,7 @@ BEGIN
         gen_uuid(),
         u2b(user_id),
         1,
-        NOW(),
+        CURDATE(),
         u2b(fl_id),
         u2b(af_id),
         fname,
