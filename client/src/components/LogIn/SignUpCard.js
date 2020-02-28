@@ -32,6 +32,7 @@ export class SignUpCard extends Component {
             phoneNumberValid: true,
 
             signUpSuccess: null,
+            loading: null,
             display: false,
         }
 
@@ -154,6 +155,7 @@ export class SignUpCard extends Component {
         }
 
         if (firstNameValid && lastNameValid && birthdayValid && genderEntered && emailValid && passwordValid && confirmpwdValid && phoneNumberValid) {
+            this.setState({loading: true})
             axios.put('/api/user', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
@@ -182,14 +184,15 @@ export class SignUpCard extends Component {
                         passwordValid: true,
                         confirmpwdValid: true,
                         phoneNumberValid: true,
+                        signUpSuccess: true,
+                        loading: false
                     })
-                    this.setState({signUpSuccess: true});
-                    this.props.logIn();
+                    setTimeout(() => {window.location.reload();}, 2000);
                   }
             }).catch(error => {
                 try {
                     console.log(error);
-                  } catch {}
+                } catch {}
             })
         }
 
@@ -217,11 +220,13 @@ export class SignUpCard extends Component {
                     <TextField type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <TextField label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid} helperText={!this.state.passwordValid && 'At least 10 characters, containing lowercase letters, uppercase letters, and numbers'}/>
                     <TextField label="Confirm Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.confirmpwd} onChange={(e) => this.updateConfirmPwd(e.target.value)} error={!this.state.confirmpwdValid}/>
-                    {this.state.signUpSuccess !== null && (this.state.signUpSuccess ? <Alert severity="success">Signed Up!</Alert> : <Alert severity="error">Error!</Alert>)}
                     <Button variant="contained" color="primary" onClick={this.signUp}>
                     Sign Up
                     </Button>
                     <Button color="primary" variant="outlined" onClick={() => {this.props.logIn(); this.close()}}>Log In</Button>
+                    {this.state.signUpSuccess !== null && (this.state.signUpSuccess ? <Alert severity="success">Signed Up! Check your email for a verification message!</Alert> : <Alert severity="error">Error!</Alert>)}
+                    {this.state.loading !== null && this.state.loading && <Alert severity="info">Loading...</Alert>}
+                    {((this.state.loading === null || this.state.logInSuccess === null) && !this.state.loading) && <div className="MuiAlert-root" style={{height: '36px'}}>&nbsp;</div>}
                 </Paper>            
             </div>
         )

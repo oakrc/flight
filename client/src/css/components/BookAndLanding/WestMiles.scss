@@ -32,7 +32,7 @@
                 border-top: 2px solid #0068a6;
             }
 
-            p {
+            .pboy {
                 margin-top: 3vh;
                 font-size: 1.25rem;
                 text-align: justify;
@@ -42,5 +42,9 @@
                 font-size: 1.25rem;
             }
         }
+    }
+
+    .scrollDown.MuiSvgIcon-root {
+        right: 3.5vw;
     }
 }

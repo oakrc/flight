@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Paper, TextField, Button } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
+import axios from 'axios';
 
 import '../../css/components/CheckIn/CheckIn.scss';
 
@@ -17,6 +18,8 @@ export class CheckIn extends Component {
             lNameValid: true,
             confNumberValid: true,
             confSuccess: null,
+
+            id: ''
         }
 
         this.checkIn = this.checkIn.bind(this);
@@ -64,6 +67,11 @@ export class CheckIn extends Component {
             confNumberValid = false;
             confSuccess = false;
         }
+
+        axios({
+            method: 'put',
+            url: '/api/ticket/' + this.state.id,
+        })
 
         this.setState({fNameValid: fNameValid, lNameValid: lNameValid, confNumberValid: confNumberValid, confSuccess: confSuccess});
     }

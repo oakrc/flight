@@ -146,6 +146,12 @@
 
     .FlightSearch {
         padding-top: 3vh;
+
+        .Middle {
+            .MuiInputBase-root {
+                width: 17vw;
+            }
+        }
     }
 }
 
@@ -164,7 +170,7 @@
     box-sizing: border-box;
     padding: 2vh 3vw 3vh 3vw;
     height: 15vh;
-    min-width: 50vw;
+    min-width: 30vw;
     font-size: 1.5rem;
     z-index: 3;
     transition: 0.5s;

@@ -45,7 +45,9 @@ export class Purchase extends Component {
                 'AK', 'AL', 'AR', 'AS', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'GU', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UM', 'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'
             ],
 
-            paid: false
+            paid: false,
+            adultsCorrect: true
+
         }
 
         this.back = this.back.bind(this)
@@ -95,7 +97,7 @@ export class Purchase extends Component {
         if (value === '') {
             this.setState({birthday: null})
         } else {
-            if (value instanceof Date && !isNaN(value) && value.getFullYear() > 1909 && value < new Date().setFullYear(new Date().getFullYear() - 18)) {
+            if (value instanceof Date && !isNaN(value) && value.getFullYear() > 1909) {
                 this.setState({birthday: value, birthdayValid: true})
             } else {
                 this.setState({birthday: value, birthdayValid: false})
@@ -184,7 +186,7 @@ export class Purchase extends Component {
             lastNameValid = false;
         }
 
-        if (this.state.birthday instanceof Date && !isNaN(this.state.birthday) && this.state.birthday.getFullYear() > 1909 && this.state.birthday < new Date().setFullYear(new Date().getFullYear() - 18)) {
+        if (this.state.birthday instanceof Date && !isNaN(this.state.birthday) && this.state.birthday.getFullYear() > 1909) {
             birthdayValid = true;
         }
 
@@ -233,45 +235,59 @@ export class Purchase extends Component {
             this.forceUpdate()
             
             if (this.state.currentPassenger === this.props.flightData[0][1].passengers) {
-                this.setState({
-                    firstName: '',
-                    lastName: '',
-                    gender: '',
-                    email: '',
-                    phoneNumber: '',
-                    birthday: null,
-                    address1: '',
-                    address2: '',
-                    city: '',
-                    state: '',
-                    postal: '',
-                    paid: true
-                }, () => {
-                    for (let i = 0; i < this.props.flightData[0][1].passengers; i++) {
-                        axios.put('/api/ticket', {
-                            fl_id: this.props.flightData[0][0].fl_id,
-                            af_id: this.props.flightData[0][0].af_id,
-                            first_name: this.state.passengerRequestData[i].firstName,
-                            last_name: this.state.passengerRequestData[i].lastName,
-                            gender: this.state.passengerRequestData[i].gender,
-                            email: this.state.passengerRequestData[i].email,
-                            phone: this.state.passengerRequestData[i].phoneNumber,
-                            birthday: this.state.passengerRequestData[i].birthday,
-                            addr1: this.state.passengerRequestData[i].address1,
-                            addr2: this.state.passengerRequestData[i].address2,
-                            city: this.state.passengerRequestData[i].city,
-                            state: this.state.passengerRequestData[i].state,
-                            postal: this.state.passengerRequestData[i].postal,
-                        }, {withCredentials: true})
-                        .then(response => {console.log(response)})
-                        .catch(error => {console.log(error)})
+                let adultsPresent = this.props.flightData[1][1].adults;
+                let adultsSubmitted = 0;
+                for (let i = 0; i < this.props.flightData[0][1].passengers; i++) {
+                    if (this.state.passengerRequestData[i].birthday < new Date().setFullYear(new Date().getFullYear() - 18)) {
+                        adultsSubmitted++;
                     }
-                })
-                setTimeout(() => {
-                    alert('As for this is a mock website for FBLA Web Design, we will not be taking any actual payments. However, We will still process your order for your (pretend) flight.');
-                    this.props.history.push('/');
-                }, 1000)
-                
+                }
+
+                if (adultsSubmitted === adultsPresent) {
+                    this.setState({
+                        firstName: '',
+                        lastName: '',
+                        gender: '',
+                        email: '',
+                        phoneNumber: '',
+                        birthday: null,
+                        address1: '',
+                        address2: '',
+                        city: '',
+                        state: '',
+                        postal: '',
+                        paid: true,
+                        adultsCorrect: true
+                    }, () => {
+                        for (let i = 0; i < this.props.flightData[0][1].passengers; i++) {
+                            axios.put('/api/ticket', {
+                                fl_id: this.props.flightData[0][0].fl_id,
+                                af_id: this.props.flightData[0][0].af_id,
+                                first_name: this.state.passengerRequestData[i].firstName,
+                                last_name: this.state.passengerRequestData[i].lastName,
+                                gender: this.state.passengerRequestData[i].gender[0],
+                                email: this.state.passengerRequestData[i].email,
+                                phone: this.state.passengerRequestData[i].phoneNumber,
+                                birthday: this.state.passengerRequestData[i].birthday,
+                                addr1: this.state.passengerRequestData[i].address1,
+                                addr2: this.state.passengerRequestData[i].address2,
+                                city: this.state.passengerRequestData[i].city,
+                                state: this.state.passengerRequestData[i].state,
+                                postal: this.state.passengerRequestData[i].postal,
+                            }, {withCredentials: true})
+                            .then(response => {console.log(response)})
+                            .catch(error => {console.log(error)})
+                        }
+                    })
+                    setTimeout(() => {
+                        alert('As for this is a mock website for FBLA Web Design, we will not be taking any actual payments. However, We will still process your order for your (pretend) flight.');
+                        setTimeout(() => {
+                            this.props.history.push('/');
+                        }, 1500)
+                    }, 1500)
+                } else {
+                    this.setState({adultsCorrect: false})
+                }
             } else {
                 this.setState({
                     firstName: this.state.passengerRequestData[this.state.currentPassenger].firstName,
@@ -381,7 +397,7 @@ export class Purchase extends Component {
                         <div className="third-field">
                             <TextField className="spaceTaken" error={!this.state.firstNameValid} label="First name" variant="outlined" value={this.state.firstName} onChange={(e) => this.updateFName(e.target.value)}/>
                             <TextField className="spaceTaken" error={!this.state.lastNameValid} label="Last name" variant="outlined" value={this.state.lastName} onChange={(e) => this.updateLName(e.target.value)}/>
-                            <DatePick className="spaceGot" disableFuture label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}} error={!this.state.birthdayValid} minDate={new Date('1910-12-31')} maxDate={new Date().setFullYear(new Date().getFullYear() - 18)} maxDateMessage={'Must be 18 years or older'}/>
+                            <DatePick className="spaceGot" disableFuture label="Birthdate" value={this.state.birthday} updater={(e, date) => {this.updateBirthday(e, date)}} error={!this.state.birthdayValid} minDate={new Date('1910-12-31')}/>
                         </div>
                         <div className="third-field">
                             <Select error={!this.state.genderEntered} label="Gender" variant="outlined" curr={this.state.gender} options={["Male", "Female", "Other", "Prefer not to say"]} updater={(e, option) => this.updateGender(e, option)}/>
@@ -407,6 +423,7 @@ export class Purchase extends Component {
                             }
                             </Button>
                         </div>
+                        {!this.state.adultsCorrect && <Alert className="payButton" severity="error">{'Make sure that you have ' + this.props.flightData[1][1].adults + (this.props.flightData[1][1].adults > 1 ? ' adults' : ' adult') + ' and ' + (this.props.flightData[1][1].passengers - this.props.flightData[1][1].passengers) +  ' children/infants.'}</Alert>}
                         {this.state.paid && <Alert className="payButton" severity="success">Booked!</Alert>}
                     </Paper>            
                 </div>

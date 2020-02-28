@@ -14,6 +14,7 @@ export class LogInCard extends Component {
             emailValid: true,
             passwordValid: true,
             logInSuccess: null,
+            loading: null,
 
             display: false
         }
@@ -59,19 +60,20 @@ export class LogInCard extends Component {
         }
 
         if (this.state.password.length !== 0 && this.state.email.length !== 0 && /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.email)) {
-            axios.post('http://localhost:5000/api/user', {
+            this.setState({loading: true, logInSuccess: null})
+            axios.post('/api/user', {
                 email: this.state.email,
                 password: btoa(this.state.password)
               }, {withCredentials: true})
               .then((response) => {
                 if (response.status === 200) {
-                  this.setState({email: '', password: '', logInSuccess: true})
-                  this.props.logIn();
+                    this.setState({email: '', password: '', logInSuccess: true, loading: false})
+                    this.props.logIn();
                 }
               })
               .catch((error) => {
                 try {
-                    (error.response.status === 401 || error.response.status === 400) && this.setState({password: '', logInSuccess: false});
+                    (error.response.status === 401 || error.response.status === 400 || error.response.status === 423) && this.setState({password: '', logInSuccess: false, loading: false});
                   } catch {}
               });
         }
@@ -88,11 +90,13 @@ export class LogInCard extends Component {
                     <h1>Log In</h1>
                     <TextField id="outlined-basic" type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <TextField id="outlined-password-input" label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid} onKeyPress={(e) => this.enterKeyPress(e)}/>
-                    {this.state.logInSuccess !== null && (this.state.logInSuccess ? <Alert severity="success">Logged In!</Alert> : <Alert severity="error">Wrong email & password combination.</Alert>)}
                     <Button variant="contained" color="primary" onClick={this.logIn}>
                     Log In
                     </Button>
                     <Button color="primary" variant="outlined" onClick={() => {this.props.signUp(); this.close()}}>Sign Up</Button>
+                    {this.state.logInSuccess !== null && (this.state.logInSuccess ? <Alert severity="success">Logged In!</Alert> : <Alert severity="error">Wrong email & password combination. If just signed up, please verify account.</Alert>)}
+                    {this.state.loading !== null && this.state.loading && <Alert severity="info">Loading...</Alert>}
+                    {((this.state.loading === null || this.state.logInSuccess === null) && !this.state.loading) && <div className="MuiAlert-root" style={{height: '36px'}}>&nbsp;</div>}
                 </Paper>
             </div>
         )

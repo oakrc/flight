@@ -14,9 +14,15 @@ export class WestMiles extends Component {
         this.hide = this.hide.bind(this)
         this.backToTop = this.backToTop.bind(this)
     }
+
+    componentDidMount() {
+        if (window.pageYOffset || document.documentElement.scrollTop >= window.innerHeight / 2) {
+            this.setState({hidden:true});
+        } 
+    }
     
     hide() {
-        this.setState({hidden: true}, () => window.scrollTo(0, window.innerHeight * 1.2));
+        this.setState({hidden: true}, () => window.scrollTo(0, window.innerHeight * 1.1));
     }
 
     backToTop() {
@@ -27,7 +33,6 @@ export class WestMiles extends Component {
 
     render() {
         return (
-            <div>
             <div className="WestMiles">
                 <div className="Title">
                     <h2>West Miles: Our Frequent Flyer Program</h2>
@@ -94,8 +99,7 @@ export class WestMiles extends Component {
                         </ul>
                     </div>
                 </div>
-            </div>
-            <KeyboardArrowDownRoundedIcon onClick={this.hide} className={`scrollDown ${(this.state.hidden || this.state.unmounting) && 'hidden'}`}/>
+                <KeyboardArrowDownRoundedIcon onClick={this.hide} className={`scrollDown ${(this.state.hidden || this.state.unmounting) && 'hidden'}`}/>
             </div>
         )
     }

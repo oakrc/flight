@@ -3,7 +3,7 @@ import DelayLink from './DelayLink';
 
 import '../css/Animations.scss';
 import '../css/Navbar.scss';
-import FlightIcon from '@material-ui/icons/Flight';
+import logo from '../css/images/logo3.png';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
@@ -44,7 +44,7 @@ export class Navbar extends Component {
                     </div>
                 </div>
                 <div className="Navbar">
-                    <FlightIcon fontSize="inherit"/>
+                    <img alt="logo" src={logo}></img>
                     <div className={`menu ${this.state.navOpen && 'menuToggled'}`} onClick={this.toggleNav}></div>
                 </div>
                 <div className={`transitionScreen ${this.props.transitionScreen && 'shown'}`}></div>

@@ -5,6 +5,8 @@ import axios from 'axios';
 import { TextField, Fab} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import { Paper } from '@material-ui/core';
 
 import '../../css/components/BookAndLanding/FlightSearch.scss';
 import DatePick from '../DatePick';
@@ -22,12 +24,12 @@ class FlightSearch extends Component {
             departLocation: '',
             departDate: depDate,
             arriveLocation: '',
-            arriveDate: arrDate,
 
             departValid: true,
             arriveValid: true,
             departDateValid: true,
-            arriveDateValid: true,
+
+            flightList: [],
 
             airportNames: [
                 'Boeing Field King County (BFI)',
@@ -55,7 +57,6 @@ class FlightSearch extends Component {
 
         this.flightSearcher = new FuzzySearch(this.state.airportNames);
         this.dDateUpdate = this.dDateUpdate.bind(this);
-        this.aDateUpdate = this.aDateUpdate.bind(this);
         this.searchFlights = this.searchFlights.bind(this);
 
     } 
@@ -100,18 +101,6 @@ class FlightSearch extends Component {
         }
     }
 
-    aDateUpdate(value, e) {
-        if (value === null) {
-            this.setState({arriveDate: '', arriveDateValid: false})
-        } else {
-            if (new Date(value) instanceof Date && new Date(value) > new Date().setDate(new Date().getDate() - 1) && new Date(value).getFullYear() < 2022 && new Date(value) >= new Date(this.state.departDate)) {
-                this.setState({arriveDate: value, arriveDateValid: true})
-            } else {
-                this.setState({arriveDate: value, arriveDateValid: false})
-            }
-        }
-    }
-
     searchFlights() {
         if (!this.state.departLocation.replace(/\s/g, '').length) {
             this.setState({
@@ -127,14 +116,8 @@ class FlightSearch extends Component {
             })
         }
 
-        if (new Date(this.state.arriveDate) < new Date(this.state.departDate)) {
-            this.setState({ arriveDateValid: false })
-        }
-
-        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022) && (new Date(this.state.arriveDate) instanceof Date && new Date(this.state.arriveDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.arriveDate).getFullYear() < 2022) && new Date(this.state.arriveDate) > new Date(this.state.departDate)) {
-            axios({
-                method: 'get',
-                url: '/api/sched',
+        if (this.state.arriveLocation.replace(/\s/g, '').length && this.state.departLocation.replace(/\s/g, '').length && (this.state.departLocation !== this.state.arriveLocation) && (new Date(this.state.departDate) instanceof Date && new Date(this.state.departDate) > new Date().setDate(new Date().getDate() - 1) && new Date(this.state.departDate).getFullYear() < 2022)) {
+            axios.get('/api/flight/schedule', {
                 params: {
                     depart: this.state.departLocation.slice(-4, -1),
                     arrive: this.state.arriveLocation.slice(-4, -1),
@@ -143,6 +126,21 @@ class FlightSearch extends Component {
             })
             .then(response => {
                 if (response.status === 200) {
+                    this.setState({
+                        flightList: response.data.map((flight, index) => {
+                            let depTime = new Date(flight.dt_arr);
+                            let depTimeL = new Date(flight.dt_dep);
+                            return <Paper key={flight.fl_id} className="flightResult">
+                                    <div>{this.state.departLocation.slice(-5)}</div>
+                                    <div><ArrowForwardIcon /></div>
+                                    <div>{this.state.arriveLocation.slice(-5)}</div>
+                                    <div>{new Date(flight.dt_dep).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                                    <div><ArrowForwardIcon /></div>
+                                    <div>{new Date(flight.dt_arr).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                                    <div>{Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) !== 0 && Math.floor((depTime - depTimeL) / (1000 * 60 * 60)) + 'hr '}{Math.floor((depTime - depTimeL) / (1000 * 60) % 60)}min<br></br></div>
+                            </Paper>;
+                        }) 
+                    });
                 }
             })
             .catch(error => {
@@ -167,7 +165,6 @@ class FlightSearch extends Component {
                         <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.departLocation} onChange={(e, value) => {this.departUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('departValid')} error={!this.state.departValid} className="Depart" type="text" label="Depart&nbsp;" variant="outlined"/>)}></Autocomplete>
                         <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.airportNames} value={this.state.arriveLocation} onChange={(e, value) => {this.arriveUpdate(e, value)}} renderInput={params => (<TextField {...params} onClick={() => this.resetError('arriveValid')} error={!this.state.arriveValid} className="Arrive" type="text" label="Arrive&nbsp;" variant="outlined"/>)}></Autocomplete>
                         <DatePick className='Date' disablePast label="Depart date&nbsp;&nbsp;" value={this.state.departDate} updater={(e, date) => this.dDateUpdate(e, date)} error={!this.state.departDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
-                        <DatePick className='Date' disablePast label="Return date&nbsp;&nbsp;" value={this.state.arriveDate} updater={(e, date) => this.aDateUpdate(e, date)} error={!this.state.arriveDateValid} minDate={new Date().setDate(new Date().getDate() - 1)} maxDate={new Date('2022-01-01')}/>
                     </div>
                 </div>
                 <div className="Bottom">
@@ -176,6 +173,7 @@ class FlightSearch extends Component {
                         See Flight Schedules
                     </Fab>
                 </div>
+                <div className="fullFlightList">{this.state.flightList}</div>
             </div>
         )
     }

@@ -93,7 +93,7 @@ class App extends Component {
     setTimeout(() => {
       this.props.history.push('/dashboard');
       this.setState({loggedIn: true});
-    }, 500);
+    }, 1000);
   }
 
   logOut() {
@@ -103,6 +103,7 @@ class App extends Component {
         setTimeout(() => {
           this.props.history.push('/login');
           this.setState({loggedIn: false});
+          window.location.reload();
         }, 500);
     }).catch((error) => {
         console.log(error);
@@ -144,7 +145,7 @@ class App extends Component {
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
               <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={(value) => this.showOption(value)}/>} />
-              <Route component={NotAPage} />
+              <Route render={(props) => <NotAPage {...props} showOption={(value => this.showOption(value))}/>} />
             </Switch>
         </div>
       </ThemeProvider> 

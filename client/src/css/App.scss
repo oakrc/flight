@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Kollektif';
+    src: url('./kollektif.woff2') format('woff');
+}
+
 html {
     scroll-behavior: smooth;
     font-size: 14px;
@@ -650,5 +655,27 @@ span {
     .FlightSched .FlightSearch {
         width: fit-content;
         margin: 2.5vh auto 0vh auto;
+    }
+  }
+
+  @media only screen and (max-width: 1500px) and (min-width: 1024px) {
+    .flightResult {
+        min-width: 65vw !important;
+
+        .times {
+            min-width: 40vw!important;
+        }
+
+        .flightSelect {
+            margin-left: 4vw;
+        }
+        .MuiButtonBase-root {
+            width: 12vw;
+            font-size: 0.9rem!important;
+        }
+    }
+
+    .FlightSched .flightResult {
+        min-width: 30vw !important;
     }
   }
