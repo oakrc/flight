@@ -62,7 +62,7 @@ function send_mail(fname, lname, age, email, phone, jid, file) {
     ]
     var mailOpts = {
         from: process.env.MAIL_USER,
-        to: 'workat@westflightairlines.com',
+        to: 'westflightairlines@gmail.com',
         subject: 'Application: ' + jobs[jid]
                 + ': ' + lname + ', ' + fname
                 + ' | ' + age,
