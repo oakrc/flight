@@ -14,7 +14,6 @@ router.get('/:query', valid.uid, (req, res) => {
         [uid],
         (err,result)=>{
         if (err) {
-            console.log(err)
             res.status(500).send({error: 'Internal Server Error'})
             return
         }
@@ -86,7 +85,6 @@ router.put('/', valid.uid, (req, res) => {
                 [uid,first_name,last_name,birthday],
                 (err, result) => {
                     if (err) {
-                        console.log(err)
                         res.status(500).send({ error: 'Failed to send confirmation email.'})
                         return
                     }

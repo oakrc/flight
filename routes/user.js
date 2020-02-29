@@ -104,20 +104,22 @@ router.put('/', (req, res) => {
                                             })
                                             transporter.verify((err,succ) => {
                                                 if (err) {
+                                                    console.log(err)
                                                     res.status(500).send({ error: 'Failed to send verification email.'})
                                                     return
                                                 }
                                                 var mailOpts = {
-                                                    from:'noreply@westflightairlines.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
+                                                    from:'westflightairlines@gmail.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
                                                     to: req.body.email,
                                                     subject: 'WestFlight Airlines: Account Verification',
-                                                    html: `<html><head></head><body><form method="DELETE" action="https://www.westflightairlines.com/api/user/token/` + encodeURIComponent(JSON.parse(JSON.stringify(result))[0].token) + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
+                                                    html: `<html><head></head><body><form method="GET" action="https://www.westflightairlines.com/api/user/token/` + encodeURIComponent(JSON.parse(JSON.stringify(result))[0].token) + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
                                                 }
                                                 transporter.sendMail(mailOpts).then(
                                                     () => {
                                                         res.status(200).send({ msg: 'Sucessful Registration' })
                                                     },
-                                                    () => {
+                                                    (err) => {
+                                                        console.log(err)
                                                         res.status(500).send({ error: 'Failed to send verification email.'})
                                                     }
                                                 )
@@ -127,9 +129,7 @@ router.put('/', (req, res) => {
                                 })
                             }
                         })
-
                     })
-
                 })
             } else res.status(500).end()
         })
@@ -174,7 +174,7 @@ router.post('/', (req, res) => {
 })
 
 // verify account
-router.delete('/token/:token', (req, res) => {
+router.get('/token/:token', (req, res) => {
     var token = decodeURIComponent(req.params.token)
     if (token.length != 64) {
         res.status(403).send({ error:'Invalid token.' })
@@ -198,7 +198,7 @@ router.delete('/token/:token', (req, res) => {
                 if (err) {
                     res.status(500).send({ error: 'Internal Server Error.' })
                 }
-                else conn.query(query.del_token + query.set_usr_verified, [uid, uid, token], (err, result) => {
+                else conn.query(query.del_token + query.set_usr_verified, [uid, token, uid], (err, result) => {
                     if (err) {
                         conn.rollback(() => {
                             conn.release()

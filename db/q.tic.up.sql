@@ -15,7 +15,6 @@ SELECT
     fs.dtime_arrive AS dt_arr,
     t.tic_status AS stat,
     t.dtime_booked AS dt_booked,
-    time_format(SUM(abs(timediff(fs.dtime_depart,fs.dtime_arrive))),'%H:%i') AS dur,
     af.cabin,
     af.fare
 FROM
