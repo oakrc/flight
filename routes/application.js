@@ -60,23 +60,46 @@ function send_mail(fname, lname, age, email, phone, jid, file) {
         'Sr. Analyst (Inventory)',
         'Customer Service Agent (Customer Service)'
     ]
-    var mailOpts = {
-        from: process.env.MAIL_USER,
-        to: 'westflightairlines@gmail.com',
-        subject: 'Application: ' + jobs[jid]
-                + ': ' + lname + ', ' + fname
-                + ' | ' + age,
-        text: 'Name: ' + lname + ', ' + fname + '\n'
-                + 'Applying for: ' + jobs[jid] + '\n'
-                + 'Email: ' + email + '\n'
-                + 'Phone: ' + phone + '\n'
-                + 'Age: ' + age + '\n',
-        attachments: [
-            {
-                filename: file.originalname,
-                content: file.buffer
-            }
-        ]
+    var mailOpts = null
+    if (file != null) {
+        mailOpts = {
+            from: process.env.MAIL_USER,
+            to: 'westflightairlines@gmail.com',
+            subject: 'Application: ' + jobs[jid]
+            + ': ' + lname + ', ' + fname
+            + ' | ' + age,
+            text: 'Name: ' + lname + ', ' + fname + '\n'
+            + 'Applying for: ' + jobs[jid] + '\n'
+            + 'Email: ' + email + '\n'
+            + 'Phone: ' + phone + '\n'
+            + 'Age: ' + age + '\n',
+            attachments: [
+                {
+                    filename: file.originalname,
+                    content: file.buffer
+                }
+            ]
+        }
+    }
+    else {
+        mailOpts = {
+            from: process.env.MAIL_USER,
+            to: 'westflightairlines@gmail.com',
+            subject: 'Application: ' + jobs[jid]
+            + ': ' + lname + ', ' + fname
+            + ' | ' + age,
+            text: 'Name: ' + lname + ', ' + fname + '\n'
+            + 'Applying for: ' + jobs[jid] + '\n'
+            + 'Email: ' + email + '\n'
+            + 'Phone: ' + phone + '\n'
+            + 'Age: ' + age + '\n',
+            attachments: [
+                {
+                    filename: file.originalname,
+                    content: file.buffer
+                }
+            ]
+        }
     }
     var ret = false;
     transporter.sendMail(mailOpts).then(()=>{
