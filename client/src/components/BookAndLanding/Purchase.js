@@ -277,6 +277,26 @@ export class Purchase extends Component {
                             }, {withCredentials: true})
                             .then(response => {console.log(response)})
                             .catch(error => {console.log(error)})
+                            
+                            if (this.props.flightData.length === 2) {
+                                axios.put('/api/ticket', {
+                                    fl_id: this.props.flightData[1][0].fl_id,
+                                    af_id: this.props.flightData[1][0].af_id,
+                                    first_name: this.state.passengerRequestData[i].firstName,
+                                    last_name: this.state.passengerRequestData[i].lastName,
+                                    gender: this.state.passengerRequestData[i].gender[0],
+                                    email: this.state.passengerRequestData[i].email,
+                                    phone: this.state.passengerRequestData[i].phoneNumber,
+                                    birthday: this.state.passengerRequestData[i].birthday,
+                                    addr1: this.state.passengerRequestData[i].address1,
+                                    addr2: this.state.passengerRequestData[i].address2,
+                                    city: this.state.passengerRequestData[i].city,
+                                    state: this.state.passengerRequestData[i].state,
+                                    postal: this.state.passengerRequestData[i].postal,
+                                }, {withCredentials: true})
+                                .then(response => {console.log(response)})
+                                .catch(error => {console.log(error)})
+                            }
                         }
                     })
                     setTimeout(() => {
@@ -305,36 +325,6 @@ export class Purchase extends Component {
                     currentPassenger: this.state.currentPassenger + 1,
                 })
             }
-            /*axios.put('https://westflightairlines.com/api/user', {
-                first_name: this.state.firstName,
-                last_name: this.state.lastName,
-                birthday: this.state.birthday,
-                gender: this.state.gender[0],
-                phone_number: this.state.phoneNumber,
-                email: this.state.email,
-            }, {withCredentials: true})
-            .then(response => {
-                if (response.status === 200) {
-                    this.setState({
-                        email: '',
-                        firstName: '',
-                        lastName: '',
-                        birthday: null,
-                        gender: '',
-                        phoneNumber: '',
-                        firstNameValid: true,
-                        lastNameValid: true,
-                        birthdayValid: true,
-                        genderEntered: true,
-                        emailValid: true,
-                        phoneNumberValid: true,
-                    })
-                  }
-            }).catch(error => {
-                try {
-                    console.log(error);
-                  } catch {}
-            })*/
         }
         this.setState({firstNameValid: firstNameValid, lastNameValid: lastNameValid, birthdayValid: birthdayValid, genderEntered: genderEntered, emailValid: emailValid, phoneNumberValid: phoneNumberValid, address1Valid: address1Valid, cityValid: cityValid, stateValid: stateValid, postalValid: postalValid});
     }

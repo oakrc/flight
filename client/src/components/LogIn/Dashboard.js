@@ -12,7 +12,12 @@ export class Dashboard extends Component {
         this.state = {
             upcomingTickets: [],
             previousTickets: [],
+
+            upcomingTicketsFormat: [],
+            previousTicketsFormat: [],
+
             userInfo: [],
+            
         }
     }
 
@@ -22,33 +27,32 @@ export class Dashboard extends Component {
             url: '/api/user'
         })
         .then((response) => {
-            console.log(response);
             this.setState({userInfo: response.data})
         })
         .catch((err) => {
-            console.log(err);
         })
         axios({
             method: 'get',
             url: '/api/ticket/upcoming'
         })
         .then((response) => {
-            console.log(response);
-            this.setState({upcomingTickets: response.data})
+            console.log(response.data);
+            this.setState({upcomingTickets: response.data, upcomingTicketsFormat: response.data.map((ticket, index) => {
+                return (<div className="ticket" key={ticket.tk_id}>
+                    {ticket.first_name + ' ' + ticket.last_name + ' '}
+                </div>)
+            })})
         })
         .catch((err) => {
-            console.log(err);
         })
         axios({
             method: 'get',
             url: '/api/ticket/history'
         })
         .then((response) => {
-            console.log(response);
             this.setState({previousTickets: response.data})
         })
         .catch((err) => {
-            console.log(err);
         })
     }
 
@@ -58,8 +62,10 @@ export class Dashboard extends Component {
                 <h1>{'Hello, ' + this.state.userInfo.first_name}!</h1>
                 <div className="tickets">
                     <Paper>
+                        <p>{this.state.upcomingTickets.length === 0 ? 'Currently no upcoming flights.' : this.state.upcomingTicketsFormat}</p>
                     </Paper>
                     <Paper>
+                        <p>{this.state.previousTickets.length === 0 ? 'Currently no upcoming flights.' : this.state.previousTicketsFormat}</p>
                     </Paper>
                 </div>
                 <Button variant="contained" color="primary" onClick={this.props.logOut}>
