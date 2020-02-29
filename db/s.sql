@@ -282,7 +282,7 @@ this_proc:BEGIN
                                 ELSE 0
                             END FROM users HAVING id=usid);
     UPDATE users
-        SET miles = miles + @mi_factor * cost
+        SET miles = miles + @mi_factor * cost + 200
         WHERE id = usid;
     SET @miles = (SELECT miles FROM users WHERE id=usid);
     SELECT users.tier INTO tier FROM users HAVING id=usid;

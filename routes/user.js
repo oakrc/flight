@@ -111,7 +111,7 @@ router.put('/', (req, res) => {
                                                     from:'noreply@westflightairlines.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
                                                     to: req.body.email,
                                                     subject: 'WestFlight Airlines: Account Verification',
-                                                    html: `<html><head></head><body><form method="DELETE" action="https://www.westflightairlines.com/api/user/token/` + encodeURIComponent(JSON.parse(JSON.stringify(result))[0].token) + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
+                                                    html: `<html><head></head><body><form method="GET" action="https://www.westflightairlines.com/api/user/token/` + encodeURIComponent(JSON.parse(JSON.stringify(result))[0].token) + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
                                                 }
                                                 transporter.sendMail(mailOpts).then(
                                                     () => {
@@ -127,9 +127,7 @@ router.put('/', (req, res) => {
                                 })
                             }
                         })
-
                     })
-
                 })
             } else res.status(500).end()
         })
@@ -174,7 +172,7 @@ router.post('/', (req, res) => {
 })
 
 // verify account
-router.delete('/token/:token', (req, res) => {
+router.get('/token/:token', (req, res) => {
     var token = decodeURIComponent(req.params.token)
     if (token.length != 64) {
         res.status(403).send({ error:'Invalid token.' })
