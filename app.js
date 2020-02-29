@@ -2,6 +2,7 @@
 // imports
 const express = require('express')
 const session = require('express-session')
+const sslRedir = require('heroku-ssl-redirect')
 const redis = require('redis')
 const RedisStore = require('connect-redis')(session)
 const logger = require('morgan')
@@ -13,6 +14,7 @@ const path = require('path')
 const app = express()
 app.disable('x-powered-by')
 app.use(logger('dev'))
+if (process.env.SSL === 'true') app.use(sslRedir())
 
 // setup session store (redis + connect-redis)
 var client = redis.createClient({
@@ -28,11 +30,7 @@ app.use(session({
         ttl: 60*60*24*15
     }),
     saveUninitialized: false,
-    resave: false,
-    cookie: {
-      //expires: new Date(Date.now() + (30 * 86400 * 1000)),
-        secure: process.env.SSL === 'true'
-    }
+    resave: false
 }))
 
 
