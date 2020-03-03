@@ -122,7 +122,7 @@ export class Careers extends Component {
             axios.post('/api/msg', {
                 first_name: this.state.firstName,
                 last_name: this.state.lastName,
-                phone_number: this.state.phoneNumber,
+                phone: this.state.phoneNumber,
                 email: this.state.email,
                 subject: this.state.subject.trim(),
                 message: this.state.message.trim()
@@ -166,8 +166,10 @@ export class Careers extends Component {
                     <TextField type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <TextField type="text" label="Subject" variant="outlined" value={this.state.subject} onChange={(e) => this.updateSubject(e.target.value)} error={!this.state.subjectValid}/>
                     <TextField label="Message" multiline rowsMax="6" value={this.state.message} onChange={(e) => this.updateMessage(e.target.value)} error={!this.state.messageValid} variant="outlined"/>
-                    <Button className="submitButton" variant="contained" color="primary" onClick={this.send}>Submit</Button>
-                    {this.state.sent && <Alert severity="success">Sent!</Alert>}
+                    <div style={{display: 'inline-flex', width: '100%', justifyContent: this.state.sent ? 'space-between' : 'flex-end'}}>
+                        <Button className="submitButton" variant="contained" color="primary" onClick={this.send}>Submit</Button>
+                        {this.state.sent && <Alert severity="success">Sent!</Alert>}
+                    </div>
                 </Paper>            
             </div>
         )

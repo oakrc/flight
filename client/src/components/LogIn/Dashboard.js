@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Button, Paper } from "@material-ui/core";
 import '../../css/components/LogIn/LogInAndDashboard.scss';
 
@@ -22,6 +23,8 @@ export class Dashboard extends Component {
     }
 
     componentDidMount() {
+        this.props.showOption();
+        this.props.showOption();
         axios({
             method: 'get',
             url: '/api/user'
@@ -36,11 +39,19 @@ export class Dashboard extends Component {
             url: '/api/ticket/upcoming'
         })
         .then((response) => {
-            console.log(response.data);
             this.setState({upcomingTickets: response.data, upcomingTicketsFormat: response.data.map((ticket, index) => {
-                return (<div className="ticket" key={ticket.tk_id}>
-                    {ticket.first_name + ' ' + ticket.last_name + ' '}
-                </div>)
+                if (ticket.tk_id !== null) {
+                    return (<Paper className="ticket" key={ticket.tk_id}>
+                        <div>
+                            {ticket.first_name} {ticket.last_name}<br></br>
+                            ({ticket.src }) <ArrowForwardIcon /> ({ticket.dest}), {new Date(ticket.dt_dep).toLocaleTimeString().replace(/:\d+ /, ' ')} <ArrowForwardIcon/> {new Date(ticket.dt_arr).toLocaleTimeString().replace(/:\d+ /, ' ')}
+                        </div>
+                    </Paper>)
+                } else {
+                    return (<Paper className="ticket">
+                        Currently no upcoming flights.
+                    </Paper>)
+                }
             })})
         })
         .catch((err) => {
@@ -50,7 +61,21 @@ export class Dashboard extends Component {
             url: '/api/ticket/history'
         })
         .then((response) => {
-            this.setState({previousTickets: response.data})
+            this.setState({previousTickets: response.data, previousTicketsFormat: response.data.map((ticket, index) => {
+                if (ticket.tk_id !== null) {
+                    return (<Paper className="ticket" key={ticket.tk_id}>
+                        <div>
+                            {ticket.first_name} {ticket.last_name}<br></br>
+                            ({ticket.src})  <ArrowForwardIcon />  ({ticket.dest})
+                            {(new Date(ticket.dt_arr) - new Date(ticket.dt_dep)) / 60000 % 60 + 'min, ' + new Date(ticket.dt_dep).toLocaleTimeString().replace(/:\d+ /, ' ') + ' to ' + new Date(ticket.dt_arr).toLocaleTimeString().replace(/:\d+ /, ' ')}
+                        </div>
+                    </Paper>)
+                } else {
+                    return (<Paper className="ticket">
+                        Currently no previous flights.
+                    </Paper>)
+                }
+            })})
         })
         .catch((err) => {
         })
@@ -61,12 +86,14 @@ export class Dashboard extends Component {
             <div className="Dashboard">
                 <h1>{'Hello, ' + this.state.userInfo.first_name}!</h1>
                 <div className="tickets">
-                    <Paper>
-                        <p>{this.state.upcomingTickets.length === 0 ? 'Currently no upcoming flights.' : this.state.upcomingTicketsFormat}</p>
-                    </Paper>
-                    <Paper>
-                        <p>{this.state.previousTickets.length === 0 ? 'Currently no upcoming flights.' : this.state.previousTicketsFormat}</p>
-                    </Paper>
+                    <div className="half-section">
+                        <Paper>Upcoming Flights</Paper>
+                        {this.state.upcomingTickets.length === 0 ? <Paper className="ticket">Currently no upcoming flights.</Paper> : this.state.upcomingTicketsFormat}
+                    </div>
+                    <div className="half-section">
+                        <Paper>Previous Flights</Paper>
+                        {this.state.previousTickets.length === 0 ? <Paper className="ticket">Currently no previous flights.</Paper> : this.state.previousTicketsFormat}
+                    </div>
                 </div>
                 <Button variant="contained" color="primary" onClick={this.props.logOut}>
                     Log Out

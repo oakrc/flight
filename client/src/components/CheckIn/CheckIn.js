@@ -91,8 +91,10 @@ export class CheckIn extends Component {
                     <TextField id="outlined-basic" label="Passenger First Name" variant="outlined" value={this.state.passengerFirstName} onChange={(e) => this.fNameUpdate(e.target.value)} error={!this.state.fNameValid}/>
                     <TextField id="outlined-basic" label="Passenger Last Name" variant="outlined" value={this.state.passengerLastName} onChange={(e) => this.lNameUpdate(e.target.value)} error={!this.state.lNameValid}/>
                     <TextField id="outlined-basic" label="Confirmation Number" variant="outlined" value={this.state.confirmationNumber} onChange={(e) => this.confirmUpdate(e.target.value)} error={!this.state.confNumberValid}/>
-                    {this.state.confSuccess !== null && (this.state.confSuccess ? <Alert severity="success">Checked In</Alert> : <Alert severity="error">Error! (Confirmation Number is 6 digits)</Alert>)}
-                    <Button color="primary" variant="contained" onClick={this.checkIn}>Check In</Button>
+                    <div style={{display: 'inline-flex', width: '100%', justifyContent: this.state.confSuccess === null ? 'flex-end' : 'space-between'}}>
+                        {this.state.confSuccess !== null && (this.state.confSuccess ? <Alert severity="success">Checked In</Alert> : <Alert severity="error">Error! (Confirmation # is 6 digits)</Alert>)}
+                        <Button color="primary" variant="contained" onClick={this.checkIn}>Check In</Button>
+                    </div>
                 </Paper>
             </div>
         )

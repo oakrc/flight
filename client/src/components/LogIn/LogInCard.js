@@ -98,8 +98,8 @@ export class LogInCard extends Component {
                             {this.state.loading !== null && this.state.loading && <Alert severity="info">Loading...</Alert>}
                         </div>
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                        <Button variant="contained" color="primary" onClick={this.logIn}>Log In</Button>
-                        <Button color="primary" variant="outlined" onClick={() => {this.props.signUp(); this.close()}}>Sign Up</Button>
+                            <Button variant="contained" color="primary" onClick={this.logIn}>Log In</Button>
+                            <Button color="primary" variant="outlined" onClick={() => {this.props.signUp(); this.close()}}>Sign Up</Button>
                         </div>
                     </div>
                 </Paper>

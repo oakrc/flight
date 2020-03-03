@@ -45,6 +45,7 @@ export class Careers extends Component {
             birthdayValid: true,
 
             display: false,
+            success: false
         }
 
         this.flightSearcher = new FuzzySearch(this.state.careers);
@@ -188,6 +189,7 @@ export class Careers extends Component {
                         genderEntered: true,
                         emailValid: true,
                         phoneNumberValid: true,
+                        success: true,
                     })
                 }
             }).catch(error => {
@@ -214,20 +216,24 @@ export class Careers extends Component {
                     <TextField type="tel" label="Phone Number" variant="outlined" value={this.state.phoneNumber} onChange={(e) => this.updatePhoneNumber(e.target.value)} error={!this.state.phoneNumberValid}/>
                     <TextField type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.flightSearcher.search(inputValue)} options={this.state.careers} value={this.state.career} onChange={(e, value) => {this.careerUpdate(e, value)}} renderInput={params => (<TextField {...params} error={!this.state.careerValid} type="text" label="Careers" variant="outlined"/>)}></Autocomplete>
-                    <Button
-                        variant="contained"
-                        component="label"
-                        >
-                        Upload File
-                        <input
-                            accept=".pdf,.png,.jpg,.docx,.txt,.rtf,.doc,.odt"
-                            type="file"
-                            style={{ display: "none" }}
-                            onChange={this.updateFile}
-                        />
-                    </Button>
-                    {this.state.resume !== null ? <p className="resumeTitle">{this.state.resumeTitle}</p> : null}
-                    <Button className="submitButton" variant="contained" color="primary" onClick={this.signUp}>Submit</Button>
+                    <div style={{display: 'flex', width: '100%', justifyContent: this.state.success ? 'space-between' : 'flex-end'}}>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <Button
+                                variant="contained"
+                                component="label"
+                                >
+                                Upload File
+                                <input
+                                    accept=".pdf,.png,.jpg,.docx,.txt,.rtf,.doc,.odt"
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={this.updateFile}
+                                />
+                            </Button>
+                            {this.state.resume !== null ? <p className="resumeTitle">{this.state.resumeTitle}</p> : null}
+                            <Button className="submitButton" variant="contained" color="primary" onClick={this.signUp}>Submit</Button>
+                        </div>
+                    </div>
                 </Paper>            
             </div>
         )

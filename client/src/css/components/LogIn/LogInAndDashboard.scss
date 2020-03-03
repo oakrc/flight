@@ -85,7 +85,7 @@
 
     .MuiButton-root {
         margin-top: 3.5vh;
-        min-width: 6vw;
+        min-width: 11vw;
         height: 4vh;
         text-transform: none;
         align-self: flex-end;
@@ -102,6 +102,8 @@
     }
 
     .payButton {
+        width: 100%;
+        display: inline-flex;
         align-self: flex-end;
     }
 }
@@ -112,12 +114,13 @@
     align-items: center;
     justify-content: center;
     width: 100vw;
-    height: 100vh;
     background: -webkit-linear-gradient(#005aa7, #528caf);
     background: linear-gradient(#005aa7, #528caf);
+    padding: 7.5vh 0 5vh 0;
 
     .tickets {
         width: 90vw;
+        max-height: 65vh;
         display: inline-flex;
         justify-content: space-evenly;
 
@@ -126,14 +129,35 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-around;
-            width: 35vw;
-            min-height: 60vh;
-            border-radius: 0.5vw;
+            border-radius: 0.35vw;
+            box-sizing: border-box;
+            font-size: 1.8rem;
+            padding: 3vh 2vw;
+        }
+
+        .half-section {
+            overflow: scroll;
+
+            .ticket {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 40vw;
+                margin-top: 5vh;
+                font-size: 1.5rem;
+                padding: 4vh 2vw;
+                line-height: 2.2rem;
+            }
+    
+            .MuiSvgIcon-root {
+                position: relative;
+                top: 3px;
+            }
         }
     }
 
     .MuiButton-root {
-        margin: 5vh 0 0 0;
+        margin-top: 5vh;
         background-color: #f0f0f0;
         color: #005aa7;
     }

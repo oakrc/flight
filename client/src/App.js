@@ -142,7 +142,7 @@ class App extends Component {
         <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
             <Switch>
               <Route exact path='/' render={(props) => <BookAndLanding {...props} showPurchase={(flightData) => this.showPurchase(flightData)} resetFlData={this.resetFlData}/>} />
-              {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} />} />}
+              {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} showOption={this.showOption} />} />}
               <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
               {/*<Route path='/flightstatus' component={FlightStatus} />*/}

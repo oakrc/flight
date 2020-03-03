@@ -402,11 +402,13 @@ export class Purchase extends Component {
                             <Autocomplete disableClearable autoHighlight autoComplete autoSelect filterOptions={(options, {inputValue}) => this.stateSearcher.search(inputValue)} options={this.state.states} value={this.state.state} onChange={(e, value) => {this.updateState(e, value)}} renderInput={params => (<TextField {...params} error={!this.state.stateValid} type="text" label="State&nbsp;" variant="outlined"/>)}></Autocomplete>
                             <TextField label="Postal Code" variant="outlined" value={this.state.postal} onChange={(e) => this.updatePostal(e.target.value)} error={!this.state.postalValid}/>
                         </div>
-                        <div className={this.state.currentPassenger !== 1 ? 'half-field1' : 'payButton'}>
+                        <div className={this.state.currentPassenger !== 1 ? 'half-field1' : 'payButton'} style={{justifyContent: (this.state.adultsCorrect || !this.state.paid) && 'flex-end'}}>
                             {this.state.currentPassenger !== 1 &&
                             <Button variant="contained" color="primary" onClick={this.back}>
                                 Back
                             </Button>}
+                            {!this.state.adultsCorrect && <Alert className="payButton" severity="error">{'Make sure that you have ' + this.props.flightData[1][1].adults + (this.props.flightData[1][1].adults > 1 ? ' adults' : ' adult') + ' and ' + (this.props.flightData[1][1].passengers - this.props.flightData[1][1].passengers) +  ' children/infants.'}</Alert>}
+                            {this.state.paid && <Alert className="payButton" severity="success">Booked!</Alert>}
                             <Button variant="contained" color="primary" onClick={this.signUp}>
                             {this.state.currentPassenger < this.props.flightData[0][1].passengers ?
                                 `Next Passenger (${this.state.currentPassenger}/${this.props.flightData[0][1].passengers})` :
@@ -414,8 +416,6 @@ export class Purchase extends Component {
                             }
                             </Button>
                         </div>
-                        {!this.state.adultsCorrect && <Alert className="payButton" severity="error">{'Make sure that you have ' + this.props.flightData[1][1].adults + (this.props.flightData[1][1].adults > 1 ? ' adults' : ' adult') + ' and ' + (this.props.flightData[1][1].passengers - this.props.flightData[1][1].passengers) +  ' children/infants.'}</Alert>}
-                        {this.state.paid && <Alert className="payButton" severity="success">Booked!</Alert>}
                     </Paper>            
                 </div>
                 }
