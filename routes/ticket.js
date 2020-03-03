@@ -2,7 +2,8 @@
 const express = require('express')
 const query   = require('../query')
 const valid   = require('../valid')
-const nodemailer = require('nodemailer')
+const sg      = require('@sendgrid/mail')
+sg.setApiKey(process.env.SG_API_KEY)
 var   router  = express.Router()
 
 // get ticket details
@@ -14,6 +15,7 @@ router.get('/:query', valid.uid, (req, res) => {
         [uid],
         (err,result)=>{
         if (err) {
+            console.log(err)
             res.status(500).send({error: 'Internal Server Error'})
             return
         }
@@ -76,6 +78,7 @@ router.put('/', valid.uid, (req, res) => {
             postal
         ], (err, _) => {
             if (err) {
+                console.log(err)
                 res.status(500).end()
                 return
             }
@@ -85,37 +88,25 @@ router.put('/', valid.uid, (req, res) => {
                 [uid,first_name,last_name,birthday],
                 (err, result) => {
                     if (err) {
+                        console.log(err)
                         res.status(500).send({ error: 'Failed to send confirmation email.'})
                         return
                     }
                     var conf = JSON.parse(JSON.stringify(result))[0].conf
-                    let transporter = nodemailer.createTransport({
-                        service: 'Gmail',
-                        auth: {
-                            user: 'westflightairlines@gmail.com',//process.env.MAIL_USER,
-                            pass: process.env.MAIL_PASS
-                        }
-                    })
-                    transporter.verify((err,succ) => {
-                        if (err || !succ) {
+                    var msg = {
+                        from: process.env.MAIL_USER,
+                        to: req.body.email,
+                        subject: 'WestFlight Airlines: Account Verification',
+                        html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf + `</body></html>`
+                    }
+                    sg.send(msg).then(
+                        () => {
+                            res.status(200).end()
+                        },
+                        () => {
                             res.status(500).send({ error: 'Failed to send confirmation email.'})
-                            return
                         }
-                        var mailOpts = {
-                            from:'noreply@westflightairlines.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
-                            to: req.body.email,
-                            subject: 'WestFlight Airlines: Account Verification',
-                            html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf + `</body></html>`
-                        }
-                        transporter.sendMail(mailOpts).then(
-                            () => {
-                                res.status(200).end()
-                            },
-                            () => {
-                                res.status(500).send({ error: 'Failed to send confirmation email.'})
-                            }
-                        )
-                    })
+                    )
                 }
             )
         }
@@ -135,6 +126,7 @@ router.post('/check-in', (req, res) => {
     }
     req.app.locals.pool.query(query.check_in, [conf,first,last], (err, result) => {
         if (err) {
+            console.log(err)
             res.status(400).send({error: 'Invalid Request'})
         }
         else res.status(200).send({msg: 'Sucessfully checked-in.'})

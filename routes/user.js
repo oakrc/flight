@@ -5,8 +5,9 @@ const bcrypt = require('bcrypt')
 const valid = require('../valid')
 const query = require('../query')
 const crypto = require('crypto')
-const nodemailer = require('nodemailer')
+const sg = require('@sendgrid/mail')
 
+sg.setApiKey(process.env.SG_API_KEY)
 var router = express.Router()
 
 // register
@@ -29,6 +30,7 @@ router.put('/', (req, res) => {
     // checks if user already exists
     req.app.locals.pool.query(query.user_exists, [req.body.email], (err, result) => {
         if (err) {
+            console.log(err)
             res.status(500).send({ error: 'Error registering user' })
             return
         }
@@ -41,6 +43,7 @@ router.put('/', (req, res) => {
         // hash & store password
         bcrypt.hash(plain_pw, salt_rounds, (err, hashed) => {
             if (err) {
+                console.log(err)
                 res.status(500).send({ error: 'Error registering user' })
                 return
             }
@@ -61,10 +64,12 @@ router.put('/', (req, res) => {
             if (hashed.length > 1) {
                 req.app.locals.pool.getConnection((err,conn) => {
                     if (err) {
+                        console.log(err)
                         res.status(500).send({ error: 'Error registering user' })
                     }
                     else conn.beginTransaction((err) => {
                         if (err) {
+                            console.log(err)
                             res.status(500).send({ error: 'Error registering user' })
                         }
                         else conn.query(query.register_user, [
@@ -77,6 +82,7 @@ router.put('/', (req, res) => {
                             hashed
                         ], (err, _) => {
                             if (err) {
+                                console.log(err)
                                 conn.rollback(() => {
                                     conn.release()
                                     res.status(500).send({ error: 'Error registering user' })
@@ -84,6 +90,7 @@ router.put('/', (req, res) => {
                             } else {
                                 conn.commit((err) => {
                                     if (err) {
+                                        console.log(err)
                                         conn.rollback(() => {
                                             conn.release()
                                             res.status(500).send({ error: 'Error registering user' })
@@ -92,37 +99,24 @@ router.put('/', (req, res) => {
                                         conn.release();
                                         req.app.locals.pool.query(query.get_token_w_email, [req.body.email], (err, result) => {
                                             if (err) {
+                                                console.log(err)
                                                 res.status(500).send({ error: 'Failed to send verification email.' })
                                                 return
                                             }
-                                            let transporter = nodemailer.createTransport({
-                                                service: 'Gmail',
-                                                auth: {
-                                                    user: 'westflightairlines@gmail.com',//process.env.MAIL_USER,
-                                                    pass: process.env.MAIL_PASS
-                                                }
-                                            })
-                                            transporter.verify((err,succ) => {
+                                            const msg = {
+                                                from: process.env.MAIL_USER, //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
+                                                to: req.body.email,
+                                                subject: 'WestFlight Airlines: Account Verification',
+                                                html: `<html><head></head><body><form method="GET" action="https://www.westflightairlines.com/api/user/token/` + encodeURIComponent(JSON.parse(JSON.stringify(result))[0].token) + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
+                                            }
+                                            sg.send(msg,false,(err,result)=>{
                                                 if (err) {
                                                     console.log(err)
+                                                    console.log(err)
                                                     res.status(500).send({ error: 'Failed to send verification email.'})
-                                                    return
                                                 }
-                                                var mailOpts = {
-                                                    from:'westflightairlines@gmail.com', //'westflightairlines@gmail.com',//process.env.MAIL_USER,//
-                                                    to: req.body.email,
-                                                    subject: 'WestFlight Airlines: Account Verification',
-                                                    html: `<html><head></head><body><form method="GET" action="https://www.westflightairlines.com/api/user/token/` + encodeURIComponent(JSON.parse(JSON.stringify(result))[0].token) + `"><input type="submit" value="Verify your new WestFlight account."></form><br>If the action was not performed by you, ignore this email.</body></html>`
-                                                }
-                                                transporter.sendMail(mailOpts).then(
-                                                    () => {
-                                                        res.status(200).send({ msg: 'Sucessful Registration' })
-                                                    },
-                                                    (err) => {
-                                                        console.log(err)
-                                                        res.status(500).send({ error: 'Failed to send verification email.'})
-                                                    }
-                                                )
+                                                else 
+                                                    res.status(200).send({ msg: 'Sucessful Registration' })
                                             })
                                         })
                                     }
@@ -144,6 +138,7 @@ router.post('/', (req, res) => {
         [req.body.email],
         (err, result) => {
             if (err) {
+                console.log(err)
                 res.status(500).send({ error: 'Error logging in' })
                 return
             }
@@ -160,6 +155,7 @@ router.post('/', (req, res) => {
             }
             bcrypt.compare(Buffer.from(req.body.password, 'base64').toString(), pw_hash, (err, comp) => {
                 if (err) {
+                    console.log(err)
                     res.status(500).send({ error: 'Internal Server Error.' })
                 }
                 if (comp) {
@@ -182,11 +178,13 @@ router.get('/token/:token', (req, res) => {
     }
     req.app.locals.pool.getConnection((err, conn) => {
         if (err) {
+            console.log(err)
             res.status(500).send({ error: 'Internal Server Error.' })
             return;
         }
         conn.query(query.get_token, [token], (err, result) => {
             if (err) {
+                console.log(err)
                 res.status(500).send({ error: 'Internal Server Error.' })
                 return;
             }
@@ -196,10 +194,12 @@ router.get('/token/:token', (req, res) => {
             else conn.beginTransaction((err) => {
                 var uid = JSON.parse(JSON.stringify(result))[0].user_id
                 if (err) {
+                    console.log(err)
                     res.status(500).send({ error: 'Internal Server Error.' })
                 }
                 else conn.query(query.del_token + query.set_usr_verified, [uid, token, uid], (err, result) => {
                     if (err) {
+                        console.log(err)
                         conn.rollback(() => {
                             conn.release()
                             res.status(500).send({ error: 'Internal Server Error.' })
@@ -207,6 +207,7 @@ router.get('/token/:token', (req, res) => {
                     }
                     else conn.commit((err) => {
                         if (err) {
+                            console.log(err)
                             conn.rollback(() => {
                                 conn.release()
                                 res.status(500).send({ error: 'Internal Server Error.' })
@@ -230,6 +231,7 @@ router.get('/', valid.uid, (req, res) => {
         [req.session.uid, req.session.uid],
         (err, result) => {
             if (err) {
+                console.log(err)
                 res.status(500).send({ error: 'Internal Server Error' })
                 return
             }
@@ -246,6 +248,7 @@ router.get('/', valid.uid, (req, res) => {
 router.delete('/', valid.uid, (req, res) => {
     req.session.destroy((err) => {
         if (err) {
+            console.log(err)
             res.status(500).send({ error: 'Failed to destroy session' })
             return;
         }
