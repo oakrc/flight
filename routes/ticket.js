@@ -93,6 +93,7 @@ router.put('/', valid.uid, (req, res) => {
                         return
                     }
                     if (result.length < 1) {
+                        console.log(result.insertId)
                         console.log('Confirmation Number not found')
                         res.status(500).send({ error: 'Failed to send confirmation email' })
                     }
