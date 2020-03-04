@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
                 var msg2 = {
                     from: process.env.MAIL_USER,
                     to: email,
-                    subject: 'West Flight Airlines Support: Ticket created!'
+                    subject: 'West Flight Airlines Support: Ticket created!',
                     text: 'Hello dear customer,\nour representative will contact you within 3 business days!\nThank you for your patience.\nBest regards,\nWest Flight Team'
                 }
                 sg.send(msg2)
