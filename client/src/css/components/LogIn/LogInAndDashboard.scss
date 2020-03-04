@@ -1,0 +1,185 @@
+.LogIn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: -webkit-linear-gradient(#005aa7, #528caf);
+    background: linear-gradient(#005aa7, #528caf);
+
+    h1 {
+        color: #0571af;
+        font-family: 'Rubik';
+        text-transform: none;
+        font-size: 2em;
+    }
+
+    .MuiPaper-root {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 5vh 0 5vh 0;
+        min-width: 30vw;
+        padding: 2.5vh 2vw 5vh 2vw;
+        border-radius: 10px;
+        background-color: #f0f0f0;
+
+        .MuiFormControl-root {
+            width: 100%;
+            margin-top: 3.5vh;
+            background-color: #f0f0f0;
+        }
+
+        .MuiOutlinedInput-root {
+            transition: 0.5s;
+    
+            &:focus {
+                background-color: #f0f0f0 !important;
+            }
+    
+            &:hover {
+                background-color: #e4e4e4;
+    
+                .MuiOutlinedInput-notchedOutline {
+                    border-color: #0277bd;
+                }
+            }
+        }
+
+        .MuiAlert-root {
+            display: inline-flex;
+            flex-direction: row;
+            margin: 2vh 0 0 0;
+            padding: 5px;
+            border-radius: 5px;
+            min-width: inherit!important;
+        }
+
+        .half-field {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            & > * {
+                width: 45%;
+            }
+        }
+
+        .half-field1 {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .third-field {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            & > * {
+                width: 31%;
+            }
+        }
+    }
+
+    .MuiButton-root {
+        margin-top: 3.5vh;
+        min-width: 11vw;
+        height: 4vh;
+        text-transform: none;
+        align-self: flex-end;
+    }
+}
+
+.Purchase {
+    .MuiPaper-root {
+        min-width: 50vw;
+    }
+
+    .MuiAlert-root {
+        min-width: 0!important;
+    }
+
+    .payButton {
+        width: 100%;
+        display: inline-flex;
+        align-self: flex-end;
+    }
+}
+
+.Dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100vw;
+    height: 87.5vh;
+    background: -webkit-linear-gradient(#005aa7, #528caf);
+    background: linear-gradient(#005aa7, #528caf);
+    padding: 7.5vh 0 5vh 0;
+
+    .tickets {
+        width: 90vw;
+        max-height: 65vh;
+        display: inline-flex;
+        justify-content: space-evenly;
+
+        .MuiPaper-root {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            border-radius: 0.35vw;
+            box-sizing: border-box;
+            font-size: 1.8rem;
+            padding: 3vh 2vw;
+        }
+
+        .half-section {
+            overflow: scroll;
+
+            .ticket {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 40vw;
+                margin-top: 5vh;
+                font-size: 1.5rem;
+                padding: 4vh 2vw;
+                line-height: 2.2rem;
+            }
+    
+            .MuiSvgIcon-root {
+                position: relative;
+                top: 3px;
+            }
+        }
+    }
+
+    .MuiButton-root {
+        background-color: #f0f0f0;
+        color: #005aa7;
+    }
+
+    h1 {
+        margin: 0 0 5vh 0;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .MuiSvgIcon-root {
+        margin-top: 5vh;
+        color: white;
+        font-size: 3rem;
+        animation: bounce 2s infinite;
+        @keyframes bounce {
+            50% {
+              transform: translateY(-40%);
+            }
+            100% {
+              transform: translateY(0);
+            }
+        }
+    }
+}

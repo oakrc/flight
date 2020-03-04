@@ -3,7 +3,8 @@ const express = require('express')
 const query = require('../query')
 const valid = require('../valid')
 const multer = require('multer')
-const nodemailer = require('nodemailer')
+const sg = require('@sendgrid/mail')
+sg.setApiKey(process.env.SG_API_KEY)
 var upload = multer({
     dest: 'resumes/',
     fileFilter: (req, file, cb) => {
@@ -41,13 +42,6 @@ router.post('/', upload.single('resume'), (req, res, next) => {
 })
 
 function send_mail(fname, lname, age, email, phone, jid, file) {
-    let transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS
-        }
-    })
     var jobs = [
         'Sr. Software Engineer (IT)',
         'Aircraft Support Mechanic (Cabin - Dept #5)',
@@ -60,29 +54,37 @@ function send_mail(fname, lname, age, email, phone, jid, file) {
         'Sr. Analyst (Inventory)',
         'Customer Service Agent (Customer Service)'
     ]
-    var mailOpts = {
-        from: process.env.MAIL_USER,
-        to: 'workat@westflightairlines.com',
-        subject: 'Application: ' + jobs[jid]
-                + ': ' + lname + ', ' + fname
-                + ' | ' + age,
-        text: 'Name: ' + lname + ', ' + fname + '\n'
-                + 'Applying for: ' + jobs[jid] + '\n'
-                + 'Email: ' + email + '\n'
-                + 'Phone: ' + phone + '\n'
-                + 'Age: ' + age + '\n',
-        attachments: [
-            {
-                filename: file.originalname,
-                content: file.buffer
-            }
-        ]
+    var msg = null
+    msg = {
+            from: process.env.MAIL_USER,
+            to: 'workat@westflightairlines.com',
+            subject: 'Application: ' + jobs[jid]
+            + ': ' + lname + ', ' + fname
+            + ' | ' + age,
+            text: 'Name: ' + lname + ', ' + fname + '\n'
+            + 'Applying for: ' + jobs[jid] + '\n'
+            + 'Email: ' + email + '\n'
+            + 'Phone: ' + phone + '\n'
+        + 'Age: ' + age + '\n',
     }
-    var ret = false;
-    transporter.sendMail(mailOpts).then(()=>{
-        ret = true
-    })
-    return ret;
+    if (file != null) {
+        msg.attachments = [{
+            filename: file.originalname,
+            content: file.buffer,
+            disposition: 'attachment',
+            contentId: 'resume'
+        }]
+    }
+    sg.send(msg).then(()=>{
+        var msg2 = {
+            from: process.env.MAIL_USER,
+            to: email,
+            subject: 'West Flight Airlines: Job Application Under Review',
+            text: 'Thanks for your interest!\n Your application is under review and we will reply within 10 business days.\nBest regards,\nWest Flight Team'
+        }
+        sg.send(msg2)
+    },()=>{console.log('ERR: The job application was not sent.')})
+    return true
 }
 
 module.exports = router

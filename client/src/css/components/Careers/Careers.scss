@@ -1,0 +1,109 @@
+.Careers {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: -webkit-linear-gradient(#005aa7, #528caf);
+    background: linear-gradient(#005aa7, #528caf);
+
+    h1 {
+        color: #0571af;
+        font-family: 'Rubik';
+        text-transform: none;
+        font-size: 2em;
+    }
+
+    .MuiPaper-root {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 5vh 0 0 0;
+        min-width: 20vw;
+        padding: 2.5vh 2vw 5vh 2vw;
+        border-radius: 10px;
+        background-color: #f0f0f0;
+
+        .MuiFormControl-root {
+            width: 100%;
+            margin-top: 3.5vh;
+            background-color: #f0f0f0;
+        }
+
+        .MuiOutlinedInput-root {
+            transition: 0.5s;
+    
+            &:focus {
+                background-color: #f0f0f0 !important;
+            }
+    
+            &:hover {
+                background-color: #e4e4e4;
+    
+                .MuiOutlinedInput-notchedOutline {
+                    border-color: #0277bd;
+                }
+            }
+        }
+
+        .MuiAlert-root {
+            display: inline-flex;
+            flex-direction: row;
+            margin: 2vh 0 0 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .MuiAutocomplete-root {
+            width: 100%;
+            background-color: #f0f0f0;
+        }
+
+        .half-field {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            & > * {
+                width: 45%;
+            }
+        }
+    }
+
+    .MuiButton-root {
+        margin-top: 3vh;
+        min-width: 6vw;
+        height: 4vh;
+        text-transform: none;
+        align-self: flex-end;
+    }
+
+    .resumeTitle {
+        margin: 1vh 0 0 0;
+        min-width: 6vw;
+        text-align: center;
+        font-size: 0.85rem;
+        align-self: flex-end;
+    }
+}
+
+.Contact {
+    .MuiPaper-root {
+        min-width: 40vw;
+    }
+
+    .third-field {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        & > * {
+            width: 30% !important;
+        }
+    }
+}
+
+.submitButton {
+    margin-top: 2vh !important;
+}

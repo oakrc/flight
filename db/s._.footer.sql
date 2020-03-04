@@ -2,7 +2,18 @@ DELIMITER ;
 SET FOREIGN_KEY_CHECKS=1;
 CALL add_dummy();
 CALL add_routes();
-CALL register_user('Example','User','2000-01-01','M','5550687272','a@gmail.com','$2y$12$8Zi9WTNlwm2dZ4NRueQCWOw5ouQzXjJiHXG4oHcOzyxj5juFpJAca');
-CALL add_dummy_flights('LAX','BOI','2023-04-20 08:00:00');
+INSERT INTO users VALUES (
+    gen_uuid(),
+    'West',
+    'Flight',
+    '1995-01-01',
+    'O',
+    '555-000-8888',
+    'noreply@westflightairlines.com',
+    '$2b$15$N1JgCucoID6kf70XCbLVnOnoDuy2bck0ZP2zSwQ09L5H/EODFAuO6',
+    'G',-- bronze
+    10000000,
+    1
+);
 COMMIT;
 SET autocommit = 1;

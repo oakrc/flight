@@ -7,6 +7,7 @@ CREATE PROCEDURE buy_ticket (
     IN lname VARCHAR(255),
     IN gender CHAR(1),
     IN phone VARCHAR(16),
+    IN email VARCHAR(50),
     IN dob DATE,
     IN addr1 VARCHAR(255),
     IN addr2 VARCHAR(255),
@@ -17,20 +18,22 @@ CREATE PROCEDURE buy_ticket (
 BEGIN
     INSERT INTO tickets VALUES (
         gen_uuid(),
-        UUID_TO_BIN(user_id),
+        u2b(user_id),
         1,
         NOW(),
-        UUID_TO_BIN(fl_id),
-        UUID_TO_BIN(af_id),
+        u2b(fl_id),
+        u2b(af_id),
         fname,
         lname,
         gender,
         phone,
+        email,
         dob,
         addr1,
         addr2,
         city,
         state,
-        postal
+        postal,
+        LEFT(MD5(RANDOM_BYTES(15)),6)
     );
 END//

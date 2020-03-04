@@ -1,0 +1,116 @@
+.Navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 93vw;
+    height: 9vh;
+    padding: 0 3.5vw;
+    z-index: 10;
+
+    .MuiSvgIcon-root {
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+        z-index: 11;
+    }
+
+    .menu {
+        width: 40px;
+        height: 40px;
+        background-image: url('./images/menu.svg');
+        background-repeat: no-repeat;
+        transition: 0.5s;
+        transition-timing-function: steps(30);
+        filter: invert(1);
+        cursor: pointer;
+    }
+    
+    .menuToggled {
+        background-position: -1200px 0px;
+    }
+
+    img {
+        width: 40px;
+        height: 40px;
+        animation: zoom 2s infinite;
+        @keyframes zoom {
+            50% {
+                transform: scale(1.05) translateY(-2%);
+            }
+        }
+    }
+}
+
+.Nav {
+    padding: 13vh 0 0 0;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 80vh;
+    width: 100vw;
+    padding: 12.5vh 0 7.5vh 0;
+    transition: 0.5s;
+    color: white;
+    background-color: #005aa7;
+    z-index: -1;
+
+    h1 {
+        text-align: center;
+        font-size: 25px;
+        cursor: pointer;
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    }
+
+    .extras {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        height: 10vh;
+        min-width: 35vw;
+        
+        h2 {
+            text-align: center;
+            font-size: 15px;
+            cursor: pointer;
+            
+            a {
+                color: white;
+                text-decoration: none;
+            }
+        }
+
+        .MuiSvgIcon-root {
+            color: white;
+            cursor: pointer;
+        }
+    }
+}
+
+.nav-open {
+    opacity: 1;
+    z-index: 10;
+}
+
+.transitionScreen {
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #005aa7;
+    transition: .75s;
+    z-index: -1;
+}

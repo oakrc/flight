@@ -71,12 +71,14 @@ CREATE TABLE IF NOT EXISTS tickets (
     last_name       VARCHAR(255) NOT NULL,
     gender          CHAR(1) NOT NULL,
     phone_number    VARCHAR(16),
+    email           VARCHAR(50),
     birthday        DATE NOT NULL,
     addr1           VARCHAR(255) NOT NULL,
     addr2           VARCHAR(255),
     city            VARCHAR(60) NOT NULL,
     state           CHAR(2) NOT NULL,
     postal          CHAR(5) NOT NULL,
+    conf            CHAR(6) NOT NULL,
     UNIQUE KEY (first_name, last_name, birthday, postal, flight_id),
     FOREIGN KEY (flight_id) REFERENCES flight_schedule(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (fare_id) REFERENCES airfares(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -144,7 +146,7 @@ CREATE PROCEDURE register_user(
     IN gender CHAR(1),
     IN phone_number VARCHAR(16),
     IN email VARCHAR(50),
-    IN pw BINARY(60)
+    IN pw BINARY(16)
 )
 BEGIN
     SET @uuid = gen_uuid();
@@ -157,7 +159,7 @@ BEGIN
         phone_number,
         email,
         pw,
-        'B',-- bronze
+        '_',-- bronze
         0,
         0
     );
@@ -175,7 +177,7 @@ BEGIN
         LEFT(MD5(RANDOM_BYTES(16)), 8),
         cap,
         model,
-        FLOOR(RAND()*(2020-2017)*2017)
+        FLOOR(RAND()*3+2016)
     );
 END//
 DROP PROCEDURE IF EXISTS add_flight;
@@ -212,6 +214,7 @@ CREATE PROCEDURE buy_ticket (
     IN lname VARCHAR(255),
     IN gender CHAR(1),
     IN phone VARCHAR(16),
+    IN email VARCHAR(50),
     IN dob DATE,
     IN addr1 VARCHAR(255),
     IN addr2 VARCHAR(255),
@@ -222,49 +225,80 @@ CREATE PROCEDURE buy_ticket (
 BEGIN
     INSERT INTO tickets VALUES (
         gen_uuid(),
-        UUID_TO_BIN(user_id),
+        u2b(user_id),
         1,
         NOW(),
-        UUID_TO_BIN(fl_id),
-        UUID_TO_BIN(af_id),
+        u2b(fl_id),
+        u2b(af_id),
         fname,
         lname,
         gender,
         phone,
+        email,
         dob,
         addr1,
         addr2,
         city,
         state,
-        postal
+        postal,
+        LEFT(MD5(RANDOM_BYTES(15)),6)
     );
 END//
 DROP PROCEDURE IF EXISTS check_in;
-CREATE PROCEDURE check_in (IN user_uid CHAR(36), IN ticket_id CHAR(36))
+CREATE PROCEDURE check_in (
+    IN _conf CHAR(6),
+    IN _first_name VARCHAR(255),
+    IN _last_name VARCHAR(255)
+)
 this_proc:BEGIN
     DECLARE tk_stat TINYINT;
     DECLARE cost DECIMAL(8,2);
-    DECLARE af_id BINARY(60);
+    DECLARE af_id BINARY(16);
+    DECLARE tier CHAR(1);
+    DECLARE usid BINARY(16) DEFAULT NULL;
+    DECLARE ticket_id BINARY(16);
+    SELECT user_id, id INTO usid, ticket_id FROM tickets WHERE first_name = _first_name AND last_name = _last_name AND conf = _conf;
+    IF usid = NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ticket not found';
+    END IF;
     SELECT tk_stat = tic_status, af_id = fare_id
                     FROM tickets
-                    WHERE user_id=UUID_TO_BIN(user_uid)
-                        AND id=UUID_TO_BIN(ticket_id);
+                    WHERE user_id=usid
+                        AND id=ticket_id;
     IF tk_stat != 1 THEN
-        LEAVE this_proc;
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Ticket not available for check-in';
     END IF;
-    SET cost = (SELECT fare FROM airfares HAVING id=af_id);
+    SET cost = (SELECT fare FROM airfares WHERE id=af_id);
     UPDATE tickets
         SET tic_status = 0
-        WHERE id=UUID_TO_BIN(ticket_id);
+        WHERE id=ticket_id;
     SET @mi_factor = (SELECT CASE
+                                WHEN tier='_' THEN 1
                                 WHEN tier='B' THEN 5
                                 WHEN tier='S' THEN 7
                                 WHEN tier='G' THEN 9
                                 ELSE 0
-                            END FROM users HAVING id=UUID_TO_BIN(user_uid));
+                            END FROM users WHERE id=usid);
     UPDATE users
-        SET miles = miles + @mi_factor * cost
-        WHERE id = UUID_TO_BIN(user_uid); -- TODO: move up tier when jason finishes the document
+        SET miles = miles + @mi_factor * cost + 200
+        WHERE id = usid;
+    SET @miles = (SELECT miles FROM users WHERE id=usid);
+    SELECT users.tier INTO tier FROM users WHERE id=usid;
+    IF tier = '_' AND @miles >= 15000 AND @miles < 30000 THEN
+        UPDATE users
+            SET tier = 'B'
+            WHERE id=usid;
+    ELSEIF tier = 'B' AND @miles >= 30000 AND @miles < 45000 THEN
+        UPDATE users
+            SET tier = 'S'
+            WHERE id=usid;
+    ELSEIF tier = 'S' AND @miles >= 45000 THEN
+        UPDATE users
+            SET tier = 'G'
+            WHERE id=usid;
+    END IF;
 END//
 DROP PROCEDURE IF EXISTS add_dummy_aircrafts;
 CREATE PROCEDURE add_dummy_aircrafts ()
@@ -295,7 +329,7 @@ BEGIN
     SET @reps = 15;
     REPEAT
         SET @fl_id = gen_uuid();
-        SET @depart = DATE_ADD(dtime_depart, INTERVAL ROUND(RAND()*35) MINUTE);
+        SET @depart = DATE_ADD(dtime_depart, INTERVAL ROUND(RAND()*600) MINUTE);
         SET @arrive = DATE_ADD(@depart, INTERVAL ROUND(RAND()*0.06*@duration*60)+ROUND(@duration*60) MINUTE);
         SET @ac_id = (SELECT id FROM aircrafts ORDER BY RAND() LIMIT 1);
         SET @max_allowed = (SELECT capacity FROM aircrafts WHERE id=@ac_id);
@@ -308,9 +342,9 @@ BEGIN
             0,
             @max_allowed
         );
-        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(400))+@duration*30+600)),
-                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(200))+@duration*25+300)),
-                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(100))+@duration*15+30));
+        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(100))+@duration*75+170)),
+                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(50))+@duration*55+140)),
+                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(20))+@duration*20+25));
         SET @reps = @reps - 1;
     UNTIL @reps = 0 END REPEAT;
 END//
@@ -336,7 +370,18 @@ DELIMITER ;
 SET FOREIGN_KEY_CHECKS=1;
 CALL add_dummy();
 CALL add_routes();
-CALL register_user('Example','User','2000-01-01','M','5550687272','a@gmail.com','$2y$12$8Zi9WTNlwm2dZ4NRueQCWOw5ouQzXjJiHXG4oHcOzyxj5juFpJAca');
-CALL add_dummy_flights('LAX','BOI','2023-04-20 08:00:00');
+INSERT INTO users VALUES (
+    gen_uuid(),
+    'West',
+    'Flight',
+    '1995-01-01',
+    'O',
+    '555-000-8888',
+    'noreply@westflightairlines.com',
+    '$2b$15$N1JgCucoID6kf70XCbLVnOnoDuy2bck0ZP2zSwQ09L5H/EODFAuO6',
+    'G',-- bronze
+    10000000,
+    1
+);
 COMMIT;
 SET autocommit = 1;

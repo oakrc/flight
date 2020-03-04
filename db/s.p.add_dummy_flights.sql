@@ -11,7 +11,7 @@ BEGIN
     SET @reps = 15;
     REPEAT
         SET @fl_id = gen_uuid();
-        SET @depart = DATE_ADD(dtime_depart, INTERVAL ROUND(RAND()*35) MINUTE);
+        SET @depart = DATE_ADD(dtime_depart, INTERVAL ROUND(RAND()*600) MINUTE);
         SET @arrive = DATE_ADD(@depart, INTERVAL ROUND(RAND()*0.06*@duration*60)+ROUND(@duration*60) MINUTE);
         SET @ac_id = (SELECT id FROM aircrafts ORDER BY RAND() LIMIT 1);
         SET @max_allowed = (SELECT capacity FROM aircrafts WHERE id=@ac_id);
@@ -24,9 +24,9 @@ BEGIN
             0,
             @max_allowed
         );
-        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(400))+@duration*30+600)),
-                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(200))+@duration*25+300)),
-                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(100))+@duration*15+30));
+        INSERT INTO airfares VALUES (gen_uuid(), @fl_id, 'F', ROUND((RAND()*(100))+@duration*75+170)),
+                                    (gen_uuid(), @fl_id, 'B', ROUND((RAND()*(50))+@duration*55+140)),
+                                    (gen_uuid(), @fl_id, 'E', ROUND((RAND()*(20))+@duration*20+25));
         SET @reps = @reps - 1;
     UNTIL @reps = 0 END REPEAT;
 END//
