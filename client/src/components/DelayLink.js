@@ -49,7 +49,6 @@ class DelayLink extends React.Component {
       } else {
         this.props.history.push(to);
         this.props.history.push(to);
-        this.props.history.push(to);
       }
       onDelayEnd(e, to);
     }, delay);
