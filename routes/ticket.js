@@ -102,7 +102,6 @@ router.put('/', valid.uid, (req, res) => {
                         from: process.env.MAIL_USER,
                         to: req.body.email,
                         subject: 'WestFlight Airlines: Account Verification',
-                        html: `<html><head></head><body><a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation #: ` + conf + `</body></html>`
                         html: `<html> <head> <link href="https://fonts.googleapis.com/css?family=Rubik&display=swap" rel="stylesheet"> <style>body{margin: 0; font-family: 'Rubik'; display: flex; flex-direction: column; align-items: center; margin-top: 5vh; color: white;}div{height: 80vh; padding: 5vh 10vw; display: flex; flex-direction: column; align-items: center; background-color: #005aa7; border-radius: 1vw; height: fit-content;}a{color: #005aa7; text-decoration: none;}</style> </head> <body> <div> <img src="https://www.westflightairlines.com/static/media/logo3.311095c9.png" alt="Logo"> <h1>West Flight Airlines</h1> <h3>Thank you for booking a flight!</h3> <a href="https://www.westflightairlines.com/checkin">Check-in</a><br>Confirmation Number:` + conf + `</div></body></html>`
                     }
                     sg.send(msg).then(
