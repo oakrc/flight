@@ -34,8 +34,8 @@ router.get('/schedule', (req, res) => {
         [src,dest,date,date,src,dest],
         (err, result) => {
             if (err) {
-                res.status(500).send({code: 'Internal Server Error'})
                 console.log(err.message)
+                res.status(500).send({code: 'Internal Server Error'})
             }
             else res.status(200).send(result[1])
     })
@@ -51,6 +51,7 @@ router.get('/:id', (req, res) => {
     }
     req.app.locals.pool.query(query.flight_by_id, [rid,rid], (err, result) => {
         if (err) {
+            console.log(err)
             res.status(500).send({code: 'srv_err', loc: 'sel_flight_id', msg: err.message})
             return
         }
@@ -92,8 +93,8 @@ router.get('/', (req, res) => {
         [src,dest,date, /**/ date,date,src,dest,cabin,passengers],
         (err, result) => {
             if (err) {
+                console.log(err)
                 res.status(500).send({code: 'Internal Server Error'})
-                console.log(err.message)
             }
             else res.status(200).send(result[1])
     })

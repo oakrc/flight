@@ -24,7 +24,7 @@ this_proc:BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Ticket not available for check-in';
     END IF;
-    SET cost = (SELECT fare FROM airfares HAVING id=af_id);
+    SET cost = (SELECT fare FROM airfares WHERE id=af_id);
     UPDATE tickets
         SET tic_status = 0
         WHERE id=ticket_id;
@@ -34,12 +34,12 @@ this_proc:BEGIN
                                 WHEN tier='S' THEN 7
                                 WHEN tier='G' THEN 9
                                 ELSE 0
-                            END FROM users HAVING id=usid);
+                            END FROM users WHERE id=usid);
     UPDATE users
         SET miles = miles + @mi_factor * cost + 200
         WHERE id = usid;
     SET @miles = (SELECT miles FROM users WHERE id=usid);
-    SELECT users.tier INTO tier FROM users HAVING id=usid;
+    SELECT users.tier INTO tier FROM users WHERE id=usid;
     IF tier = '_' AND @miles >= 15000 AND @miles < 30000 THEN
         UPDATE users
             SET tier = 'B'
