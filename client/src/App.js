@@ -170,14 +170,14 @@ class App extends Component {
         <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
             <Switch>
               <Route exact path='/' render={(props) => <BookAndLanding {...props} showPurchase={(flightData) => this.showPurchase(flightData)} resetFlData={this.resetFlData}/>} />
-              {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} showOption={this.showOption} previousTickets={this.state.previousTickets} upcomingTickets={this.state.upcomingTickets} userInfo={this.state.userInfo}/>} />}
+              {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} showOption={this.showOption} previousTickets={this.state.previousTickets} upcomingTickets={this.state.upcomingTickets} userInfo={this.state.userInfo} updateFlights={this.updateFlights}/>} />}
               <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
               {/*<Route path='/flightstatus' component={FlightStatus} />*/}
               <Route path='/flightschedules' component={Schedules} />
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
-              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={(value) => this.showOption(value)} updateFlights={this.state.updateFlights}/>} />
+              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={(value) => this.showOption(value)} updateFlights={this.updateFlights}/>} />
               <Route render={(props) => <NotAPage {...props} showOption={(value => this.showOption(value))}/>} />
             </Switch>
         </div>

@@ -18,6 +18,8 @@ export class Dashboard extends Component {
     }
 
     componentDidMount() {
+        setTimeout(() => {this.props.updateFlights()}, 1000);
+        this.props.showOption();
         this.setState({upcomingTicketsFormat: this.props.upcomingTickets.map((ticket, index) => {
                 if (ticket.tk_id !== null) {
                     return (<Paper className="ticket" key={ticket.tk_id}>

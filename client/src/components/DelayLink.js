@@ -39,10 +39,7 @@ class DelayLink extends React.Component {
 
     onDelayStart(e, to);
     if (e.defaultPrevented) {
-      console.log('qwerqwerqwer');
       return;
-    } else {
-      console.log('asdfasdfasdf');
     }
     e.preventDefault();
 
@@ -50,6 +47,8 @@ class DelayLink extends React.Component {
       if (replace) {
         this.props.history.replace(to);
       } else {
+        this.props.history.push(to);
+        this.props.history.push(to);
         this.props.history.push(to);
       }
       onDelayEnd(e, to);
