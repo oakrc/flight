@@ -76,7 +76,7 @@ router.put('/', valid.uid, (req, res) => {
             city,
             state,
             postal
-        ], (err, _) => {
+        ], (err, result) => {
             if (err) {
                 console.log(err)
                 res.status(500).end()
@@ -85,12 +85,16 @@ router.put('/', valid.uid, (req, res) => {
             
             req.app.locals.pool.query(
                 query.get_conf,
-                [uid,first_name,last_name,birthday],
+                [uid,result.insertId],
                 (err, result) => {
                     if (err) {
                         console.log(err)
                         res.status(500).send({ error: 'Failed to send confirmation email.'})
                         return
+                    }
+                    if (result.length < 1) {
+                        console.log('Confirmation Number not found')
+                        res.status(500).send({ error: 'Failed to send confirmation email' })
                     }
                     var conf = JSON.parse(JSON.stringify(result))[0].conf
                     var msg = {
