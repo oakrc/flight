@@ -74,7 +74,7 @@ export class Dashboard extends Component {
                             {this.props.previousTickets.length === 0 ? <Paper className="ticket">Currently no previous flights.</Paper> : this.state.previousTicketsFormat}
                         </div>
                     </div>
-                    <div style={{display: 'flex', justifyContent: 'space-around'}}>
+                    <div className="downArrows" style={{display: 'flex', justifyContent: 'space-around'}}>
                         <KeyboardArrowDownRoundedIcon />
                         <KeyboardArrowDownRoundedIcon />
                     </div>

@@ -115,7 +115,7 @@ class App extends Component {
   componentDidMount() {
     axios.get('/api/user', {withCredentials: true})
     .then((response) => {
-      response.status === 200 && this.setState({loggedIn: true, userInfo: response.data})
+      ( response.status === 200 || response.status === 304 ) && this.setState({loggedIn: true, userInfo: response.data})
     })
     .catch((error) => {
       try {
@@ -127,13 +127,13 @@ class App extends Component {
       method: 'get',
       url: '/api/ticket/upcoming'
     }).then((response) => {
-      response.status === 200 && this.setState({upcomingTickets: response.data})
+      ( response.status === 200 || response.status === 304 ) && this.setState({upcomingTickets: response.data})
     }).catch((error) => {try{} catch{}})
     axios({
       method: 'get',
       url: '/api/ticket/history'
     }).then((response) => {
-      response.status === 200 && this.setState({previousTickets: response.data})
+      ( response.status === 200 || response.status === 304 ) && this.setState({previousTickets: response.data})
     }).catch((error) => {try{} catch{}})
   }
 
@@ -142,13 +142,13 @@ class App extends Component {
       method: 'get',
       url: '/api/ticket/upcoming'
     }).then((response) => {
-      response.status === 200 && this.setState({upcomingTickets: response.data})
+      ( response.status === 200 || response.status === 304 ) && this.setState({upcomingTickets: response.data})
     }).catch((error) => {try{} catch{}})
     axios({
       method: 'get',
       url: '/api/ticket/history'
     }).then((response) => {
-      response.status === 200 && this.setState({previousTickets: response.data})
+      ( response.status === 200 || response.status === 304 ) && this.setState({previousTickets: response.data})
     }).catch((error) => {try{} catch{}})
   }
 

@@ -303,7 +303,9 @@ export class Purchase extends Component {
                         alert('As for this is a mock website for FBLA Web Design, we will not be taking any actual payments. However, We will still process your order for your (pretend) flight.');
                         setTimeout(() => {
                             this.props.updateFlights();
-                        }, 1000);
+                            window.location.reload();
+                            this.props.history.push('/dashboard');
+                        }, 500);
                     }, 1500)
                 } else {
                     this.setState({adultsCorrect: false})
