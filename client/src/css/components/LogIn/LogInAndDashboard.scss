@@ -112,8 +112,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100vw;
+    height: 87.5vh;
     background: -webkit-linear-gradient(#005aa7, #528caf);
     background: linear-gradient(#005aa7, #528caf);
     padding: 7.5vh 0 5vh 0;

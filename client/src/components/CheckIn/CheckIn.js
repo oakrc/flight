@@ -19,6 +19,8 @@ export class CheckIn extends Component {
             confNumberValid: true,
             confSuccess: null,
 
+            fieldError : 0,
+
             id: ''
         }
 
@@ -54,6 +56,7 @@ export class CheckIn extends Component {
         let lNameValid = true;
         let confNumberValid = true;
         let confSuccess = null;
+        let fieldError = 0;
 
         if (this.state.passengerFirstName.replace(/\s+/g, '').length === 0) {
             fNameValid = false;
@@ -68,19 +71,29 @@ export class CheckIn extends Component {
             confSuccess = false;
         }
 
-        axios.post('/api/ticket/check-in', {
-            first_name: this.state.passengerFirstName,
-            last_name: this.state.passengerLastName,
-            conf: this.state.confirmationNumber
-        }, {withCredentials: true})
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
+        if (!this.state.confNumberValid && this.state.lNameValid && this.state.fNameValid) {
+            fieldError = 1;
+        } else {
+            fieldError = 2;
+        }
 
-        this.setState({fNameValid: fNameValid, lNameValid: lNameValid, confNumberValid: confNumberValid, confSuccess: confSuccess});
+        if (confNumberValid && lNameValid && fNameValid) {
+            axios.post('/api/ticket/check-in', {
+                first_name: this.state.passengerFirstName,
+                last_name: this.state.passengerLastName,
+                conf: this.state.confirmationNumber
+            }, {withCredentials: true})
+            .then((response) => {
+                response.status === 200 && this.setState({confSuccess: true})
+                console.log(response);
+            })
+            .catch((err) => {
+                this.setState({confSuccess: false})
+                console.log(err);
+            })
+        }
+
+        this.setState({fNameValid: fNameValid, lNameValid: lNameValid, confNumberValid: confNumberValid, confSuccess: confSuccess, fieldError: fieldError});
     }
 
     render() {
@@ -92,7 +105,7 @@ export class CheckIn extends Component {
                     <TextField id="outlined-basic" label="Passenger Last Name" variant="outlined" value={this.state.passengerLastName} onChange={(e) => this.lNameUpdate(e.target.value)} error={!this.state.lNameValid}/>
                     <TextField id="outlined-basic" label="Confirmation Number" variant="outlined" value={this.state.confirmationNumber} onChange={(e) => this.confirmUpdate(e.target.value)} error={!this.state.confNumberValid}/>
                     <div style={{display: 'inline-flex', width: '100%', justifyContent: this.state.confSuccess === null ? 'flex-end' : 'space-between'}}>
-                        {this.state.confSuccess !== null && (this.state.confSuccess ? <Alert severity="success">Checked In</Alert> : <Alert severity="error">Error! (Confirmation # is 6 digits)</Alert>)}
+                        {this.state.confSuccess !== null && (this.state.confSuccess ? <Alert severity="success">Checked In!</Alert> : this.state.fieldError === 1 ? <Alert severity="error">Error! (6 digit Confirmation #)</Alert> : <Alert severity="error">Please fill out all fields!</Alert>)}
                         <Button color="primary" variant="contained" onClick={this.checkIn}>Check In</Button>
                     </div>
                 </Paper>

@@ -146,7 +146,6 @@ export class Careers extends Component {
                     })
                 }
             }).catch(error => {
-                console.log(error);
             })
         }
 

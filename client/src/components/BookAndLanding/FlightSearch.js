@@ -261,7 +261,6 @@ class FlightSearch extends Component {
                 }
             })
             .catch(error => {
-                console.log(error);
             });
             
             if (this.state.typeOfTrip === 'Round trip') {
@@ -290,7 +289,6 @@ class FlightSearch extends Component {
                     }
                 })
                 .catch(error => {
-                    console.log(error);
                 });
             }
         }
@@ -306,7 +304,7 @@ class FlightSearch extends Component {
             <div>
                 <div className="FlightSearch">
                         <div className="Top">
-                            <Select curr={this.state.typeOfTrip} options={["Round trip", "One way", "Multi-city"]} updater={(e, option) => this.changeTrip(e, option)}/>
+                            <Select curr={this.state.typeOfTrip} options={["Round trip", "One way"]} updater={(e, option) => this.changeTrip(e, option)}/>
                             <Select curr={this.state.class} options={["Economy", "Business", "First Class"]} updater={(e, option) => this.changeClass(e, option)}/>
                             <OutsideAlerter condition={this.state.passengerShown} effect={this.togglePassengers}> 
                                 <div className="Vertical">

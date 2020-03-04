@@ -39,7 +39,10 @@ class DelayLink extends React.Component {
 
     onDelayStart(e, to);
     if (e.defaultPrevented) {
+      console.log('qwerqwerqwer');
       return;
+    } else {
+      console.log('asdfasdfasdf');
     }
     e.preventDefault();
 

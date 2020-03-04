@@ -45,7 +45,10 @@ class App extends Component {
     this.state = {
       flightData: [],
       transitionScreen: false,
-      loggedIn: false
+      loggedIn: false,
+      userInfo: [],
+      upcomingTickets: [],
+      previousTickets: [],
     }
 
     this.resetFlData = this.resetFlData.bind(this);
@@ -106,22 +109,47 @@ class App extends Component {
           window.location.reload();
         }, 500);
     }).catch((error) => {
-        console.log(error);
     })
   }
 
   componentDidMount() {
     axios.get('/api/user', {withCredentials: true})
     .then((response) => {
-      response.status === 200 && this.setState({loggedIn: true})
+      response.status === 200 && this.setState({loggedIn: true, userInfo: response.data})
     })
     .catch((error) => {
       try {
         error.response.status === 401 && this.setState({loggedIn: false})
       } catch {
-
       }
     });
+    axios({
+      method: 'get',
+      url: '/api/ticket/upcoming'
+    }).then((response) => {
+      response.status === 200 && this.setState({upcomingTickets: response.data})
+    }).catch((error) => {try{} catch{}})
+    axios({
+      method: 'get',
+      url: '/api/ticket/history'
+    }).then((response) => {
+      response.status === 200 && this.setState({previousTickets: response.data})
+    }).catch((error) => {try{} catch{}})
+  }
+
+  updateFlights() {
+    axios({
+      method: 'get',
+      url: '/api/ticket/upcoming'
+    }).then((response) => {
+      response.status === 200 && this.setState({upcomingTickets: response.data})
+    }).catch((error) => {try{} catch{}})
+    axios({
+      method: 'get',
+      url: '/api/ticket/history'
+    }).then((response) => {
+      response.status === 200 && this.setState({previousTickets: response.data})
+    }).catch((error) => {try{} catch{}})
   }
 
   render() {
@@ -130,10 +158,10 @@ class App extends Component {
       <Preloader fadeDuration={2800} style={{backgroundColor: '#005aa7', transition: '1s', transitionDelay: '1.8s'}}>
         <Placeholder>
           <img src={logo} alt="logo" className="logo"/>
-          <div class="spinner">
-            <div class="bounce1"></div>
-            <div class="bounce2"></div>
-            <div class="bounce3"></div>
+          <div className="spinner">
+            <div className="bounce1"></div>
+            <div className="bounce2"></div>
+            <div className="bounce3"></div>
           </div>
         </Placeholder>
       </Preloader>
@@ -142,14 +170,14 @@ class App extends Component {
         <Navbar transitionScreen={this.state.transitionScreen} optionHandler={(option) => {this.showOption(option)}} loggedIn={this.state.loggedIn}/>
             <Switch>
               <Route exact path='/' render={(props) => <BookAndLanding {...props} showPurchase={(flightData) => this.showPurchase(flightData)} resetFlData={this.resetFlData}/>} />
-              {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} showOption={this.showOption} />} />}
+              {!this.state.loggedIn ? <Route path='/login' render={(props) => <LogIn logIn={this.logIn} {...props} />} /> : <Route path='/dashboard' render={(props) => <Dashboard logOut={this.logOut} {...props} showOption={this.showOption} previousTickets={this.state.previousTickets} upcomingTickets={this.state.upcomingTickets} userInfo={this.state.userInfo}/>} />}
               <Route path='/westmiles' component={WestMiles} />
               <Route path='/checkin' component={CheckIn} />
               {/*<Route path='/flightstatus' component={FlightStatus} />*/}
               <Route path='/flightschedules' component={Schedules} />
               <Route path='/careers' component={Careers} />
               <Route path='/contact' component={ContactUs} />
-              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={(value) => this.showOption(value)}/>} />
+              <Route path='/book' render={(props) => <Purchase {...props} flightData={this.state.flightData} showOption={(value) => this.showOption(value)} updateFlights={this.state.updateFlights}/>} />
               <Route render={(props) => <NotAPage {...props} showOption={(value => this.showOption(value))}/>} />
             </Switch>
         </div>

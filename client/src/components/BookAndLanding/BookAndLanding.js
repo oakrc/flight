@@ -92,7 +92,7 @@ export class BookAndLanding extends Component {
                         {query.typeOfTrip === 'Round trip' ?
                         <Button onClick={() => this.handleFlight(flightInfo, index, query)} variant="outlined" color="primary">Select First Flight</Button> :
                         <Button onClick={() => {
-                            this.setState({searchDisabled: true}, () => setTimeout(() => {this.setState({searchDisabled: false})}, 1000))
+                            !this.state.unmounting && this.setState({searchDisabled: true}, () => setTimeout(() => {this.setState({searchDisabled: false})}, 1000))
                             this.props.showPurchase([[flightInfo[index], query]]);
                         }} variant="outlined" color="primary"><DelayLink style={{textDecoration: 'none', color: 'inherit'}} to='/book'>Select Flight</DelayLink></Button>
                         }
