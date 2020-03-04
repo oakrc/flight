@@ -165,14 +165,16 @@ export class Careers extends Component {
         } 
 
         if (firstNameValid && lastNameValid && genderEntered && emailValid && phoneNumberValid) {
+            let formData = new FormData();
+            formData.append('first_name', this.state.firstName);
+            formData.append('last_name', this.state.lastName);
+            formData.append('birthday', this.state.birthday);
+            formData.append('gender', this.state.gender[0]);
+            formData.append('phone_number', this.state.phoneNumber);
+            formData.append('email', this.state.email);
+            formData.append('resume', this.state.resume);
             axios.post('/api/app', {
-                first_name: this.state.firstName,
-                last_name: this.state.lastName,
-                birthday: this.state.birthday,
-                gender: this.state.gender[0],
-                phone_number: this.state.phoneNumber,
-                email: this.state.email,
-                resume: this.state.resume
+                formData
             }, {headers: {'content-type': 'multipart/form-data'}})
             .then(response => {
                 if (response.status === 200) {
@@ -193,7 +195,6 @@ export class Careers extends Component {
                     })
                 }
             }).catch(error => {
-                console.log(error);
             })
         }
 
@@ -204,7 +205,7 @@ export class Careers extends Component {
         return (
             <div className={`Careers ${this.state.display ? 'shownnozfast' : 'hiddenfast'}`}>
                 <Paper elevation={5}>
-                    <h1>Apply for a Career</h1>
+                    <h1>Work At West Flight</h1>
                     <div className="half-field">
                         <TextField error={!this.state.firstNameValid} label="First name" variant="outlined" value={this.state.firstName} onChange={(e) => this.updateFName(e.target.value)}/>
                         <TextField error={!this.state.lastNameValid} label="Last name" variant="outlined" value={this.state.lastName} onChange={(e) => this.updateLName(e.target.value)}/>

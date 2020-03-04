@@ -47,6 +47,9 @@ class DelayLink extends React.Component {
       if (replace) {
         this.props.history.replace(to);
       } else {
+        if (to === '/book') {
+          this.props.history.push(to);
+        }
         this.props.history.push(to);
       }
       onDelayEnd(e, to);

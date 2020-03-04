@@ -275,8 +275,8 @@ export class Purchase extends Component {
                                 state: this.state.passengerRequestData[i].state,
                                 postal: this.state.passengerRequestData[i].postal,
                             }, {withCredentials: true})
-                            .then(response => {console.log(response)})
-                            .catch(error => {console.log(error)})
+                            .then(response => {})
+                            .catch(error => {})
                             
                             if (this.props.flightData.length === 2) {
                                 axios.put('/api/ticket', {
@@ -294,17 +294,16 @@ export class Purchase extends Component {
                                     state: this.state.passengerRequestData[i].state,
                                     postal: this.state.passengerRequestData[i].postal,
                                 }, {withCredentials: true})
-                                .then(response => {console.log(response)})
-                                .catch(error => {console.log(error)})
+                                .then(response => {})
+                                .catch(error => {})
                             }
                         }
                     })
                     setTimeout(() => {
                         alert('As for this is a mock website for FBLA Web Design, we will not be taking any actual payments. However, We will still process your order for your (pretend) flight.');
-                        this.props.showOption();
                         setTimeout(() => {
-                            this.props.history.push('/dashboard');
-                        }, 1000)
+                            this.props.updateFlights();
+                        }, 1000);
                     }, 1500)
                 } else {
                     this.setState({adultsCorrect: false})
@@ -408,7 +407,7 @@ export class Purchase extends Component {
                                 Back
                             </Button>}
                             {!this.state.adultsCorrect && <Alert className="payButton" severity="error">{'Make sure that you have ' + this.props.flightData[1][1].adults + (this.props.flightData[1][1].adults > 1 ? ' adults' : ' adult') + ' and ' + (this.props.flightData[1][1].passengers - this.props.flightData[1][1].passengers) +  ' children/infants.'}</Alert>}
-                            {this.state.paid && <Alert className="payButton" severity="success">Booked!</Alert>}
+                            {this.state.paid && <Alert className="payButton" severity="success">Booked! Please check email for check-in code!</Alert>}
                             <Button variant="contained" color="primary" onClick={this.signUp}>
                             {this.state.currentPassenger < this.props.flightData[0][1].passengers ?
                                 `Next Passenger (${this.state.currentPassenger}/${this.props.flightData[0][1].passengers})` :

@@ -31,7 +31,7 @@ export class SignUpCard extends Component {
             confirmpwdValid: true,
             phoneNumberValid: true,
 
-            signUpSuccess: null,
+            signUpSuccess: true,
             loading: null,
             display: false,
         }
@@ -220,13 +220,18 @@ export class SignUpCard extends Component {
                     <TextField type="email" label="Email" variant="outlined" value={this.state.email} onChange={(e) => this.updateEmail(e.target.value)} error={!this.state.emailValid}/>
                     <TextField label="Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.password} onChange={(e) => this.updatePwd(e.target.value)} error={!this.state.passwordValid} helperText={!this.state.passwordValid && 'At least 10 characters, containing lowercase letters, uppercase letters, and numbers'}/>
                     <TextField label="Confirm Password" type="password" autoComplete="current-password" variant="outlined" value={this.state.confirmpwd} onChange={(e) => this.updateConfirmPwd(e.target.value)} error={!this.state.confirmpwdValid}/>
-                    <Button variant="contained" color="primary" onClick={this.signUp}>
-                    Sign Up
-                    </Button>
-                    <Button color="primary" variant="outlined" onClick={() => {this.props.logIn(); this.close()}}>Log In</Button>
-                    {this.state.signUpSuccess !== null && (this.state.signUpSuccess ? <Alert severity="success">Signed Up! Check your email for a verification message!</Alert> : <Alert severity="error">Error!</Alert>)}
-                    {this.state.loading !== null && this.state.loading && <Alert severity="info">Loading...</Alert>}
-                    {((this.state.loading === null || this.state.logInSuccess === null) && !this.state.loading) && <div className="MuiAlert-root" style={{height: '36px'}}>&nbsp;</div>}
+                    <div style={{width: '100%', display: 'flex', justifyContent: this.state.signUpSuccess !== null || this.state.loading !== null ? 'space-between' : 'flex-end'}}>
+                        <div style={{width: '50%', display: 'flex', alignItems: 'center'}}>
+                            {this.state.signUpSuccess !== null && (this.state.signUpSuccess ? <Alert severity="success">Signed Up! Check your email for a verification message!</Alert> : <Alert severity="error">Error!</Alert>)}
+                            {this.state.loading !== null && this.state.loading && <Alert severity="info">Loading...</Alert>}
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <Button variant="contained" color="primary" onClick={this.signUp}>
+                            Sign Up
+                            </Button>
+                            <Button color="primary" variant="outlined" onClick={() => {this.props.logIn(); this.close()}}>Log In</Button>
+                        </div>
+                    </div>
                 </Paper>            
             </div>
         )
