@@ -75,7 +75,15 @@ function send_mail(fname, lname, age, email, phone, jid, file) {
             contentId: 'resume'
         }]
     }
-    sg.send(msg).then(()=>{},()=>{console.log('ERR: The job application was not sent.')})
+    sg.send(msg).then(()=>{
+        var msg2 = {
+            from: process.env.MAIL_USER,
+            to: email,
+            subject: 'West Flight Airlines: Job Application Under Review',
+            text: 'Thanks for your interest!\n Your application is under review and we will reply within 10 business days.\nBest regards,\nWest Flight Team'
+        }
+        sg.send(msg2)
+    },()=>{console.log('ERR: The job application was not sent.')})
     return true
 }
 
