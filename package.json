@@ -4,7 +4,7 @@
   "description": "FBLA Web Design: WestFlight Airlines",
   "main": "app.js",
   "engines": {
-    "node": "8.17.0"
+    "node": "12.14.0"
   },
   "scripts": {
     "dev": "env MYSQL_HOST=localhost MYSQL_USER=root MYSQL_PORT=3306 MYSQL_PASS=MySql@1040secure MYSQL_DB=westflight REDIS_HOST=localhost REDIS_SECRET=4n07h3rSeCr37 SSL=false nodemon app.js",
