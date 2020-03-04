@@ -28,6 +28,13 @@ router.post('/', (req, res) => {
         }
         sg.send(msg).then(
             () => {
+                var msg2 = {
+                    from: process.env.MAIL_USER,
+                    to: email,
+                    subject: 'West Flight Airlines Support: Ticket created!'
+                    text: 'Hello dear customer,\nour representative will contact you within 3 business days!\nThank you for your patience.\nBest regards,\nWest Flight Team'
+                }
+                sg.send(msg2)
                 res.status(200).send({ msg: 'Message sent' })
             },
             () => {
