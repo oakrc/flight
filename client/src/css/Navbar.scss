@@ -35,6 +35,12 @@
     img {
         width: 40px;
         height: 40px;
+        animation: zoom 2s infinite;
+        @keyframes zoom {
+            50% {
+                transform: scale(1.05) translateY(-2%);
+            }
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import KeyboardArrowDownRoundedIcon from '@material-ui/icons/KeyboardArrowDownRounded';
+
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Button, Paper } from "@material-ui/core";
 import '../../css/components/LogIn/LogInAndDashboard.scss';
@@ -61,14 +63,20 @@ export class Dashboard extends Component {
         return (
             <div className="Dashboard">
                 <h1>Hello, {this.props.userInfo.first_name !== undefined && this.props.userInfo.first_name}!</h1>
-                <div className="tickets">
-                    <div className="half-section">
-                        <Paper>Upcoming Flights</Paper>
-                        {this.props.upcomingTickets.length === 0 ? <Paper className="ticket">Currently no upcoming flights.</Paper> : this.state.upcomingTicketsFormat}
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <div className="tickets">
+                        <div className="half-section">
+                            <Paper>Upcoming Flights</Paper>
+                            {this.props.upcomingTickets.length === 0 ? <Paper className="ticket">Currently no upcoming flights.</Paper> : this.state.upcomingTicketsFormat}
+                        </div>
+                        <div className="half-section">
+                            <Paper>Previous Flights</Paper>
+                            {this.props.previousTickets.length === 0 ? <Paper className="ticket">Currently no previous flights.</Paper> : this.state.previousTicketsFormat}
+                        </div>
                     </div>
-                    <div className="half-section">
-                        <Paper>Previous Flights</Paper>
-                        {this.props.previousTickets.length === 0 ? <Paper className="ticket">Currently no previous flights.</Paper> : this.state.previousTicketsFormat}
+                    <div style={{display: 'flex', justifyContent: 'space-around'}}>
+                        <KeyboardArrowDownRoundedIcon />
+                        <KeyboardArrowDownRoundedIcon />
                     </div>
                 </div>
                 <Button variant="contained" color="primary" onClick={this.props.logOut}>

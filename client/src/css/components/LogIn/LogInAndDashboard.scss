@@ -158,7 +158,6 @@
     }
 
     .MuiButton-root {
-        margin-top: 5vh;
         background-color: #f0f0f0;
         color: #005aa7;
     }
@@ -167,5 +166,20 @@
         margin: 0 0 5vh 0;
         font-size: 3rem;
         color: white;
+    }
+
+    .MuiSvgIcon-root {
+        margin-top: 5vh;
+        color: white;
+        font-size: 3rem;
+        animation: bounce 2s infinite;
+        @keyframes bounce {
+            50% {
+              transform: translateY(-40%);
+            }
+            100% {
+              transform: translateY(0);
+            }
+        }
     }
 }
